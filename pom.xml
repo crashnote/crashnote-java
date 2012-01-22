@@ -286,6 +286,7 @@
     <profiles>
         <profile>
             <id>develop</id>
+
             <activation>
                 <property>
                     <name>develop</name>
@@ -294,9 +295,12 @@
         </profile>
 
         <profile>
-            <id>release</id>
+            <id>production</id>
+
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>!develop</name>
+                </property>
             </activation>
 
             <build>
@@ -315,7 +319,23 @@
                                 </execution>
                             </executions>
                         </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
 
+        <profile>
+            <id>deploy</id>
+
+            <activation>
+                <property>
+                    <name>gpg.passphrase</name>
+                </property>
+            </activation>
+
+            <build>
+                <pluginManagement>
+                    <plugins>
                         <!-- sign artifacts for release -->
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>

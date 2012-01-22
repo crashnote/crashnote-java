@@ -1,4 +1,3 @@
-crashnote.key
 *.jav
 *.scal
 *.tmp
@@ -7,3 +6,5 @@ crashnote.key
 .idea/
 target/
 project/
+crashnote.key*
+crashnote.gpg*

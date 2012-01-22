@@ -110,10 +110,7 @@
         </profile>
 
         <profile>
-            <id>release</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
+            <id>production</id>
 
             <build>
                 <plugins>
@@ -127,12 +124,15 @@
                             </sources>
                         </configuration>
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
 
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-install-plugin</artifactId>
-                    </plugin>
+        <profile>
+            <id>deploy</id>
 
+            <build>
+                <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
