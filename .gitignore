@@ -1,0 +1,7 @@
+crashnote.key
+*.jav
+*.scal
+*.tmp
+*.temp
+target/
+build/
