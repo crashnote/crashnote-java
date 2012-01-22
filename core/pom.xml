@@ -7,7 +7,7 @@
 
     <groupId>com.crashnote</groupId>
     <artifactId>crashnote-core</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <!-- ==== Artifact is NOT deployed, it is embedded within the released modules ==== -->
@@ -20,7 +20,7 @@
     <parent>
         <groupId>com.crashnote</groupId>
         <artifactId>parent</artifactId>
-        <version>0.0.3</version>
+        <version>0.0.3-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
 
