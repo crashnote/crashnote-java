@@ -323,17 +323,6 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
 
-            <properties>
-                <repository-id>sonatype-nexus-snapshots</repository-id>
-                <!--<repository-id>sonatype-nexus-staging</repository-id>-->
-                <repository-url>
-                    https://oss.sonatype.org/content/repositories/snapshots
-                </repository-url>
-                <!--<repository-url>
-                    https://oss.sonatype.org/service/local/staging/deploy/maven2
-                </repository-url>-->
-            </properties>
-
             <build>
                 <pluginManagement>
                     <plugins>
