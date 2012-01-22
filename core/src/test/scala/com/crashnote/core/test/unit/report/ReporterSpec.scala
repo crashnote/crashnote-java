@@ -217,7 +217,7 @@ class ReporterSpec
     }
 
     override def afterStarted() {
-        reset(m_session)
+        reset(m_session, m_processor)
     }
 
 }

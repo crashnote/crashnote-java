@@ -1,5 +1,3 @@
-package com.crashnote.servlet.test.defs.stubs
-
 /**
  * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
  *
@@ -15,7 +13,11 @@ package com.crashnote.servlet.test.defs.stubs
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.crashnote.logger.test.defs.stubs;
 
-import com.crashnote.servlet.config.ServletConfig
+import com.crashnote.logger.config.LoggerConfig;
 
-class ConfigStub extends ServletConfig[ConfigStub]()
+public class ConfigStub
+    extends LoggerConfig<ConfigStub> {
+
+}

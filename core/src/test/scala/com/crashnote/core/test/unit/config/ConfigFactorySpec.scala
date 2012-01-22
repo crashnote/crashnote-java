@@ -80,15 +80,15 @@ class ConfigFactorySpec
                     }
                 }
                 "file first, then environment and system last" >> new Mocked() {
-                    m_sysUtil.getProperties returns toProps(Map("port" -> "1"))
-                    m_sysUtil.getEnvProperties returns toProps(Map("port" -> "2"))
+                    m_sysUtil.getProperties returns toProps(Map("crashnote.port" -> "1"))
+                    m_sysUtil.getEnvProperties returns toProps(Map("crashnote.port" -> "2"))
                     m_sysUtil.loadProperties(PROP_FILE) returns toProps(Map("port" -> "3"))
 
                     target.get()
 
-                    there was one(m_conf).setPort("1") then
+                    there was one(m_conf).setPort("3") then
                         one(m_conf).setPort("2") then
-                        one(m_conf).setPort("3")
+                        one(m_conf).setPort("1")
                 }
             }
             "but throw exception for" >> {

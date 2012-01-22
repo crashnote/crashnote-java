@@ -141,18 +141,6 @@
                     <optimize>true</optimize>
                     <encoding>UTF-8</encoding>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>default-testCompile</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
 
             <!-- use Scala to compile the tests -->
@@ -169,6 +157,7 @@
                 </executions>
                 <configuration>
                     <scalaVersion>2.9.1</scalaVersion>
+                    <sendJavaToScalac>false</sendJavaToScalac>
                 </configuration>
             </plugin>
 

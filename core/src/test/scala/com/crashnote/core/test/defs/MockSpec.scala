@@ -56,6 +56,7 @@ abstract class MockSpec[T](implicit t: Manifest[T])
     def start() {
         if (target.isInstanceOf[Lifecycle])
             target.asInstanceOf[Lifecycle].start()
+        afterStarted()
     }
 
     def afterStarted() = {}
