@@ -3,5 +3,7 @@ crashnote.key
 *.scal
 *.tmp
 *.temp
+*.iml
+.idea/
 target/
-build/
+project/
