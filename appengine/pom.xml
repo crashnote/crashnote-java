@@ -138,7 +138,7 @@
                         </configuration>
                     </plugin>
 
-                    <plugin>
+                    <!--<plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-jarsigner-plugin</artifactId>
                         <version>1.2</version>
@@ -156,7 +156,7 @@
                             <storepass>${gpg.passphrase}</storepass>
                             <keypass>${gpg.passphrase}</keypass>
                         </configuration>
-                    </plugin>
+                    </plugin>-->
                 </plugins>
             </build>
         </profile>
