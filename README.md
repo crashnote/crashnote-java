@@ -1,4 +1,4 @@
-# Crashnote: Error tracking for mobile, desktop and web apps
+# [Crashnote](http://crashnote.com#java): Error tracking for mobile, desktop and web apps
 
 [crashnote.com](http://crashnote.com#java) is an online service that tracks errors in applications.
 
