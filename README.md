@@ -4,11 +4,20 @@
 
 This makes it easier to understand where problems are and helps you to fix bugs faster.
 
-To use the service for your Java-based apps, you just need to embed a small library: the notifier,
-which manages everything for you.
+The Java notifier is designed to work in all **Java Servlet applications** (even on AppEngine), by embedding a small library: the notifier.
+
+
+## Quick Guide
+
+1. sign up
+2. install notifier
+3. deploy and track errors
 
 
 ## General Features
+
+Each application platform has it's own specific library that leverages its unique features and
+obeys the according restrictions:
 
 - pure Java
 - works with JDK 1.5+
@@ -17,17 +26,6 @@ which manages everything for you.
 - works asynchronously by default
 - uses JSON format and GZIP compression
 - supports all major logging tools: JDK JUL, Log4j and Logback
-
-
-## Notifiers
-
-Each application platform has it's own specific library that leverages its unique features and
-obeys the according restrictions:
-
-* **[Servlet](https://github.com/crashnote/crashnote-java/master/servlet)**
-* **[App Engine](https://github.com/crashnote/crashnote-java/master/appengine)**
-* **Android** (coming soon)
-* **Desktop** (coming soon)
 
 
 # License
