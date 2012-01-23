@@ -7,7 +7,7 @@
 
     <groupId>com.crashnote</groupId>
     <artifactId>crashnote-appengine</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
     <packaging>jar</packaging>
 
     <name>Crashnote Appengine Module</name>
@@ -47,7 +47,7 @@
     <parent>
         <groupId>com.crashnote</groupId>
         <artifactId>parent</artifactId>
-        <version>0.0.3-SNAPSHOT</version>
+        <version>0.0.3</version>
         <relativePath>../</relativePath>
     </parent>
 
@@ -96,8 +96,18 @@
             <dependencies>
                 <dependency>
                     <groupId>com.crashnote</groupId>
+                    <artifactId>crashnote-core</artifactId>
+                    <version>0.0.3</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.crashnote</groupId>
+                    <artifactId>crashnote-logger</artifactId>
+                    <version>0.0.3</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.crashnote</groupId>
                     <artifactId>crashnote-servlet</artifactId>
-                    <version>0.0.3-SNAPSHOT</version>
+                    <version>0.0.3</version>
                 </dependency>
             </dependencies>
 
@@ -127,6 +137,26 @@
                             </sources>
                         </configuration>
                     </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jarsigner-plugin</artifactId>
+                        <version>1.2</version>
+                        <executions>
+                            <execution>
+                                <id>sign</id>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <keystore>../crashnote.key</keystore>
+                            <alias>crashnote</alias>
+                            <storepass>${gpg.passphrase}</storepass>
+                            <keypass>${gpg.passphrase}</keypass>
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -151,26 +181,6 @@
                         <artifactId>maven-deploy-plugin</artifactId>
                         <configuration>
                             <skip>false</skip>
-                        </configuration>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jarsigner-plugin</artifactId>
-                        <version>1.2</version>
-                        <executions>
-                            <execution>
-                                <id>sign</id>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <keystore>../crashnote.key</keystore>
-                            <alias>crashnote</alias>
-                            <storepass>${gpg.passphrase}</storepass>
-                            <keypass>${gpg.passphrase}</keypass>
                         </configuration>
                     </plugin>
                 </plugins>

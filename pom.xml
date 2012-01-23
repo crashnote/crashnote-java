@@ -8,7 +8,7 @@
     <groupId>com.crashnote</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
 
     <name>Crashnote Parent POM</name>
     <description>The base POM for all Crashnote modules.</description>
@@ -79,7 +79,7 @@
         <dependency>
             <groupId>com.crashnote</groupId>
             <artifactId>crashnote-test</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <version>0.0.3</version>
             <scope>test</scope>
         </dependency>
 
@@ -289,7 +289,7 @@
 
             <activation>
                 <property>
-                    <name>develop</name>
+                    <name>!gpg.passphrase</name>
                 </property>
             </activation>
         </profile>
@@ -299,7 +299,7 @@
 
             <activation>
                 <property>
-                    <name>!develop</name>
+                    <name>gpg.passphrase</name>
                 </property>
             </activation>
 
