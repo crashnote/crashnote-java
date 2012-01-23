@@ -45,9 +45,8 @@ public class ServletReporter<C extends ServletConfig>
      * Before each request, start the internal log session
      *
      * @param request  the HTTP request
-     * @param response the HTTP response
      */
-    public void beforeRequest(final ServletRequest request, final ServletResponse response) {
+    public void beforeRequest(final ServletRequest request) {
         startSession();
     }
 

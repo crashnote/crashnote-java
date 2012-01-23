@@ -36,7 +36,7 @@ class ServletReporterSpec
     "Reporter" should {
 
         "start session before request" >> new Started() {
-            target.beforeRequest(null, null)
+            target.beforeRequest(null)
 
             expect {
                 one(m_session).clear()

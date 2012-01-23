@@ -16,12 +16,13 @@ package com.crashnote.servlet.test.unit
  * limitations under the License.
  */
 
+import javax.servlet._
 import com.crashnote.servlet.test.defs.MockSpec
 import com.crashnote.servlet.report.ServletReporter
 import com.crashnote.logger.helper.AutoLogConnector
 import com.crashnote.servlet.CrashnoteFilter
 import com.crashnote.servlet.test.defs.stubs.ConfigStub
-import javax.servlet._
+import com.crashnote.servlet.model.CustomServletResponse
 
 class CrashnoteFilterSpec
     extends MockSpec[CrashnoteFilter] {
@@ -31,7 +32,7 @@ class CrashnoteFilterSpec
     var m_connector: AutoLogConnector = _
 
     var m_request: ServletRequest = _
-    var m_response: ServletResponse = _
+    var m_response: CustomServletResponse = _
     var m_chain: FilterChain = _
 
     "Filter" should {
@@ -60,7 +61,7 @@ class CrashnoteFilterSpec
                 target.init(null)
                 target.doFilter(m_request, m_response, m_chain)
 
-                there was one(m_reporter).beforeRequest(m_request, m_response) then
+                there was one(m_reporter).beforeRequest(m_request) then
                     one(m_reporter).afterRequest(m_request, m_response)
             }
             "when an error occurs" >> new Mocked(ENABLED) {
@@ -70,7 +71,7 @@ class CrashnoteFilterSpec
                 target.init(null)
                 target.doFilter(m_request, m_response, m_chain) must throwA[ServletException]
 
-                there was one(m_reporter).beforeRequest(m_request, m_response) then
+                there was one(m_reporter).beforeRequest(m_request) then
                     one(m_reporter).uncaughtException(m_request, Thread.currentThread(), err) then
                     one(m_reporter).afterRequest(m_request, m_response)
             }
@@ -100,7 +101,7 @@ class CrashnoteFilterSpec
         m_reporter = mock[ServletReporter[C]]
         m_connector = mock[AutoLogConnector]
         m_request = mock[ServletRequest]
-        m_response = mock[ServletResponse]
+        m_response = mock[CustomServletResponse]
         m_chain = mock[FilterChain]
 
         m_conf = config

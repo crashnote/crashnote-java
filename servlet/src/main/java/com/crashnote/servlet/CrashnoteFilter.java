@@ -69,7 +69,7 @@ public class CrashnoteFilter
         } else {
             try {
                 // initialize reporting with current request
-                reporter.beforeRequest(request, response);
+                reporter.beforeRequest(request);
 
                 // proceed with filter chain...
                 chain.doFilter(request, response);
