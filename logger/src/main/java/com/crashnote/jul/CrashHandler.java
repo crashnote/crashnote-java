@@ -33,9 +33,9 @@ public class CrashHandler
     extends Handler implements ICrashAppender {
 
     private boolean started;
+    private Level logLevel = Level.INFO;
 
     private MDCAdapter mdc;
-
     private LoggerReporter<LoggerConfig> reporter;
 
     // config
@@ -86,20 +86,24 @@ public class CrashHandler
         return started;
     }
 
+    /**
+     * Set the minimum log level for the handler, so it does not accept records with lower level.
+     * Cannot use setLevel() from base class since it throws an AccessControlException on AppEngine.
+     */
     public void setLogLevel(final LogLevel lvl) {
         if (lvl == LogLevel.DEBUG)
-            setLevel(Level.FINE);
+            logLevel = Level.FINE;
         else if (lvl == LogLevel.INFO)
-            setLevel(Level.INFO);
+            logLevel = Level.INFO;
         else if (lvl == LogLevel.WARN)
-            setLevel(Level.WARNING);
+            logLevel = Level.WARNING;
         else
-            setLevel(Level.SEVERE);
+            logLevel = Level.SEVERE;
     }
 
     @Override
     public boolean isLoggable(final LogRecord record) {
-        return record.getLevel().intValue() >= getLevel().intValue() &&
+        return record.getLevel().intValue() >= logLevel.intValue() &&
             getReporter().doAcceptLog(record.getLoggerName());
     }
 
