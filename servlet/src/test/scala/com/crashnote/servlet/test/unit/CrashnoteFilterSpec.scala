@@ -22,7 +22,6 @@ import com.crashnote.servlet.report.ServletReporter
 import com.crashnote.logger.helper.AutoLogConnector
 import com.crashnote.servlet.CrashnoteFilter
 import com.crashnote.servlet.test.defs.stubs.ConfigStub
-import com.crashnote.servlet.model.CustomServletResponse
 
 class CrashnoteFilterSpec
     extends MockSpec[CrashnoteFilter] {
@@ -32,7 +31,7 @@ class CrashnoteFilterSpec
     var m_connector: AutoLogConnector = _
 
     var m_request: ServletRequest = _
-    var m_response: CustomServletResponse = _
+    var m_response: ServletResponse = _
     var m_chain: FilterChain = _
 
     "Filter" should {
@@ -101,7 +100,7 @@ class CrashnoteFilterSpec
         m_reporter = mock[ServletReporter[C]]
         m_connector = mock[AutoLogConnector]
         m_request = mock[ServletRequest]
-        m_response = mock[CustomServletResponse]
+        m_response = mock[ServletResponse]
         m_chain = mock[FilterChain]
 
         m_conf = config

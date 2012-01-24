@@ -6,5 +6,5 @@
 .idea/
 target/
 project/
-crashnote.key*
+About.java
 crashnote.gpg*

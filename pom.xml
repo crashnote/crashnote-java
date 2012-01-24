@@ -119,13 +119,6 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/About.java</include>
-                </includes>
-                <filtering>true</filtering>
-            </resource>
         </resources>
 
         <plugins>
@@ -263,6 +256,53 @@
                     </executions>
                 </plugin>
 
+                <!-- add version information to source -->
+                <plugin>
+                    <groupId>com.google.code.maven-replacer-plugin</groupId>
+                    <artifactId>maven-replacer-plugin</artifactId>
+                    <version>1.4.0</version>
+                    <executions>
+                        <execution>
+                            <phase>process-sources</phase>
+                            <goals>
+                                <goal>replace</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <file>src/main/resources/About.java.template</file>
+                        <outputFile>target/gen-src/com/crashnote/About.java</outputFile>
+                        <replacements>
+                            <replacement>
+                                <token>@name@</token>
+                                <value>${client-name}</value>
+                            </replacement>
+                            <replacement>
+                                <token>@version@</token>
+                                <value>${client-version}</value>
+                            </replacement>
+                            <replacement>
+                                <token>@timestampt@</token>
+                                <value>${maven.build.timestamp}</value>
+                            </replacement>
+                        </replacements>
+                    </configuration>
+                </plugin>
+
+                <!-- add module sources to create one big JAR -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>1.7</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>add-source</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
                 <!-- make OSGi-compatible (TODO) -->
                 <!--
                 <plugin>
@@ -288,9 +328,7 @@
             <id>develop</id>
 
             <activation>
-                <property>
-                    <name>!gpg.passphrase</name>
-                </property>
+                <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
 
@@ -318,6 +356,11 @@
                                     </goals>
                                 </execution>
                             </executions>
+                            <configuration>
+                                <sources>
+                                    <source>target/gen-src</source>
+                                </sources>
+                            </configuration>
                         </plugin>
                     </plugins>
                 </pluginManagement>

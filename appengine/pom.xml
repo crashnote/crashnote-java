@@ -93,6 +93,10 @@
         <profile>
             <id>develop</id>
 
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
             <dependencies>
                 <dependency>
                     <groupId>com.crashnote</groupId>
@@ -127,10 +131,16 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>com.google.code.maven-replacer-plugin</groupId>
+                        <artifactId>maven-replacer-plugin</artifactId>
+                    </plugin>
+
+                    <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
                         <configuration>
                             <sources>
+                                <source>target/gen-src</source>
                                 <source>../core/src/main/java</source>
                                 <source>../logger/src/main/java</source>
                                 <source>../servlet/src/main/java</source>

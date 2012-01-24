@@ -123,7 +123,7 @@ public class EnvCollector<C extends Config>
                 for (final String name : getSysUtil().getEnvKeys())
                     props.put(name, doFilter(name, envFilters) ? "#" : getSysUtil().getEnv(name));
             }
-            sysData.put("props", props);
+            sysData.putObj("props", props);
         }
         return sysData;
     }
