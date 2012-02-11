@@ -25,7 +25,7 @@ obeys the according restrictions:
 - single JAR, no dependencies
 - works asynchronously by default
 - uses JSON format and GZIP compression
-- supports all major logging tools: JDK JUL, Log4j and Logback
+- supports all major logging tools: JUL, Log4j and Logback
 
 
 # License
