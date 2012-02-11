@@ -35,7 +35,7 @@ public class AppengineEnvCollector<C extends Config>
         final DataObject appData = super.getAppData();
         {
             appData.put("id", getSysUtil().getProperty("com.google.appengine.application.id"));
-            appData.put("rev", getSysUtil().getProperty("com.google.appengine.application.version"));
+            appData.put("revision", getSysUtil().getProperty("com.google.appengine.application.version"));
         }
         return appData;
     }
@@ -44,7 +44,7 @@ public class AppengineEnvCollector<C extends Config>
     protected DataObject getRtData() {
         final DataObject rtData = super.getRtData();
         {
-            rtData.put("sdk", getSysUtil().getProperty("com.google.appengine.runtime.version"));
+            rtData.put("code", getSysUtil().getProperty("com.google.appengine.runtime.version"));
         }
         return rtData;
     }

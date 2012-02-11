@@ -46,9 +46,9 @@ class RequestCollectorSpec
             m_req.getParameter("userPassword") returns "secret"
 
             val res = target.collect(m_req)
-            res.get("mth") === "PUT"
+            res.get("method") === "PUT"
             res.get("url") === "http://test.com"
-            res.get("iph") === 6279231751978338320L
+            res.get("ip_hash") === 6279231751978338320L
             res.get("principal") === "admin"
 
             val params = res.get("param").asInstanceOf[DataObject]

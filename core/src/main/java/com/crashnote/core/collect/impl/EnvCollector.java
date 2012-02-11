@@ -59,9 +59,9 @@ public class EnvCollector<C extends Config>
             data.put("start", startTime);
 
             data.putObj("app", getAppData());
-            data.putObj("rt", getRtData());
-            data.putObj("sys", getSysData());
-            data.putObj("dev", getDevData());
+            data.putObj("runtime", getRtData());
+            data.putObj("system", getSysData());
+            data.putObj("device", getDevData());
         }
         return data;
     }
@@ -71,8 +71,8 @@ public class EnvCollector<C extends Config>
     protected DataObject getAppData() {
         final DataObject appData = createDataObj();
         {
-            appData.put("lang", "java");
-            appData.put("ver", appVersion);
+            appData.put("language", "java");
+            appData.put("version", appVersion);
             appData.put("mode", mode);
             appData.put("client", clientInfo);
         }
@@ -84,7 +84,7 @@ public class EnvCollector<C extends Config>
         {
             rtData.put("type", "jvm");
             rtData.put("name", getSysUtil().getRuntimeName());
-            rtData.put("ver", getSysUtil().getRuntimeVersion());
+            rtData.put("version", getSysUtil().getRuntimeVersion());
 
             // properties
             final DataObject props = createDataObj();
@@ -109,13 +109,13 @@ public class EnvCollector<C extends Config>
             sysData.put("name", getSysUtil().getHostName());
 
             // settings
-            sysData.put("tz", getSysUtil().getTimezoneId());
-            sysData.put("toff", getSysUtil().getTimezoneOffset());
-            sysData.put("lang", getSysUtil().getLanguage());
+            sysData.put("timezone", getSysUtil().getTimezoneId());
+            sysData.put("timezone_offset", getSysUtil().getTimezoneOffset());
+            //sysData.put("language", getSysUtil().getLanguage());
 
             // OS
-            sysData.put("os.n", getSysUtil().getOSName());
-            sysData.put("os.v", getSysUtil().getOSVersion());
+            sysData.put("os_name", getSysUtil().getOSName());
+            sysData.put("os_version", getSysUtil().getOSVersion());
 
             // environment properties
             final DataObject props = createDataObj();
@@ -135,8 +135,10 @@ public class EnvCollector<C extends Config>
             devData.put("cores", getSysUtil().getAvailableProcessors());
 
             // RAM
+            /*
             devData.put("ram", getSysUtil().getTotalMemorySize());
-            devData.put("ram.free", getSysUtil().getAvailableMemorySize());
+            devData.put("ram_free", getSysUtil().getAvailableMemorySize());
+            */
         }
         return devData;
     }

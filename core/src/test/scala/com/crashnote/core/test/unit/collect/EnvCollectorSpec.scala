@@ -36,37 +36,36 @@ class EnvCollectorSpec
             res.get("start") === 123456789L
 
             val app = res.get("app").asInstanceOf[DataObject]
-            app.get("lang") === "java"
-            app.get("ver") === "1.0"
+            app.get("language") === "java"
+            app.get("version") === "1.0"
             app.get("mode") === "dev"
             app.get("client") === "cn:1.0"
 
-            val rt = res.get("rt").asInstanceOf[DataObject]
+            val rt = res.get("runtime").asInstanceOf[DataObject]
             rt.get("type") === "jvm"
             rt.get("name") === "Java 1.6.0"
-            rt.get("ver") === "1.6.0"
+            rt.get("version") === "1.6.0"
             val rtProps = rt.get("props").asInstanceOf[DataObject]
             rtProps.get("prop1") === "value1"
             rtProps.get("prop2") === "value2"
 
-            val sys = res.get("sys").asInstanceOf[DataObject]
+            val sys = res.get("system").asInstanceOf[DataObject]
             sys.get("id") === 1984
             sys.get("ip") === "192.168.0.1"
             sys.get("name") === "My-PC"
-            sys.get("tz") === "Berlin"
-            sys.get("toff") === 60
-            sys.get("lang") === "en-US"
+            sys.get("timezone") === "Berlin"
+            sys.get("timezone_offset") === 60
             val sysProps = sys.get("props").asInstanceOf[DataObject]
             sysProps.size() === 2
             sysProps.get("instance", "small")
             sysProps.get("secret", "#")
-            sys.get("os.n") === "Windows"
-            sys.get("os.v") === "6.5"
+            sys.get("os_name") === "Windows"
+            sys.get("os_version") === "6.5"
 
-            val dev = res.get("dev").asInstanceOf[DataObject]
+            val dev = res.get("device").asInstanceOf[DataObject]
             dev.get("cores") === 2
-            dev.get("ram") === 128
-            dev.get("ram.free") === 64
+            //dev.get("ram") === 128
+            //dev.get("ram_free") === 64
         }
     }
 

@@ -39,10 +39,10 @@ class AppengineEnvCollectorSpec
 
             val app = res.get("app").asInstanceOf[DataObject]
             app.get("id") === "TEST"
-            app.get("rev") === "1.0"
+            app.get("revision") === "1.0"
 
-            val rt = res.get("rt").asInstanceOf[DataObject]
-            rt.get("sdk") === "2.0"
+            val rt = res.get("runtime").asInstanceOf[DataObject]
+            rt.get("code") === "2.0"
         }
     }
 

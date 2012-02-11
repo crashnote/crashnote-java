@@ -117,7 +117,7 @@ class ConfigFactorySpec
     def configure(config: C) = {
         m_conf = mock[C]
         m_conf.isEnabled returns true
-        m_conf.getKey returns "00000000-0000-0000-0000-000000000000"
+        m_conf.getKey returns "00000000000000000000000000000000"
         m_conf.getLogger(anyClass) returns new LogLog("")
 
         new ConfigFactoryStub(m_conf)

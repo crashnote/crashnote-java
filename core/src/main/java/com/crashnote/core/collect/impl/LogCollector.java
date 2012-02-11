@@ -65,11 +65,11 @@ public class LogCollector<C extends Config>
         final DataObject res = createDataObj();
         {
             // meta data
-            res.put("m", evt.getMessage());
-            res.put("t", evt.getTimeStamp());
-            res.put("pg", evt.getLoggerName());
-            res.put("th", evt.getThreadName());
-            res.put("l", evt.getLevel().toString());
+            res.put("time", evt.getTimeStamp());
+            res.put("message", evt.getMessage());
+            res.put("source", evt.getLoggerName());
+            res.put("thread", evt.getThreadName());
+            res.put("level", evt.getLevel().toString());
 
             final Object[] msgArgs = evt.getArgs();
             if (msgArgs != null && msgArgs.length > 0) {
@@ -86,13 +86,13 @@ public class LogCollector<C extends Config>
                     final DataObject context = createDataObj();
                     for (final Object key : ctx.keySet())
                         context.put(key.toString(), ctx.get(key).toString());
-                    res.putObj("ctx", context);
+                    res.putObj("context", context);
                 }
             }
 
             // exception data
             final Throwable th = evt.getThrowable();
-            if (th != null) res.putArr("excp", collectExcp(th));
+            if (th != null) res.putArr("exception", collectExcp(th));
         }
         return res;
     }

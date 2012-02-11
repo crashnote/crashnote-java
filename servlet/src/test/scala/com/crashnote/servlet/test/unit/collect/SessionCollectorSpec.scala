@@ -41,7 +41,7 @@ class SessionCollectorSpec
 
             val res = target.collect(m_req)
             res.get("id") === "666"
-            res.get("t") === 123456789L
+            res.get("started") === 123456789L
 
             val sesData = res.get("data").asInstanceOf[DataObject]
             sesData.get("name") === "test"

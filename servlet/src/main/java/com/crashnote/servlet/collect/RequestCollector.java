@@ -66,11 +66,11 @@ public class RequestCollector
     protected DataObject collectReqBase(final HttpServletRequest req) {
         final DataObject data = createDataObj();
         {
-            data.put("mth", req.getMethod());
+            data.put("method", req.getMethod());
             data.put("url", req.getRequestURL().toString());
 
             final String userIP = req.getRemoteAddr();
-            data.put("iph", ChksumUtil.hash(userIP));
+            data.put("ip_hash", ChksumUtil.hash(userIP));
 
             final Principal principal = req.getUserPrincipal();
             if (principal != null) data.put("principal", principal.getName());

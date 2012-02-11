@@ -68,7 +68,7 @@ public class ServletReporter<C extends ServletConfig>
      * @param response the HTTP response
      */
     public void afterRequest(final ServletRequest request, final ServletResponse response) {
-        put("req", reqCollector.collect((HttpServletRequest) request));
+        put("request", reqCollector.collect((HttpServletRequest) request));
         put("session", sesCollector.collect((HttpServletRequest) request));
 
         endSession();

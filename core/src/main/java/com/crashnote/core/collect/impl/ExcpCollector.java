@@ -41,8 +41,8 @@ public class ExcpCollector<C extends Config>
             while (t != null) {
                 final DataObject excp = createDataObj();
                 {
-                    excp.put("msg", simplifyMessage(t.getMessage()));
-                    excp.put("cls", t.getClass().getName());
+                    excp.put("message", simplifyMessage(t.getMessage()));
+                    excp.put("class", t.getClass().getName());
 
                     final DataArray trace = createDataArr();
                     for (final StackTraceElement element : t.getStackTrace()) {
