@@ -15,7 +15,7 @@
         </init-param>
         <init-param>
             <param-name>key</param-name>
-            <param-value>00000000-0000-0000-0000-000000000000</param-value>
+            <param-value>00000000000000000000000000000000</param-value>
         </init-param>
         <init-param>
             <param-name>host</param-name>

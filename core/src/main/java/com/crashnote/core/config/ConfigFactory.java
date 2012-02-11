@@ -159,9 +159,9 @@ public class ConfigFactory<C extends Config> {
                 "The API Key is missing, please login to the web app under [" + LIB_URL_BOARD + "], " +
                     "browse to your app and consult the 'Install' instructions.");
 
-        } else if (key.length() != 36 || key.charAt(8) != '-' || key.charAt(13) != '-' || key.charAt(18) != '-' || key.charAt(23) != '-')
+        } else if (key.length() != 32)
             throw new IllegalArgumentException(
-                "The API Key appears to be invalid (it should be 36 characters long with 4 dashes), " +
+                "The API Key appears to be invalid (it should be 32 characters long with 4 dashes), " +
                     "please login to the web app under [" + LIB_URL_BOARD + "], " +
                     "browse to your app and consult the 'Install' instructions.");
     }

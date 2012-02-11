@@ -7,7 +7,7 @@
     </appender>
 
     <appender name="CLOUD" class="CloudAppender">
-        <key>00000000-0000-0000-0000-000000000000</key>
+        <key>00000000000000000000000000000000</key>
         <host>127.0.0.3</host>
         <enabled>true</enabled>
     </appender>

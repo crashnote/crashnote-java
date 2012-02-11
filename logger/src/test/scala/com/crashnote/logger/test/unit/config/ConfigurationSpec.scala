@@ -77,7 +77,7 @@ class ConfigurationSpec extends UnitSpec {
                 getConfig("  ").validate() must throwA[IllegalArgumentException]
                 getConfig(null).validate() must throwA[IllegalArgumentException]
                 getConfig("0000000-00000-0000-0000-000000000000").validate() must throwA[IllegalArgumentException]
-                getConfig("00000000-0000-0000-0000-00000000000").validate() must throwA[IllegalArgumentException]
+                getConfig("0000000000000000000000000000000").validate() must throwA[IllegalArgumentException]
             }
 
             "skip when disabled" >> {
@@ -160,6 +160,6 @@ class ConfigurationSpec extends UnitSpec {
     }
 
     private def getValidConfig =
-        getConfig("00000000-0000-0000-0000-000000000000")
+        getConfig("00000000000000000000000000000000")
 }
 */
