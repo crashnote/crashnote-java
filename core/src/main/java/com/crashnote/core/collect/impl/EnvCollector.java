@@ -56,7 +56,7 @@ public class EnvCollector<C extends Config>
     public DataObject collect() {
         final DataObject data = createDataObj();
         {
-            data.put("start", startTime);
+            data.put("started", startTime);
 
             data.putObj("app", getAppData());
             data.putObj("runtime", getRtData());

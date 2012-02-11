@@ -33,7 +33,7 @@ class EnvCollectorSpec
         "collect" >> new Mocked() {
 
             val res = target.collect()
-            res.get("start") === 123456789L
+            res.get("started") === 123456789L
 
             val app = res.get("app").asInstanceOf[DataObject]
             app.get("language") === "java"
