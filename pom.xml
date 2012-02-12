@@ -8,7 +8,7 @@
     <groupId>com.crashnote</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.3</version>
+    <version>0.1</version>
 
     <name>Crashnote Parent POM</name>
     <description>The base POM for all Crashnote modules.</description>
@@ -79,7 +79,7 @@
         <dependency>
             <groupId>com.crashnote</groupId>
             <artifactId>crashnote-test</artifactId>
-            <version>0.0.3</version>
+            <version>0.1</version>
             <scope>test</scope>
         </dependency>
 
@@ -282,7 +282,7 @@
                                 <value>${client-version}</value>
                             </replacement>
                             <replacement>
-                                <token>@timestampt@</token>
+                                <token>@timestamp@</token>
                                 <value>${maven.build.timestamp}</value>
                             </replacement>
                         </replacements>
