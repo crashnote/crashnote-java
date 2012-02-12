@@ -21,6 +21,9 @@ import com.google.appengine.api.utils.SystemProperty;
 
 import java.net.*;
 
+/**
+ * Customized {@link SystemUtil} that adds methods to interact with the AppEngine API.
+ */
 public class AppengineUtil extends SystemUtil {
 
     // INTERFACE ==================================================================================

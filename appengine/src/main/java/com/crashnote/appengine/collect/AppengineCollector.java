@@ -15,9 +15,9 @@
  */
 package com.crashnote.appengine.collect;
 
-import com.crashnote.appengine.collect.impl.AppengineEnvCollector;
+import com.crashnote.appengine.collect.impl.*;
 import com.crashnote.core.collect.Collector;
-import com.crashnote.core.collect.impl.EnvCollector;
+import com.crashnote.core.collect.impl.*;
 import com.crashnote.core.config.Config;
 
 public class AppengineCollector<C extends Config>
@@ -34,5 +34,10 @@ public class AppengineCollector<C extends Config>
     @Override
     protected EnvCollector<C> createEnvColl(final C config) {
         return new AppengineEnvCollector<C>(config);
+    }
+
+    @Override
+    protected LogCollector<C> createLogColl(final C config) {
+        return new AppengineLogCollector<C>(config);
     }
 }

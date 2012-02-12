@@ -19,6 +19,10 @@ import com.crashnote.core.collect.impl.EnvCollector;
 import com.crashnote.core.config.Config;
 import com.crashnote.core.model.data.DataObject;
 
+/**
+ * Customized {@link EnvCollector} that collects additional information from the AppEngine
+ * platform (like application id).
+ */
 public class AppengineEnvCollector<C extends Config>
     extends EnvCollector<C> {
 

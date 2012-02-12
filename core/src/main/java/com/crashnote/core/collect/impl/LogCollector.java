@@ -53,15 +53,9 @@ public class LogCollector<C extends Config>
         return new ExcpCollector<C>(config);
     }
 
-    // INTERNALS ==================================================================================
+    // SHARED =====================================================================================
 
-    private DataArray collectEvts(final List<LogEvt<?>> evts) {
-        final DataArray data = createDataArr();
-        for (final LogEvt evt : evts) data.add(collectEvt(evt));
-        return data;
-    }
-
-    private DataObject collectEvt(final LogEvt evt) {
+    protected DataObject collectEvt(final LogEvt evt) {
         final DataObject res = createDataObj();
         {
             // meta data
@@ -76,7 +70,7 @@ public class LogCollector<C extends Config>
                 final DataArray args = createDataArr();
                 for (final Object obj : msgArgs)
                     args.add(obj.toString());
-                res.putArr("msg_args", args);
+                res.putArr("message_args", args);
             }
 
             // context
@@ -95,6 +89,14 @@ public class LogCollector<C extends Config>
             if (th != null) res.putArr("exception", collectExcp(th));
         }
         return res;
+    }
+
+    // INTERNALS ==================================================================================
+
+    private DataArray collectEvts(final List<LogEvt<?>> evts) {
+        final DataArray data = createDataArr();
+        for (final LogEvt evt : evts) data.add(collectEvt(evt));
+        return data;
     }
 
     private DataArray collectExcp(final Throwable th) {
