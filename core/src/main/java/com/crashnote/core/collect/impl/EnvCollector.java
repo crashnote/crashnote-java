@@ -71,9 +71,8 @@ public class EnvCollector<C extends Config>
     protected DataObject getAppData() {
         final DataObject appData = createDataObj();
         {
-            appData.put("language", "java");
-            appData.put("version", appVersion);
             appData.put("mode", mode);
+            appData.put("version", appVersion);
             appData.put("client", clientInfo);
         }
         return appData;
@@ -82,7 +81,7 @@ public class EnvCollector<C extends Config>
     protected DataObject getRtData() {
         final DataObject rtData = createDataObj();
         {
-            rtData.put("type", "jvm");
+            rtData.put("type", "java");
             rtData.put("name", getSysUtil().getRuntimeName());
             rtData.put("version", getSysUtil().getRuntimeVersion());
 
@@ -143,9 +142,7 @@ public class EnvCollector<C extends Config>
         return devData;
     }
 
-    // INTERNALS ==================================================================================
-
-    private boolean ignoreProperty(final String name, final String value) {
+    protected boolean ignoreProperty(final String name, final String value) {
         return value.length() > 255
             || name.startsWith("java.")
             || name.startsWith("user.")

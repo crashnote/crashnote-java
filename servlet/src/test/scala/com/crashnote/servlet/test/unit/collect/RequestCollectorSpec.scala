@@ -51,12 +51,12 @@ class RequestCollectorSpec
             res.get("ip_hash") === 6279231751978338320L
             res.get("principal") === "admin"
 
-            val params = res.get("param").asInstanceOf[DataObject]
+            val params = res.get("parameters").asInstanceOf[DataObject]
             params.size() === 2
             params.get("userName") === "stephen"
             params.get("userPassword") === "#"
 
-            val headers = res.get("header").asInstanceOf[DataObject]
+            val headers = res.get("headers").asInstanceOf[DataObject]
             headers.size() === 2
             headers.get("User-Agent") === "Googlebot"
             val acceptHeader = headers.get("Accept").asInstanceOf[DataArray]

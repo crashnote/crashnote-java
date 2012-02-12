@@ -22,6 +22,10 @@ import com.crashnote.core.model.data.DataObject;
 public class AppengineEnvCollector<C extends Config>
     extends EnvCollector<C> {
 
+    private static final String PROP_APP_ID = "com.google.appengine.application.id";
+    private static final String PROP_APP_VER = "com.google.appengine.application.version";
+    private static final String PROP_RT_CODE = "com.google.appengine.runtime.version";
+
     // SETUP ======================================================================================
 
     public AppengineEnvCollector(final C config) {
@@ -34,8 +38,8 @@ public class AppengineEnvCollector<C extends Config>
     protected DataObject getAppData() {
         final DataObject appData = super.getAppData();
         {
-            appData.put("id", getSysUtil().getProperty("com.google.appengine.application.id"));
-            appData.put("revision", getSysUtil().getProperty("com.google.appengine.application.version"));
+            appData.put("id", getSysUtil().getProperty(PROP_APP_ID));
+            appData.put("revision", getSysUtil().getProperty(PROP_APP_VER));
         }
         return appData;
     }
@@ -44,9 +48,16 @@ public class AppengineEnvCollector<C extends Config>
     protected DataObject getRtData() {
         final DataObject rtData = super.getRtData();
         {
-            rtData.put("code", getSysUtil().getProperty("com.google.appengine.runtime.version"));
+            rtData.put("code", getSysUtil().getProperty(PROP_RT_CODE));
         }
         return rtData;
     }
 
+    // SHARED =====================================================================================
+
+    @Override
+    protected boolean ignoreProperty(final String name, final String value) {
+        return PROP_APP_ID.equals(name) || PROP_APP_VER.equals(name) || PROP_RT_CODE.equals(name)
+            || super.ignoreProperty(name, value);
+    }
 }

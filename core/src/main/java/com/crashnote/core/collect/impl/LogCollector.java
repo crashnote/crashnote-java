@@ -76,7 +76,7 @@ public class LogCollector<C extends Config>
                 final DataArray args = createDataArr();
                 for (final Object obj : msgArgs)
                     args.add(obj.toString());
-                res.putArr("args", args);
+                res.putArr("msg_args", args);
             }
 
             // context

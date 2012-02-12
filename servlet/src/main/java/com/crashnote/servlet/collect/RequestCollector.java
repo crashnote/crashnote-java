@@ -54,8 +54,8 @@ public class RequestCollector
     public DataObject collect(final HttpServletRequest req) {
         final DataObject data = collectReqBase(req);
         {
-            data.putObj("param", collectReqParams(req));
-            if (!skipHeaderData) data.putObj("header", collectReqHeader(req));
+            data.putObj("parameters", collectReqParams(req));
+            if (!skipHeaderData) data.putObj("headers", collectReqHeader(req));
 
         }
         return data;
