@@ -50,8 +50,8 @@ class ServletConfigFactorySpec
                     expect {
                         one(m_conf).setSkipHeaderData("true")
                         one(m_conf).setSkipSessionData("true")
-                        one(m_conf).addRequestFilters("abc")
-                        one(m_conf).addRequestFilters("xyz")
+                        one(m_conf).addRequestFilter("abc")
+                        one(m_conf).addRequestFilter("xyz")
                     }
                 }
                 "system" >> new Mocked() {
@@ -61,8 +61,8 @@ class ServletConfigFactorySpec
                     expect {
                         one(m_conf).setSkipHeaderData("false")
                         one(m_conf).setSkipSessionData("false")
-                        one(m_conf).addRequestFilters("def")
-                        one(m_conf).addRequestFilters("uvw")
+                        one(m_conf).addRequestFilter("def")
+                        one(m_conf).addRequestFilter("uvw")
                     }
                 }
                 "from filter first" >> new Mocked() {

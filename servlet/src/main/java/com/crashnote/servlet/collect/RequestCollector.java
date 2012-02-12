@@ -35,6 +35,7 @@ public class RequestCollector
 
     protected String[] requestFilters;
     protected boolean skipHeaderData;
+    protected boolean skipRemoteIP;
 
     // SETUP ======================================================================================
 
@@ -45,6 +46,7 @@ public class RequestCollector
 
     public void updateConfig(final ServletConfig config) {
         config.addListener(this);
+        this.skipRemoteIP = config.getSkipRemoteIP();
         this.requestFilters = config.getRequestFilters();
         this.skipHeaderData = config.getSkipHeaderData();
     }
@@ -56,7 +58,6 @@ public class RequestCollector
         {
             data.putObj("parameters", collectReqParams(req));
             if (!skipHeaderData) data.putObj("headers", collectReqHeader(req));
-
         }
         return data;
     }
@@ -69,8 +70,11 @@ public class RequestCollector
             data.put("method", req.getMethod());
             data.put("url", req.getRequestURL().toString());
 
-            final String userIP = req.getRemoteAddr();
-            data.put("ip_hash", ChksumUtil.hash(userIP));
+            final String remoteIP = req.getRemoteAddr();
+            if (skipRemoteIP) // skip? -> include hashed version
+                data.put("ip_hash", ChksumUtil.hash(remoteIP));
+            else
+                data.put("ip", remoteIP);
 
             final Principal principal = req.getUserPrincipal();
             if (principal != null) data.put("principal", principal.getName());

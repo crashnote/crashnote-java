@@ -27,9 +27,10 @@ public class ServletConfig<C extends ServletConfig<C>>
     /**
      * Property names of servlet-specific settings
      */
+    public static final String PROP_REP_IP_SKIP = "skipRemoteIP";
     public static final String PROP_REP_REQ_FILTER = "requestFilter";
-    public static final String PROP_REP_HEADER_SKIP = "skipRequestHeader";
-    public static final String PROP_REP_SESSION_SKIP = "skipRequestSession";
+    public static final String PROP_REP_HEADER_SKIP = "skipHeaders";
+    public static final String PROP_REP_SESSION_SKIP = "skipSession";
 
     // SETUP ======================================================================================
 
@@ -41,10 +42,13 @@ public class ServletConfig<C extends ServletConfig<C>>
     public void initDefaults() {
         super.initDefaults();
 
-        // filter common request parameter by default
-        addRequestFilters(".*password.*");
-        addRequestFilters(".*creditcard.*");
-        addRequestFilters(".*secret.*");
+        // filter common request parameters by default
+        addRequestFilter(".*password.*");
+        addRequestFilter(".*creditcard.*");
+        addRequestFilter(".*secret.*");
+
+        // skip remote IPs (might not be legal in some countries, force user to enable manually)
+        setSkipRemoteIP(true);
 
         // DO report header data
         setSkipHeaderData(false);
@@ -70,6 +74,10 @@ public class ServletConfig<C extends ServletConfig<C>>
         return getBoolSetting(PROP_REP_HEADER_SKIP);
     }
 
+    public boolean getSkipRemoteIP() {
+        return getBoolSetting(PROP_REP_IP_SKIP);
+    }
+
     public String[] getRequestFilters() {
         final String filters = getStringSetting(PROP_REP_REQ_FILTER);
         if (filters == null || filters.length() == 0) return new String[0];
@@ -78,7 +86,7 @@ public class ServletConfig<C extends ServletConfig<C>>
 
     // SET+ =======================================================================================
 
-    public void addRequestFilters(final String filter) {
+    public void addRequestFilter(final String filter) {
         String filters = getStringSetting(PROP_REP_REQ_FILTER);
         if (filters == null || filters.length() == 0) filters = filter;
         else filters += ":" + filter;
@@ -93,6 +101,14 @@ public class ServletConfig<C extends ServletConfig<C>>
 
     public void setSkipSessionData(final String skip) {
         addBoolSetting(PROP_REP_SESSION_SKIP, skip);
+    }
+
+    public void setSkipRemoteIP(final boolean skip) {
+        addSetting(PROP_REP_IP_SKIP, skip);
+    }
+
+    public void setSkipRemoteIP(final String skip) {
+        addBoolSetting(PROP_REP_IP_SKIP, skip);
     }
 
     public void setSkipHeaderData(final boolean skip) {
