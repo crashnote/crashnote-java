@@ -73,7 +73,7 @@ public class Collector<C extends Config>
             if (logs.size() == 1)
                 data.putObj("log", log_c.collect(logs.get(0)));
             else
-                data.putArr("logs", log_c.collect(logs));
+                data.putArr("log", log_c.collect(logs));
 
             // ctx
             final DataObject ctx = createDataObj();
