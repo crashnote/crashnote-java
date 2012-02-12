@@ -54,7 +54,7 @@ public class ServletReporter<C extends ServletConfig>
      * In case of an uncaught exception, process it
      *
      * @param request the HTTP request
-     * @param t       the thread where the error occured
+     * @param t       the thread where the error occurred
      * @param th      the exception details
      */
     public void uncaughtException(final ServletRequest request, final Thread t, final Throwable th) {
