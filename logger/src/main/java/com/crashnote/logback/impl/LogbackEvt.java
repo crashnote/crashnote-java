@@ -52,7 +52,7 @@ public class LogbackEvt
 
     @Override
     public String getMessage() {
-        final Object message = event.getMessage();
+        final Object message = event.getFormattedMessage();
         return ((message != null) ? message.toString() : null);
     }
 
