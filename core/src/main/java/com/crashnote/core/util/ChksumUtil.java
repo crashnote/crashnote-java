@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) - http://code.google.com/p/rabinfingerprint/
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

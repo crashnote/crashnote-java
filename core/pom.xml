@@ -67,6 +67,7 @@
                             <excludes>
                                 <exclude>**/build/json/**/*.java</exclude>
                                 <exclude>**/BoundedList.java</exclude>
+                                <exclude>**/ChksumUtil.java</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
