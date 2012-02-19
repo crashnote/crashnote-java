@@ -64,7 +64,7 @@ public class ServletConfigFactory<C extends ServletConfig>
         config.setSkipSessionData(getProperty(props, ServletConfig.PROP_REP_SESSION_SKIP, strict));
         config.setSkipRemoteIP(getProperty(props, ServletConfig.PROP_REP_IP_SKIP, strict));
 
-        final String filterProp = getProperty(props, ServletConfig.PROP_REP_REQ_FILTER, strict);
+        final String filterProp = getProperty(props, ServletConfig.PROP_REP_REQ_PARAM_FILTER, strict);
         if (filterProp != null) {
             final String[] filters = filterProp.split(",");
             for (final String filter : filters) {

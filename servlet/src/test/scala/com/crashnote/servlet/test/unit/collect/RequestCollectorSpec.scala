@@ -30,6 +30,7 @@ class RequestCollectorSpec
 
         "collect" >> new Mocked() {
 
+            // MOCK
             val m_req = mock[HttpServletRequest]
 
             m_req.getMethod returns "PUT"
@@ -41,10 +42,12 @@ class RequestCollectorSpec
             m_req.getHeaders("Accept").asInstanceOf[javaEnum[String]] returns toEnum(List("text/plain", "text/html"))
             m_req.getHeaders("User-Agent").asInstanceOf[javaEnum[String]] returns toEnum(List("Googlebot"))
 
-            m_req.getParameterNames.asInstanceOf[javaEnum[String]] returns toEnum(List("userName", "userPassword"))
+            m_req.getParameterNames.asInstanceOf[javaEnum[String]] returns toEnum(List("userName", "userPassword", "userBio"))
             m_req.getParameter("userName") returns "stephen"
             m_req.getParameter("userPassword") returns "secret"
+            m_req.getParameter("userBio") returns "I was born in Berlin, Germany and grew up..."
 
+            // VERIFY
             val res = target.collect(m_req)
             res.get("method") === "PUT"
             res.get("url") === "http://test.com"
@@ -55,6 +58,7 @@ class RequestCollectorSpec
             params.size() === 2
             params.get("userName") === "stephen"
             params.get("userPassword") === "#"
+            params.get("userBio") === "I was born"
 
             val headers = res.get("headers").asInstanceOf[DataObject]
             headers.size() === 2
@@ -67,6 +71,7 @@ class RequestCollectorSpec
 
     def configure(config: C) = {
         config.getRequestFilters returns Array(".*password.*")
+        config.getMaxRequestParameterSize returns 10
         config.getSkipHeaderData returns false
         config.getBuilder returns new Builder
 

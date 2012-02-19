@@ -28,7 +28,10 @@ public class ServletConfig<C extends ServletConfig<C>>
      * Property names of servlet-specific settings
      */
     public static final String PROP_REP_IP_SKIP = "skipRemoteIP";
-    public static final String PROP_REP_REQ_FILTER = "requestFilter";
+
+    public static final String PROP_REP_REQ_PARAM_SIZE = "maxRequestDataSize";
+    public static final String PROP_REP_REQ_PARAM_FILTER = "requestParameterFilter";
+
     public static final String PROP_REP_HEADER_SKIP = "skipHeaders";
     public static final String PROP_REP_SESSION_SKIP = "skipSession";
 
@@ -55,6 +58,9 @@ public class ServletConfig<C extends ServletConfig<C>>
 
         // DO NOT report session data (yet)
         setSkipSessionData(true);
+
+        // limit request parameters in size to prevent huge POST data to be included
+        setMaxRequestParameterSize(250);
     }
 
     // INTERFACE ==================================================================================
@@ -78,8 +84,12 @@ public class ServletConfig<C extends ServletConfig<C>>
         return getBoolSetting(PROP_REP_IP_SKIP);
     }
 
+    public int getMaxRequestParameterSize() {
+        return getIntSetting(PROP_REP_REQ_PARAM_SIZE);
+    }
+
     public String[] getRequestFilters() {
-        final String filters = getStringSetting(PROP_REP_REQ_FILTER);
+        final String filters = getStringSetting(PROP_REP_REQ_PARAM_FILTER);
         if (filters == null || filters.length() == 0) return new String[0];
         else return filters.split(":");
     }
@@ -87,10 +97,10 @@ public class ServletConfig<C extends ServletConfig<C>>
     // SET+ =======================================================================================
 
     public void addRequestFilter(final String filter) {
-        String filters = getStringSetting(PROP_REP_REQ_FILTER);
+        String filters = getStringSetting(PROP_REP_REQ_PARAM_FILTER);
         if (filters == null || filters.length() == 0) filters = filter;
         else filters += ":" + filter;
-        addSetting(PROP_REP_REQ_FILTER, filters.toLowerCase());
+        addSetting(PROP_REP_REQ_PARAM_FILTER, filters.toLowerCase());
     }
 
     // SET ========================================================================================
@@ -117,5 +127,13 @@ public class ServletConfig<C extends ServletConfig<C>>
 
     public void setSkipHeaderData(final String skip) {
         addBoolSetting(PROP_REP_HEADER_SKIP, skip);
+    }
+
+    public void setMaxRequestParameterSize(final int size) {
+        addSetting(PROP_REP_REQ_PARAM_SIZE, size);
+    }
+
+    public void setMaxRequestParameterSize(final String size) {
+        addIntSetting(PROP_REP_REQ_PARAM_SIZE, size);
     }
 }

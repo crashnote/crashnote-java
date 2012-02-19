@@ -36,6 +36,7 @@ public class RequestCollector
     protected String[] requestFilters;
     protected boolean skipHeaderData;
     protected boolean skipRemoteIP;
+    protected int maxRequestParamSize;
 
     // SETUP ======================================================================================
 
@@ -49,6 +50,7 @@ public class RequestCollector
         this.skipRemoteIP = config.getSkipRemoteIP();
         this.requestFilters = config.getRequestFilters();
         this.skipHeaderData = config.getSkipHeaderData();
+        this.maxRequestParamSize = config.getMaxRequestParameterSize();
     }
 
     // INTERFACE ==================================================================================
@@ -78,6 +80,9 @@ public class RequestCollector
 
             final Principal principal = req.getUserPrincipal();
             if (principal != null) data.put("principal", principal.getName());
+
+            //final int size = req.getContentLength();
+            //if (size != -1) data.put("size", size);
         }
         return data;
     }
@@ -108,7 +113,13 @@ public class RequestCollector
             final Enumeration names = req.getParameterNames();
             while (names.hasMoreElements()) {
                 final String name = names.nextElement().toString();
-                data.put(name, doFilter(name, requestFilters) ? "#" : req.getParameter(name));
+                final String value = doFilter(name, requestFilters) ? "#" : req.getParameter(name);
+
+                if (value.length() > maxRequestParamSize) { // limit data size
+                    data.put(name, value.substring(0, maxRequestParamSize));
+                } else {
+                    data.put(name, value);
+                }
             }
         }
         return data;
