@@ -137,7 +137,7 @@
         <!-- Dependency Versions -->
         <junit-version>4.10</junit-version>
         <scala-version>2.9.1</scala-version>
-        <specs-version>1.8</specs-version>
+        <specs-version>1.8.1</specs-version>
         <mockito-version>1.9.0</mockito-version>
         <powermock-version>1.4.10</powermock-version>
 
