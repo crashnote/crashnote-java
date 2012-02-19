@@ -33,13 +33,14 @@ class AppengineEnvCollectorSpec
         "collect" >> new Mocked() {
             m_appengineUtil.getProperty("com.google.appengine.application.id") returns "TEST"
             m_appengineUtil.getProperty("com.google.appengine.application.version") returns "1.0"
-            m_appengineUtil.getProperty("com.google.appengine.runtime.version") returns "2.0"
+            m_appengineUtil.getProperty("com.google.appengine.runtime.version") returns "1-5a.356739207231993312"
 
             val res = target.collect()
 
             val app = res.get("app").asInstanceOf[DataObject]
             app.get("id") === "TEST"
-            app.get("revision") === "1.0"
+            app.get("version") === "1-5a"
+            app.get("build") === "356739207231993312"
 
             val rt = res.get("runtime").asInstanceOf[DataObject]
             rt.get("code") === "2.0"

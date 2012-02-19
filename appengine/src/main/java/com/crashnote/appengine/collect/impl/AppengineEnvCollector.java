@@ -43,7 +43,12 @@ public class AppengineEnvCollector<C extends Config>
         final DataObject appData = super.getAppData();
         {
             appData.put("id", getSysUtil().getProperty(PROP_APP_ID));
-            appData.put("revision", getSysUtil().getProperty(PROP_APP_VER));
+
+            final String[] v = getSysUtil().getProperty(PROP_APP_VER).split(".");
+            if (v.length == 2) {
+                appData.put("version", v[0]);
+                appData.put("build", v[1]);
+            }
         }
         return appData;
     }
