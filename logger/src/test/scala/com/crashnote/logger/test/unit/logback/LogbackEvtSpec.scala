@@ -48,7 +48,7 @@ class LogbackEvtSpec
                 val err = new RuntimeException("oops")
                 val m_evt = mock[ILoggingEvent]
                 m_evt.getLevel returns Level.WARN
-                m_evt.getMessage returns "oops"
+                m_evt.getFormattedMessage returns "oops"
                 val m_thproxy = mock[ThrowableProxy]
                 m_evt.getThrowableProxy returns m_thproxy
                 m_thproxy.getThrowable returns err
