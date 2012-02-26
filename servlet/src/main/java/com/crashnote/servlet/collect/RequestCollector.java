@@ -124,5 +124,4 @@ public class RequestCollector
         }
         return data;
     }
-
 }

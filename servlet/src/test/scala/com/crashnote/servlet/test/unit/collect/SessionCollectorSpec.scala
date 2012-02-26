@@ -7,7 +7,7 @@ package com.crashnote.servlet.test.unit.collect
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,32 +27,45 @@ class SessionCollectorSpec
 
     "Session Collector" should {
 
-        "collect" >> new Mocked() {
+        "collect" >> {
 
-            val m_ses = mock[HttpSession]
-            m_ses.getId returns "666"
-            m_ses.getCreationTime returns 123456789L
-            m_ses.getAttributeNames.asInstanceOf[javaEnum[String]] returns toEnum(List("name", "email"))
-            m_ses.getAttribute("name") returns "test"
-            m_ses.getAttribute("email") returns "test@test.com"
+            "default" >> new Mocked() {
+                val res = target.collect(mockReq())
+                res.get("id") === "666"
+                res.get("started") === 123456789L
+                res.get("data") === null
+            }
 
-            val m_req = mock[HttpServletRequest]
-            m_req.getSession returns m_ses
-
-            val res = target.collect(m_req)
-            res.get("id") === "666"
-            res.get("started") === 123456789L
-
-            val sesData = res.get("data").asInstanceOf[DataObject]
-            sesData.get("name") === "test"
-            sesData.get("email") === "test@test.com"
+            "with session" >> new Mocked(WITH_SESSION) {
+                val res = target.collect(mockReq())
+                val sesData = res.get("data").asInstanceOf[DataObject]
+                sesData.get("name") === "test"
+                sesData.get("email") === "test@test.com"
+            }
         }
     }
 
-    def configure(config: C) = {
-        config.getSkipSessionData returns false
+    override def mockConfig(): C = {
+        val config = super.mockConfig()
+        config.getSkipSessionData returns true
         config.getBuilder returns new Builder
-
-        new SessionCollector(config)
     }
+
+    def configure(config: C) =
+        new SessionCollector(config)
+
+    def mockReq() = {
+        val m_ses = mock[HttpSession]
+        m_ses.getId returns "666"
+        m_ses.getCreationTime returns 123456789L
+        m_ses.getAttributeNames.asInstanceOf[javaEnum[String]] returns toEnum(List("name", "email"))
+        m_ses.getAttribute("name") returns "test"
+        m_ses.getAttribute("email") returns "test@test.com"
+
+        val res = mock[HttpServletRequest]
+        res.getSession returns m_ses
+        res
+    }
+
+    lazy val WITH_SESSION = (config: C) => config.getSkipHeaderData returns false
 }

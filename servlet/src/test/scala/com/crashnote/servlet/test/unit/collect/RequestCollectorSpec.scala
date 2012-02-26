@@ -28,53 +28,74 @@ class RequestCollectorSpec
 
     "Request Collector" should {
 
-        "collect" >> new Mocked() {
+        "collect" >> {
 
-            // MOCK
-            val m_req = mock[HttpServletRequest]
+            "by default" >> new Mocked() {
+                val res = target.collect(mockReq())
+                res.get("method") === "PUT"
+                res.get("url") === "http://test.com"
+                res.get("ip_hash") === 6279231751978338320L
+                res.get("principal") === "admin"
 
-            m_req.getMethod returns "PUT"
-            m_req.getRequestURL returns new StringBuffer("http://test.com")
-            m_req.getRemoteAddr returns "127.0.0.1"
-            m_req.getUserPrincipal returns new UnixPrincipal("admin")
+                val params = res.get("parameters").asInstanceOf[DataObject]
+                params.size() === 2
+                params.get("userName") === "stephen"
+                params.get("userPassword") === "#"
+                params.get("userBio") === "I was born"
 
-            m_req.getHeaderNames.asInstanceOf[javaEnum[String]] returns toEnum(List("User-Agent", "Accept"))
-            m_req.getHeaders("Accept").asInstanceOf[javaEnum[String]] returns toEnum(List("text/plain", "text/html"))
-            m_req.getHeaders("User-Agent").asInstanceOf[javaEnum[String]] returns toEnum(List("Googlebot"))
+                val headers = res.get("headers").asInstanceOf[DataObject]
+                headers.size() === 2
+                headers.get("User-Agent") === "Googlebot"
+                val acceptHeader = headers.get("Accept").asInstanceOf[DataArray]
+                acceptHeader.get(0) === "text/plain"
+                acceptHeader.get(1) === "text/html"
+            }
 
-            m_req.getParameterNames.asInstanceOf[javaEnum[String]] returns toEnum(List("userName", "userPassword", "userBio"))
-            m_req.getParameter("userName") returns "stephen"
-            m_req.getParameter("userPassword") returns "secret"
-            m_req.getParameter("userBio") returns "I was born in Berlin, Germany and grew up..."
+            "IP address" >> new Mocked(WITH_IP) {
+                val res = target.collect(mockReq())
+                res.get("ip") === "127.0.0.1"
+            }
 
-            // VERIFY
-            val res = target.collect(m_req)
-            res.get("method") === "PUT"
-            res.get("url") === "http://test.com"
-            res.get("ip_hash") === 6279231751978338320L
-            res.get("principal") === "admin"
-
-            val params = res.get("parameters").asInstanceOf[DataObject]
-            params.size() === 2
-            params.get("userName") === "stephen"
-            params.get("userPassword") === "#"
-            params.get("userBio") === "I was born"
-
-            val headers = res.get("headers").asInstanceOf[DataObject]
-            headers.size() === 2
-            headers.get("User-Agent") === "Googlebot"
-            val acceptHeader = headers.get("Accept").asInstanceOf[DataArray]
-            acceptHeader.get(0) === "text/plain"
-            acceptHeader.get(1) === "text/html"
+            "no header data" >> new Mocked(WITHOUT_HEADER) {
+                val res = target.collect(mockReq())
+                res.get("headers") === null
+            }
         }
     }
 
-    def configure(config: C) = {
+    override def mockConfig(): C = {
+        val config = super.mockConfig()
         config.getRequestFilters returns Array(".*password.*")
         config.getMaxRequestParameterSize returns 10
         config.getSkipHeaderData returns false
+        config.getSkipRemoteIP returns true
         config.getBuilder returns new Builder
-
-        new RequestCollector(config)
+        config
     }
+
+    def configure(config: C) =
+        new RequestCollector(config)
+
+    def mockReq() = {
+        val res = mock[HttpServletRequest]
+
+        res.getMethod returns "PUT"
+        res.getRequestURL returns new StringBuffer("http://test.com")
+        res.getRemoteAddr returns "127.0.0.1"
+        res.getUserPrincipal returns new UnixPrincipal("admin")
+
+        res.getHeaderNames.asInstanceOf[javaEnum[String]] returns toEnum(List("User-Agent", "Accept"))
+        res.getHeaders("Accept").asInstanceOf[javaEnum[String]] returns toEnum(List("text/plain", "text/html"))
+        res.getHeaders("User-Agent").asInstanceOf[javaEnum[String]] returns toEnum(List("Googlebot"))
+
+        res.getParameterNames.asInstanceOf[javaEnum[String]] returns toEnum(List("userName", "userPassword", "userBio"))
+        res.getParameter("userName") returns "stephen"
+        res.getParameter("userPassword") returns "secret"
+        res.getParameter("userBio") returns "I was born in Berlin, Germany and grew up..."
+
+        res
+    }
+
+    lazy val WITH_IP = (config: C) => config.getSkipRemoteIP returns true
+    lazy val WITHOUT_HEADER = (config: C) => config.getSkipHeaderData returns false
 }
