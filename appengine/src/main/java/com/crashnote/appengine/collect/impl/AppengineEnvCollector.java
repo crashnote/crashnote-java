@@ -15,6 +15,7 @@
  */
 package com.crashnote.appengine.collect.impl;
 
+import com.crashnote.appengine.util.AppengineUtil;
 import com.crashnote.core.collect.impl.EnvCollector;
 import com.crashnote.core.config.Config;
 import com.crashnote.core.model.data.DataObject;
@@ -28,7 +29,9 @@ public class AppengineEnvCollector<C extends Config>
 
     private static final String PROP_APP_ID = "com.google.appengine.application.id";
     private static final String PROP_APP_VER = "com.google.appengine.application.version";
-    private static final String PROP_RT_CODE = "com.google.appengine.runtime.version";
+
+    private static final String PROP_RT_VER = "com.google.appengine.runtime.version";
+    private static final String PROP_RT_MODE = "com.google.appengine.runtime.environment";
 
     // SETUP ======================================================================================
 
@@ -44,10 +47,19 @@ public class AppengineEnvCollector<C extends Config>
         {
             appData.put("id", getSysUtil().getProperty(PROP_APP_ID));
 
+            if (appData.get("profile") == null)
+                appData.put("profile", getSysUtil().getProperty(PROP_RT_MODE));
+
             final String[] v = getSysUtil().getProperty(PROP_APP_VER).split(".");
             if (v.length == 2) {
-                appData.put("version", v[0]);
-                appData.put("build", v[1]);
+                if (appData.get("version") == null)
+                    appData.put("version", v[0]);
+
+                if (appData.get("build") == null)
+                    if (getSysUtil().isRunningOnAppengine())
+                        appData.put("build", v[1]);
+                    else
+                        appData.put("build", getStartTime());
             }
         }
         return appData;
@@ -57,7 +69,7 @@ public class AppengineEnvCollector<C extends Config>
     protected DataObject getRtData() {
         final DataObject rtData = super.getRtData();
         {
-            rtData.put("code", getSysUtil().getProperty(PROP_RT_CODE));
+            rtData.put("code", getSysUtil().getProperty(PROP_RT_VER));
         }
         return rtData;
     }
@@ -65,8 +77,12 @@ public class AppengineEnvCollector<C extends Config>
     // SHARED =====================================================================================
 
     @Override
+    protected AppengineUtil getSysUtil() {
+        return (AppengineUtil) super.getSysUtil();
+    }
+
+    @Override
     protected boolean ignoreProperty(final String name, final String value) {
-        return PROP_APP_ID.equals(name) || PROP_APP_VER.equals(name) || PROP_RT_CODE.equals(name)
-            || super.ignoreProperty(name, value);
+        return name.startsWith("com.google.appengine") || super.ignoreProperty(name, value);
     }
 }

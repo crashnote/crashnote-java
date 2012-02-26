@@ -33,6 +33,7 @@ class AppengineEnvCollectorSpec
         "collect" >> new Mocked() {
             m_appengineUtil.getProperty("com.google.appengine.application.id") returns "TEST"
             m_appengineUtil.getProperty("com.google.appengine.application.version") returns "1.0"
+            m_appengineUtil.getProperty("com.google.appengine.runtime.environment") returns "Production"
             m_appengineUtil.getProperty("com.google.appengine.runtime.version") returns "1-5a.356739207231993312"
 
             val res = target.collect()
