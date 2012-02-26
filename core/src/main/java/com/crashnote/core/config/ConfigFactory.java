@@ -80,16 +80,20 @@ public class ConfigFactory<C extends Config> {
 
     protected void applyProperties(final Properties props, final boolean strict) {
         config.setClientInfo(getProperty(props, PROP_CLIENT, strict));
-        setKey(getProperty(props, PROP_API_KEY, strict));
+
+        setEnabled(getProperty(props, PROP_ENABLED, strict));
         setDebug(getProperty(props, PROP_DEBUG, strict));
         setSync(getProperty(props, PROP_SYNC, strict));
-        setEnabled(getProperty(props, PROP_ENABLED, strict));
+
+        setBuild(getProperty(props, PROP_APP_BUILD, strict));
+        setProfile(getProperty(props, PROP_APP_PROFILE, strict));
+        setVersion(getProperty(props, PROP_APP_VERSION, strict));
+
+        setKey(getProperty(props, PROP_API_KEY, strict));
         setHost(getProperty(props, PROP_API_HOST, strict));
-        setMode(getProperty(props, PROP_APP_MODE, strict));
         setSecure(getProperty(props, PROP_API_SECURE, strict));
         setPort(getProperty(props, PROP_API_PORT, strict));
         setSslPort(getProperty(props, PROP_API_PORT_SSL, strict));
-        setAppVersion(getProperty(props, PROP_APP_VERSION, strict));
         setConnectionTimeout(getProperty(props, PROP_API_TIMEOUT, strict));
     }
 
@@ -192,12 +196,16 @@ public class ConfigFactory<C extends Config> {
         config.setPort(port);
     }
 
-    public void setMode(final String mode) {
-        config.setAppMode(mode);
+    public void setProfile(final String profile) {
+        config.setProfile(profile);
     }
 
-    public void setAppVersion(final String appVersion) {
-        config.setAppVersion(appVersion);
+    public void setBuild(final String build) {
+        config.setBuild(build);
+    }
+
+    public void setVersion(final String version) {
+        config.setVersion(version);
     }
 
     public void setSecure(final Boolean secure) {

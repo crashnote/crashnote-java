@@ -36,13 +36,12 @@ class EnvCollectorSpec
             res.get("started") === 123456789L
 
             val app = res.get("app").asInstanceOf[DataObject]
-            app.get("language") === "java"
             app.get("version") === "1.0"
-            app.get("mode") === "dev"
+            app.get("profile") === "dev"
             app.get("client") === "cn:1.0"
 
             val rt = res.get("runtime").asInstanceOf[DataObject]
-            rt.get("type") === "jvm"
+            rt.get("type") === "java"
             rt.get("name") === "Java 1.6.0"
             rt.get("version") === "1.6.0"
             val rtProps = rt.get("props").asInstanceOf[DataObject]
@@ -70,9 +69,9 @@ class EnvCollectorSpec
     }
 
     def configure(config: C) = {
-        config.getAppMode returns "dev"
+        config.getAppProfile returns "dev"
         config.getStartTime returns 123456789L
-        config.getAppVersion returns "1.0"
+        config.getVersion returns "1.0"
         config.getClientInfo returns "cn:1.0"
         config.getEnvironmentFilters returns Array("secret")
 

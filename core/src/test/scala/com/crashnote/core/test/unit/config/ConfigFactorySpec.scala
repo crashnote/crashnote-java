@@ -38,7 +38,7 @@ class ConfigFactorySpec
             "sYnc" -> "true", "crashnote.SYNC" -> "false",
             "secure" -> "true", "crashnote_seCure" -> "false",
             "SSLPORT" -> "66", "crashnote-sslPort" -> "99",
-            "appversion" -> "1.0", "crashnote.APPVersion" -> "1.0.0"
+            "version" -> "1.0", "crashnote.VERsion" -> "1.0.0"
         ))
 
         "create configuration instance" >> {
@@ -52,7 +52,7 @@ class ConfigFactorySpec
                         one(m_conf).setSync("true")
                         one(m_conf).setSecure("true")
                         one(m_conf).setSSLPort("66")
-                        one(m_conf).setAppVersion("1.0")
+                        one(m_conf).setVersion("1.0")
                     }
                 }
                 "environment" >> new Mocked() {
@@ -64,7 +64,7 @@ class ConfigFactorySpec
                         one(m_conf).setSync("false")
                         one(m_conf).setSecure("false")
                         one(m_conf).setSSLPort("99")
-                        one(m_conf).setAppVersion("1.0.0")
+                        one(m_conf).setVersion("1.0.0")
                     }
                 }
                 "system" >> new Mocked() {
@@ -76,7 +76,7 @@ class ConfigFactorySpec
                         one(m_conf).setSync("false")
                         one(m_conf).setSecure("false")
                         one(m_conf).setSSLPort("99")
-                        one(m_conf).setAppVersion("1.0.0")
+                        one(m_conf).setVersion("1.0.0")
                     }
                 }
                 "file first, then environment and system last" >> new Mocked() {

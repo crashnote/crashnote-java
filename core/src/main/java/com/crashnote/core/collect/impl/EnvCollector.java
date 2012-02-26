@@ -29,9 +29,10 @@ public class EnvCollector<C extends Config>
     extends BaseCollector<C> implements IConfigChangeListener<C> {
 
     // configuration settings:
-    private String mode;
     private Long startTime;
-    private String appVersion;
+    private String profile;
+    private String version;
+    private String build;
     private String clientInfo;
     private String[] envFilters;
 
@@ -44,8 +45,9 @@ public class EnvCollector<C extends Config>
 
     public void updateConfig(final C config) {
         config.addListener(this);
-        this.mode = config.getAppMode();
-        this.appVersion = config.getAppVersion();
+        this.profile = config.getAppProfile();
+        this.build = config.getAppBuild();
+        this.version = config.getVersion();
         this.startTime = config.getStartTime();
         this.clientInfo = config.getClientInfo();
         this.envFilters = config.getEnvironmentFilters();
@@ -71,8 +73,9 @@ public class EnvCollector<C extends Config>
     protected DataObject getAppData() {
         final DataObject appData = createDataObj();
         {
-            appData.put("mode", mode);
-            appData.put("version", appVersion);
+            appData.put("build", build);
+            appData.put("profile", profile);
+            appData.put("version", version);
             appData.put("client", clientInfo);
         }
         return appData;
@@ -154,4 +157,9 @@ public class EnvCollector<C extends Config>
             || name.endsWith(".separator");
     }
 
+    // GET / SET ==================================================================================
+
+    public Long getStartTime() {
+        return startTime;
+    }
 }

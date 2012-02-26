@@ -36,6 +36,8 @@ import java.util.*;
  */
 public class Config<C extends Config<C>> {
 
+    private final LogLog logger;
+    
     /**
      * default prefix for the libraries properties (e.g. in command line)
      */
@@ -87,8 +89,9 @@ public class Config<C extends Config<C>> {
     public static final String PROP_CLIENT = "client";
 
     public static final String PROP_APP_TYPE = "appType";
-    public static final String PROP_APP_VERSION = "appVersion";
-    public static final String PROP_APP_MODE = "appMode";
+    public static final String PROP_APP_VERSION = "version";
+    public static final String PROP_APP_BUILD = "build";
+    public static final String PROP_APP_PROFILE = "profile";
 
     public static final String PROP_REP_LEVEL = "logLevel";
     public static final String PROP_REP_ENV_FILTER = "envFilter";
@@ -105,6 +108,7 @@ public class Config<C extends Config<C>> {
     public Config() {
         uid = IDUtil.createUID();
         parser = new ConfigParser();
+        logger = getLogger(this.getClass());
         startTime = new Date().getTime();
         initDefaults();
     }
@@ -224,13 +228,16 @@ public class Config<C extends Config<C>> {
     // ==== WRITE
 
     protected void addSetting(final String name, final String value) {
-        if (value != null)
+        if (value != null) {
+            logger.debug("added config setting '{}' with value '{}'", name, value);
             settings.put(getConfigKey(name), parser.parseString(value));
+        }
     }
 
     protected void addIntSetting(final String name, final String value) {
         if (value != null)
             try {
+                logger.debug("added config setting '{}' with value '{}'", name, value);
                 addSetting(name, parser.parseInt(value));
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException("parameter [" + name + "] is not a valid number: '" + value + "'", e);
@@ -238,21 +245,27 @@ public class Config<C extends Config<C>> {
     }
 
     protected void addSetting(final String name, final int value) {
+        logger.debug("added config setting '{}' with value '{}'", name, value);
         settings.put(getConfigKey(name), value);
     }
 
     protected void addBoolSetting(final String name, final String value) {
-        if (value != null)
+        if (value != null) {
+            logger.debug("added config setting '{}' with value '{}'", name, value);
             addSetting(name, parser.parseBool(value));
+        }
     }
 
     protected void addSetting(final String name, final boolean value) {
+        logger.debug("added config setting '{}' with value '{}'", name, value);
         settings.put(getConfigKey(name), value);
     }
 
     protected void addSetting(final String name, final Object value) {
-        if (value != null)
+        if (value != null) {
+            logger.debug("added config setting '{}' with value '{}'", name, value);
             settings.put(getConfigKey(name), value);
+        }
     }
 
     // ==== READ
@@ -291,7 +304,9 @@ public class Config<C extends Config<C>> {
     // GET+ =======================================================================================
 
     public String getPostUrl() {
-        return getBaseUrl() + "/err?key=" + getKey();
+        final String url = getBaseUrl() + "/err?key=" + getKey();
+        logger.debug("resolved POST target URL: ", url);
+        return url;
     }
 
     public LogLevel getLogLevel() {
@@ -329,11 +344,15 @@ public class Config<C extends Config<C>> {
         else return filters.split(":");
     }
 
-    public String getAppMode() {
-        return getStringSetting(PROP_APP_MODE);
+    public String getAppProfile() {
+        return getStringSetting(PROP_APP_PROFILE);
     }
 
-    public String getAppVersion() {
+    public String getVersion() {
+        return getStringSetting(PROP_APP_VERSION);
+    }
+
+    public String getAppBuild() {
         return getStringSetting(PROP_APP_VERSION);
     }
 
@@ -400,8 +419,12 @@ public class Config<C extends Config<C>> {
         addBoolSetting(PROP_API_SECURE, secure);
     }
 
-    public void setAppMode(final String mode) {
-        addSetting(PROP_APP_MODE, mode);
+    public void setProfile(final String profile) {
+        addSetting(PROP_APP_PROFILE, profile);
+    }
+
+    public void setBuild(final String build) {
+        addSetting(PROP_APP_BUILD, build);
     }
 
     public void setAppType(final ApplicationType type) {
@@ -444,8 +467,8 @@ public class Config<C extends Config<C>> {
         addBoolSetting(PROP_DEBUG, debug);
     }
 
-    public void setAppVersion(final String appVersion) {
-        addSetting(PROP_APP_VERSION, appVersion);
+    public void setVersion(final String version) {
+        addSetting(PROP_APP_VERSION, version);
     }
 
     public void setConnectionTimeout(final String timeout) {

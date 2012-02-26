@@ -46,10 +46,10 @@ class LogCollectorSpec
             log1.get("time") === 123456789L
             log1.get("source") === "com.example"
             log1.get("thread") === "main"
-            log1.get("level") === "C"
+            log1.get("level") === "CRASH"
             log1.get("exception") !== null
 
-            val logArgs = log1.get("msg_args").asInstanceOf[DataArray]
+            val logArgs = log1.get("message_args").asInstanceOf[DataArray]
             logArgs.get(0) === "abc"
             logArgs.get(1) === "xyz"
 
