@@ -25,13 +25,7 @@ class LogLevelSpec
     "Log Level" should {
 
         "convert to String" >> {
-
             val lvlStrs = LogLevel.values().map(_.toString).toSeq
-
-            "must be one-character long" >> {
-                ((_: String) must have length (1)).forall(lvlStrs)
-            }
-
             "must be unique" >> {
                 lvlStrs === lvlStrs.distinct
             }

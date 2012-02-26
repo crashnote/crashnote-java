@@ -49,11 +49,6 @@ public enum LogLevel {
         return (this.lvl >= l.lvl);
     }
 
-    @Override
-    public String toString() {
-        return super.toString().substring(0, 1);
-    }
-
     public static LogLevel getMinLevel(final LogLevel lvl1, final LogLevel lvl2) {
         return (lvl1.getLvl() > lvl2.getLvl()) ? lvl1 : lvl2;
     }
