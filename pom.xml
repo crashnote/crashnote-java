@@ -263,7 +263,7 @@
                     <version>1.4.0</version>
                     <executions>
                         <execution>
-                            <phase>process-sources</phase>
+                            <phase>generate-sources</phase>
                             <goals>
                                 <goal>replace</goal>
                             </goals>

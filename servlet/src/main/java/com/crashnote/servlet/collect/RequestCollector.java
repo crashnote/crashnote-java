@@ -80,9 +80,6 @@ public class RequestCollector
 
             final Principal principal = req.getUserPrincipal();
             if (principal != null) data.put("principal", principal.getName());
-
-            //final int size = req.getContentLength();
-            //if (size != -1) data.put("size", size);
         }
         return data;
     }

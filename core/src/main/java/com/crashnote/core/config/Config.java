@@ -305,7 +305,7 @@ public class Config<C extends Config<C>> {
 
     public String getPostUrl() {
         final String url = getBaseUrl() + "/err?key=" + getKey();
-        logger.debug("resolved POST target URL: ", url);
+        logger.debug("resolved POST target URL: {}", url);
         return url;
     }
 
@@ -352,7 +352,7 @@ public class Config<C extends Config<C>> {
         return getStringSetting(PROP_APP_VERSION);
     }
 
-    public String getAppBuild() {
+    public String getBuild() {
         return getStringSetting(PROP_APP_VERSION);
     }
 

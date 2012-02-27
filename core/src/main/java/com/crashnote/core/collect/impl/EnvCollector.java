@@ -46,7 +46,7 @@ public class EnvCollector<C extends Config>
     public void updateConfig(final C config) {
         config.addListener(this);
         this.profile = config.getAppProfile();
-        this.build = config.getAppBuild();
+        this.build = config.getBuild();
         this.version = config.getVersion();
         this.startTime = config.getStartTime();
         this.clientInfo = config.getClientInfo();

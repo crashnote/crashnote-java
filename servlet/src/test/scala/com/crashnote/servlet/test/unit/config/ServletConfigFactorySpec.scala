@@ -34,16 +34,16 @@ class ServletConfigFactorySpec
     var m_filterConf: FilterConfig = _
 
     val props = toProps(Map(
-        "skipRequestHeader" -> "true", "crashnote.skipRequestHeader" -> "false",
-        "skipRequestSession" -> "true", "crashnote-skipRequestSession" -> "false",
-        "requestFilter" -> "abc,xyz", "crashnote_requestFilter" -> "def,uvw",
+        "skipHeaders" -> "true", "crashnote.skipHeaders" -> "false",
+        "skipSession" -> "true", "crashnote-skipSession" -> "false",
+        "requestParameterFilter" -> "abc,xyz", "crashnote_requestParameterFilter" -> "def,uvw",
         "port" -> "1"
     ))
 
     "Servlet Config Factory" should {
 
         "create configuration instance" >> {
-            "by reading from" >> {
+            "by reading properties from" >> {
                 "filter" >> new Mocked() {
                     target.get()
 

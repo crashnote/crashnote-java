@@ -50,7 +50,7 @@ public class AppengineEnvCollector<C extends Config>
             if (appData.get("profile") == null)
                 appData.put("profile", getSysUtil().getProperty(PROP_RT_MODE));
 
-            final String[] v = getSysUtil().getProperty(PROP_APP_VER).split(".");
+            final String[] v = getSysUtil().getProperty(PROP_APP_VER).split("\\.");
             if (v.length == 2) {
                 if (appData.get("version") == null)
                     appData.put("version", v[0]);

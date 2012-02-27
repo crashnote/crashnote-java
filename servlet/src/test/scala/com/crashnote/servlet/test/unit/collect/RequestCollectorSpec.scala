@@ -38,7 +38,7 @@ class RequestCollectorSpec
                 res.get("principal") === "admin"
 
                 val params = res.get("parameters").asInstanceOf[DataObject]
-                params.size() === 2
+                params.size() === 3
                 params.get("userName") === "stephen"
                 params.get("userPassword") === "#"
                 params.get("userBio") === "I was born"
@@ -96,6 +96,6 @@ class RequestCollectorSpec
         res
     }
 
-    lazy val WITH_IP = (config: C) => config.getSkipRemoteIP returns true
-    lazy val WITHOUT_HEADER = (config: C) => config.getSkipHeaderData returns false
+    lazy val WITH_IP = (config: C) => config.getSkipRemoteIP returns false
+    lazy val WITHOUT_HEADER = (config: C) => config.getSkipHeaderData returns true
 }
