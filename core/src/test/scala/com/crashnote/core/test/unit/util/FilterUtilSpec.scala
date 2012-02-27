@@ -1,5 +1,3 @@
-package com.crashnote.core.test.unit.util
-
 /**
  * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
  *
@@ -15,6 +13,7 @@ package com.crashnote.core.test.unit.util
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.crashnote.core.test.unit.util
 
 import com.crashnote.test.defs.UnitSpec
 import com.crashnote.core.util.FilterUtil

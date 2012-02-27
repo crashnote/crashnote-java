@@ -1,5 +1,3 @@
-package com.crashnote.appengine.test.unit.send
-
 /**
  * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
  *
@@ -15,6 +13,7 @@ package com.crashnote.appengine.test.unit.send
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.crashnote.appengine.test.unit.send
 
 import com.crashnote.appengine.config.AppengineConfig
 import com.crashnote.appengine.test.defs.MockSpec

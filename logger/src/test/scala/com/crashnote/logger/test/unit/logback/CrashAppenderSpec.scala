@@ -1,5 +1,3 @@
-package com.crashnote.logger.test.unit.logback
-
 /**
  * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
  *
@@ -15,6 +13,7 @@ package com.crashnote.logger.test.unit.logback
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.crashnote.logger.test.unit.logback
 
 import com.crashnote.logger.test.defs._
 import com.crashnote.logback.CrashAppender

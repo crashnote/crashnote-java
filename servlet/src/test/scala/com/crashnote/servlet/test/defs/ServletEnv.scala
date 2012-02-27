@@ -1,5 +1,3 @@
-package com.crashnote.servlet.test.defs
-
 /**
  * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
  *
@@ -15,6 +13,7 @@ package com.crashnote.servlet.test.defs
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.crashnote.servlet.test.defs
 
 import com.crashnote.core.log.LogLog
 import com.crashnote.test.defs.BaseMockSpec

@@ -1,5 +1,3 @@
-package com.crashnote.core.test.unit.report.processor
-
 /**
  * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
  *
@@ -15,6 +13,7 @@ package com.crashnote.core.test.unit.report.processor
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.crashnote.core.test.unit.report.processor
 
 import java.util.concurrent._
 import com.crashnote.core.report.impl.processor.impl.AsyncProcessor

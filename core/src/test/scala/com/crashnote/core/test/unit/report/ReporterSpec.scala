@@ -1,5 +1,3 @@
-package com.crashnote.core.test.unit.report
-
 /**
  * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
  *
@@ -15,6 +13,7 @@ package com.crashnote.core.test.unit.report
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.crashnote.core.test.unit.report
 
 import com.crashnote.core.report.Reporter
 import com.crashnote.core.test.defs.MockSpec

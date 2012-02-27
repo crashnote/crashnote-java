@@ -1,5 +1,3 @@
-package com.crashnote.servlet.test.func
-
 /**
  * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
  *
@@ -15,6 +13,7 @@ package com.crashnote.servlet.test.func
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.crashnote.servlet.test.func
 
 import java.io._
 import java.util.Date
