@@ -63,6 +63,7 @@ public class ServletConfigFactory<C extends ServletConfig>
         config.setSkipRemoteIP(getProperty(props, ServletConfig.PROP_REP_IP_SKIP, strict));
         config.setSkipHeaderData(getProperty(props, ServletConfig.PROP_REP_HEADER_SKIP, strict));
         config.setSkipSessionData(getProperty(props, ServletConfig.PROP_REP_SESSION_SKIP, strict));
+        config.setIgnoreLocalRequests(getProperty(props, ServletConfig.PROP_REP_REQ_IGNORE_LOCAL, strict));
         config.setMaxRequestParameterSize(getProperty(props, ServletConfig.PROP_REP_REQ_PARAM_SIZE, strict));
 
         final String filterProp = getProperty(props, ServletConfig.PROP_REP_REQ_PARAM_FILTER, strict);

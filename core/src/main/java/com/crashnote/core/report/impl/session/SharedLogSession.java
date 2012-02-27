@@ -75,7 +75,7 @@ public class SharedLogSession
         heap.clear();
     }
 
-    public boolean hasEvents() {
+    public boolean isEmpty() {
         return !heap.isEmpty();
     }
 

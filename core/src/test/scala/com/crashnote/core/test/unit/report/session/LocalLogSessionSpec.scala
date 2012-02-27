@@ -78,8 +78,8 @@ class LocalLogSessionSpec
                     there was one(m_session).clearEvents
                 }
                 "has" >> new Mocked() {
-                    target.hasEvents
-                    there was one(m_session).hasEvents
+                    target.isEmpty
+                    there was one(m_session).isEmpty
                 }
             }
         }

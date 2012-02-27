@@ -35,6 +35,8 @@ class ServletConfigFactorySpec
     val props = toProps(Map(
         "skipHeaders" -> "true", "crashnote.skipHeaders" -> "false",
         "skipSession" -> "true", "crashnote-skipSession" -> "false",
+        "maxRequestDataSize" -> "42", "crashnote_maxRequestDataSize" -> "69",
+        "ignoreLocalRequests" -> "true", "crashnote.ignoreLocalRequests" -> "false",
         "requestParameterFilter" -> "abc,xyz", "crashnote_requestParameterFilter" -> "def,uvw",
         "port" -> "1"
     ))
@@ -47,6 +49,8 @@ class ServletConfigFactorySpec
                     target.get()
 
                     expect {
+                        one(m_conf).setMaxRequestParameterSize("42")
+                        one(m_conf).setIgnoreLocalRequests("true")
                         one(m_conf).setSkipHeaderData("true")
                         one(m_conf).setSkipSessionData("true")
                         one(m_conf).addRequestFilter("abc")
@@ -58,6 +62,8 @@ class ServletConfigFactorySpec
                     target.get()
 
                     expect {
+                        one(m_conf).setMaxRequestParameterSize("69")
+                        one(m_conf).setIgnoreLocalRequests("false")
                         one(m_conf).setSkipHeaderData("false")
                         one(m_conf).setSkipSessionData("false")
                         one(m_conf).addRequestFilter("def")

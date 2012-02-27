@@ -44,7 +44,7 @@ class ServletReporterSpec
 
         "handle uncaught exception - but do NOT flush session" >> new Started() {
             val req = mock[HttpServletRequest]
-            m_session.hasEvents returns true
+            m_session.isEmpty returns false
             target.uncaughtException(req, Thread.currentThread(), new RuntimeException("oops"))
 
             expect {

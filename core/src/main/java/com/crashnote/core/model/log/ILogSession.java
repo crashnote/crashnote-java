@@ -37,7 +37,7 @@ public interface ILogSession {
 
     void clearEvents();
 
-    boolean hasEvents();
+    boolean isEmpty();
 
 
     // ==== CONTEXT

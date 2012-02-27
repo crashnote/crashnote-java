@@ -26,16 +26,16 @@ class SharedLogSessionSpec
 
         "manage events" >> {
             val s = new SharedLogSession
-            s.hasEvents === false
+            s.isEmpty === true
 
             val evt = newLogEvt()
             s.addEvent(evt)
 
-            s.hasEvents === true
+            s.isEmpty === false
             s.getEvents !== null
 
             s.clearEvents()
-            s.hasEvents === false
+            s.isEmpty === true
         }
         "manage context" >> {
             val s = new SharedLogSession
@@ -61,12 +61,12 @@ class SharedLogSessionSpec
             s.putCtx("test", "data")
             s.addEvent(newLogEvt())
 
-            s.hasEvents === true
+            s.isEmpty === false
             s.hasContext === true
 
             s.clear()
 
-            s.hasEvents === false
+            s.isEmpty === true
             s.hasContext === false
         }
     }

@@ -22,7 +22,7 @@ import com.crashnote.servlet.report.ServletReporter;
  * Customized {@link LoggerConfig} for dealing with servlet environments.
  */
 public class ServletConfig<C extends ServletConfig<C>>
-    extends LoggerConfig<C> {
+        extends LoggerConfig<C> {
 
     /**
      * Property names of servlet-specific settings
@@ -30,6 +30,7 @@ public class ServletConfig<C extends ServletConfig<C>>
     public static final String PROP_REP_IP_SKIP = "skipRemoteIP";
 
     public static final String PROP_REP_REQ_PARAM_SIZE = "maxRequestDataSize";
+    public static final String PROP_REP_REQ_IGNORE_LOCAL = "ignoreLocalRequests";
     public static final String PROP_REP_REQ_PARAM_FILTER = "requestParameterFilter";
 
     public static final String PROP_REP_HEADER_SKIP = "skipHeaders";
@@ -44,6 +45,9 @@ public class ServletConfig<C extends ServletConfig<C>>
     @Override
     public void initDefaults() {
         super.initDefaults();
+
+        // DO ignore requests made from local machine
+        setIgnoreLocalRequests(true);
 
         // filter common request parameters by default
         addRequestFilter(".*password.*");
@@ -76,6 +80,10 @@ public class ServletConfig<C extends ServletConfig<C>>
         return getBoolSetting(PROP_REP_SESSION_SKIP);
     }
 
+    public boolean getIgnoreLocalRequests() {
+        return getBoolSetting(PROP_REP_REQ_IGNORE_LOCAL);
+    }
+
     public boolean getSkipHeaderData() {
         return getBoolSetting(PROP_REP_HEADER_SKIP);
     }
@@ -104,6 +112,14 @@ public class ServletConfig<C extends ServletConfig<C>>
     }
 
     // SET ========================================================================================
+
+    public void setIgnoreLocalRequests(final boolean skip) {
+        addSetting(PROP_REP_REQ_IGNORE_LOCAL, skip);
+    }
+
+    public void setIgnoreLocalRequests(final String skip) {
+        addSetting(PROP_REP_REQ_IGNORE_LOCAL, skip);
+    }
 
     public void setSkipSessionData(final boolean skip) {
         addSetting(PROP_REP_SESSION_SKIP, skip);

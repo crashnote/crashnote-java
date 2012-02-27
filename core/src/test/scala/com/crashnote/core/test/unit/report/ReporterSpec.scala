@@ -45,7 +45,7 @@ class ReporterSpec
                 target.isStarted === true
             }
             "with 1 stop" >> new Started(ENABLED) {
-                m_session.hasEvents returns true
+                m_session.isEmpty returns false
                 target.stop()
                 target.stop()
 
@@ -122,7 +122,7 @@ class ReporterSpec
 
         "report log event" >> {
             "when operable" >> new Started(ENABLED) {
-                m_session.hasEvents returns true
+                m_session.isEmpty returns false
                 val evt = newLogEvt()
                 target.reportLog(evt)
                 expect {
@@ -143,7 +143,7 @@ class ReporterSpec
 
         "handle uncaught exceptions" >> {
             "when unregistered" >> new Started(ENABLED) {
-                m_session.hasEvents returns true
+                m_session.isEmpty returns false
                 target.uncaughtException(Thread.currentThread(), newExcp())
 
                 expect {
@@ -155,7 +155,7 @@ class ReporterSpec
             "when registered" >> new Started(ENABLED) {
                 val th = newExcp()
                 val t = Thread.currentThread()
-                m_session.hasEvents returns true
+                m_session.isEmpty returns false
                 Thread.setDefaultUncaughtExceptionHandler(m_excpHandler)
 
                 // when registered

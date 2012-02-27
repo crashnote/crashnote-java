@@ -25,8 +25,6 @@ import com.crashnote.core.report.impl.processor.Processor;
 import com.crashnote.core.report.impl.processor.impl.*;
 import com.crashnote.core.report.impl.session.*;
 
-import java.io.Serializable;
-
 /**
  * This class is the Grand Central station of the library because every log event goes through
  * here. It's main job is to take these events and put them into the {@link ILogSession},
@@ -94,7 +92,7 @@ public class Reporter<C extends Config>
     }
 
     public void flushSession() {
-        if (isOperable() && session.hasEvents()) {
+        if (isOperable() && !isSessionEmpty()) {
             processor.process(session);
         }
     }
@@ -104,6 +102,10 @@ public class Reporter<C extends Config>
             flushSession();
             session.clear();
         }
+    }
+
+    public boolean isSessionEmpty() {
+        return session.isEmpty();
     }
 
     // ===== Log Context
@@ -206,5 +208,9 @@ public class Reporter<C extends Config>
 
     public ILogSession getSession() {
         return session;
+    }
+
+    public LogLog getLogger() {
+        return logger;
     }
 }

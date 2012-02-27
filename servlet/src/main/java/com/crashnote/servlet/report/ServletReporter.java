@@ -16,20 +16,28 @@
 package com.crashnote.servlet.report;
 
 import com.crashnote.logger.report.LoggerReporter;
-import com.crashnote.servlet.collect.*;
+import com.crashnote.servlet.collect.RequestCollector;
+import com.crashnote.servlet.collect.SessionCollector;
 import com.crashnote.servlet.config.ServletConfig;
 
-import javax.servlet.*;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Customized implementation of the core {@link LoggerReporter}. Adds servlet-specific functionality.
  */
 public class ServletReporter<C extends ServletConfig>
-    extends LoggerReporter<C> {
+        extends LoggerReporter<C> {
 
     private final RequestCollector reqCollector;
     private final SessionCollector sesCollector;
+
+    private boolean ignoreLocalhost;
+    private final Set<String> localAddresses;
 
     // SETUP ======================================================================================
 
@@ -37,6 +45,22 @@ public class ServletReporter<C extends ServletConfig>
         super(config);
         this.reqCollector = new RequestCollector(config);
         this.sesCollector = new SessionCollector(config);
+
+        // initialize list of local addresses (in order to distinguish remote calls from local ones)
+        localAddresses = new HashSet<String>();
+        try {
+            localAddresses.add(InetAddress.getLocalHost().getHostAddress());
+            for (final InetAddress inetAddress : InetAddress.getAllByName("localhost")) {
+                localAddresses.add(inetAddress.getHostAddress());
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    @Override
+    public void updateConfig(final C config) {
+        super.updateConfig(config);
+        this.ignoreLocalhost = config.getIgnoreLocalRequests();
     }
 
     // INTERFACE ==================================================================================
@@ -44,7 +68,7 @@ public class ServletReporter<C extends ServletConfig>
     /**
      * Before each request, start the internal log session
      *
-     * @param request  the HTTP request
+     * @param request the HTTP request
      */
     public void beforeRequest(final ServletRequest request) {
         startSession();
@@ -58,20 +82,33 @@ public class ServletReporter<C extends ServletConfig>
      * @param th      the exception details
      */
     public void uncaughtException(final ServletRequest request, final Thread t, final Throwable th) {
-        uncaughtException(t, th);
+        if (!ignoreRequest(request))
+            uncaughtException(t, th);
     }
 
     /**
-     * After each request, finish the internal log session
+     * After each request, evaluate and finish the internal log session
      *
      * @param request  the HTTP request
      * @param response the HTTP response
      */
     public void afterRequest(final ServletRequest request, final ServletResponse response) {
-        put("request", reqCollector.collect((HttpServletRequest) request));
-        put("session", sesCollector.collect((HttpServletRequest) request));
+        final HttpServletRequest httpReq = (HttpServletRequest) request;
 
-        endSession();
+        if (!isSessionEmpty()) { // log session empty? just skip this then..
+
+            if (ignoreLocalhost && ignoreRequest(request)) {
+                // ignore requests made from localhost
+                getLogger().debug("error for '{} {}' is ignored (local requests are disabled in config)",
+                        httpReq.getMethod(), httpReq.getRequestURL().toString());
+
+            } else {
+                // enrich log context with detailed request information
+                put("request", reqCollector.collect(httpReq));
+                put("session", sesCollector.collect(httpReq));
+                endSession();
+            }
+        }
     }
 
     // SHARED =====================================================================================
@@ -82,5 +119,9 @@ public class ServletReporter<C extends ServletConfig>
     @Override
     protected boolean isAutoFlush() {
         return false;
+    }
+
+    protected boolean ignoreRequest(final ServletRequest req) {
+        return localAddresses.contains(req.getRemoteAddr());
     }
 }

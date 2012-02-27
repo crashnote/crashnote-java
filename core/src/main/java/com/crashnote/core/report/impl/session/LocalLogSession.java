@@ -15,10 +15,8 @@
  */
 package com.crashnote.core.report.impl.session;
 
-import com.crashnote.core.config.Config;
 import com.crashnote.core.model.log.*;
 
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -64,8 +62,8 @@ public class LocalLogSession
         getSession().clearEvents();
     }
 
-    public boolean hasEvents() {
-        return getSession().hasEvents();
+    public boolean isEmpty() {
+        return getSession().isEmpty();
     }
 
     // ===== CONTEXT
