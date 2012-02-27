@@ -143,7 +143,7 @@ public class ConfigFactory<C extends Config> {
         if (isEnabled())
             validateKey();
         else
-            logger.info("transfer to Cloud is DISABLED");
+            logger.info("transfer to cloud service is DISABLED");
     }
 
     private boolean isEnabled() {

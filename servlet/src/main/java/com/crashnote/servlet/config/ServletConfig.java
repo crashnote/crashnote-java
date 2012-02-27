@@ -46,7 +46,10 @@ public class ServletConfig<C extends ServletConfig<C>>
     public void initDefaults() {
         super.initDefaults();
 
-        // DO ignore requests made from local machine
+        // DO enable by default, but ...
+        setEnabled(true);
+
+        // ... DO ignore requests made from local machine
         setIgnoreLocalRequests(true);
 
         // filter common request parameters by default

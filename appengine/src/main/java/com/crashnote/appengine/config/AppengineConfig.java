@@ -39,7 +39,12 @@ public class AppengineConfig
     @Override
     public void initDefaults() {
         super.initDefaults();
-        setEnabled(getSystemUtil().isRunningOnAppengine()); // enable client if running on AppEngine
+
+        // ONLY enable client if running on AppEngine
+        setEnabled(getSystemUtil().isRunningOnAppengine());
+
+        // since excluding local hits is taken care of (line above), local requests can just be passed through
+        setIgnoreLocalRequests(false);
     }
 
     // INTERFACE ==================================================================================
