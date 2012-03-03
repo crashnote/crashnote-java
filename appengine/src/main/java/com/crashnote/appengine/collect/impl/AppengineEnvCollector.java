@@ -19,6 +19,7 @@ import com.crashnote.appengine.util.AppengineUtil;
 import com.crashnote.core.collect.impl.EnvCollector;
 import com.crashnote.core.config.Config;
 import com.crashnote.core.model.data.DataObject;
+import com.google.appengine.api.utils.SystemProperty;
 
 /**
  * Customized {@link EnvCollector} that collects additional information from the AppEngine
@@ -27,11 +28,11 @@ import com.crashnote.core.model.data.DataObject;
 public class AppengineEnvCollector<C extends Config>
     extends EnvCollector<C> {
 
-    private static final String PROP_APP_ID = "com.google.appengine.application.id";
-    private static final String PROP_APP_VER = "com.google.appengine.application.version";
+    private static final String PROP_APP_ID = SystemProperty.applicationId.key();
+    private static final String PROP_APP_VER = SystemProperty.applicationVersion.key();
 
-    private static final String PROP_RT_VER = "com.google.appengine.runtime.version";
-    private static final String PROP_RT_MODE = "com.google.appengine.runtime.environment";
+    private static final String PROP_RT_VER = SystemProperty.version.key();
+    private static final String PROP_RT_MODE = SystemProperty.environment.key();
 
     // SETUP ======================================================================================
 
