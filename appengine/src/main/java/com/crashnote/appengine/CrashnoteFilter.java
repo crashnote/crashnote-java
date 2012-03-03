@@ -32,4 +32,14 @@ public class CrashnoteFilter
         return new AppengineConfigFactory(filterConfig).get();
     }
 
+    @Override
+    protected void checkForAppengine() {
+        if(System.getProperty("com.google.appengine.runtime.environment") == null) {
+            throw new RuntimeException("Unsupported Platform! It seems you are NOT developing for / running on " +
+                    "Google's AppEngine. This library (crashnote-appengine) only works with it - you " +
+                    "need the more general crashnote-servlet that runs any servlet-based app. " +
+                    "Please consult your app's online documentation for further details.");
+        }
+    }
+
 }
