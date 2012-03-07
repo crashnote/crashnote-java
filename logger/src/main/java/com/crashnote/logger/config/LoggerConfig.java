@@ -28,9 +28,6 @@ import com.crashnote.logger.report.LoggerReporter;
 public class LoggerConfig<C extends LoggerConfig<C>>
     extends Config<C> {
 
-    /**
-     * Property names of core-specific settings
-     */
     public static final String PCKG_BASE = "com.crashnote";
 
     // SETUP ======================================================================================
