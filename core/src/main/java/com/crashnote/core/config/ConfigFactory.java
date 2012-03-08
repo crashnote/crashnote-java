@@ -18,7 +18,8 @@ package com.crashnote.core.config;
 import com.crashnote.core.log.LogLog;
 import com.crashnote.core.util.SystemUtil;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Properties;
 
 import static com.crashnote.core.config.Config.*;
 
@@ -48,6 +49,12 @@ public class ConfigFactory<C extends Config> {
      * name of the configuration file to parse for settings
      */
     public static final String PROP_FILE = Config.LIB_NAME + ".properties";
+
+    /**
+     * name of the property to specify the path of the configuration file (e.g. via system properties)
+     */
+    public static final String PROP_FILE_CONF = Config.LIB_NAME + ".config";
+
 
     // SETUP ======================================================================================
 
@@ -106,8 +113,8 @@ public class ConfigFactory<C extends Config> {
                 final String key = (String) propName;
                 if (strict) {
                     if (key.equalsIgnoreCase(getConfigKey(name))
-                        || key.equalsIgnoreCase(getConfigKey(name, '_'))
-                        || key.equalsIgnoreCase(getConfigKey(name, '-')))
+                            || key.equalsIgnoreCase(getConfigKey(name, '_'))
+                            || key.equalsIgnoreCase(getConfigKey(name, '-')))
                         return props.getProperty(key);
                 } else if (key.equalsIgnoreCase(name))
                     return props.getProperty(key);
@@ -128,15 +135,27 @@ public class ConfigFactory<C extends Config> {
     // INTERNALS ==================================================================================
 
     private void loadSystemProperties() {
+        logger.debug("applying properties from system");
         applyProperties(sysUtil.getProperties(), true);
     }
 
     private void loadEnvProperties() {
+        logger.debug("applying properties from system environment");
         applyProperties(sysUtil.getEnvProperties(), true);
     }
 
     private void loadFileProperties() {
-        applyProperties(sysUtil.loadProperties(PROP_FILE), false);
+        final String fileName = // determine config file location: first try sys props, then env props and then default
+                sysUtil.getProperty(PROP_FILE_CONF, sysUtil.getEnv(PROP_FILE_CONF, PROP_FILE));
+
+        // load properties from file
+        final Properties props = sysUtil.loadProperties(fileName);
+        if (props.isEmpty())
+            logger.debug("no configuration properties found in '{}'", fileName);
+        else
+            logger.debug("applying properties from file '{}'", fileName);
+
+        applyProperties(props, false);
     }
 
     private void validate() {
@@ -160,14 +179,14 @@ public class ConfigFactory<C extends Config> {
         final String key = config.getKey();
         if (key == null || key.length() == 0) {
             throw new IllegalArgumentException(
-                "The API Key is missing, please login to the web app under [" + LIB_URL_BOARD + "], " +
-                    "browse to your app and consult the 'Install' instructions.");
+                    "The API Key is missing, please login to the web app under [" + LIB_URL_BOARD + "], " +
+                            "browse to your app and consult the 'Install' instructions.");
 
         } else if (key.length() != 32)
             throw new IllegalArgumentException(
-                "The API Key appears to be invalid (it should be 32 characters long with 4 dashes), " +
-                    "please login to the web app under [" + LIB_URL_BOARD + "], " +
-                    "browse to your app and consult the 'Install' instructions.");
+                    "The API Key appears to be invalid (it should be 32 characters long with 4 dashes), " +
+                            "please login to the web app under [" + LIB_URL_BOARD + "], " +
+                            "browse to your app and consult the 'Install' instructions.");
     }
 
     // SET ========================================================================================

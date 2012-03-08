@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,6 +21,7 @@ import com.crashnote.core.util.SystemUtil
 import com.crashnote.core.log.LogLog
 import ConfigFactory._
 import com.crashnote.core.test.defs.stubs._
+import java.util.Properties
 
 class ConfigFactorySpec
     extends MockSpec[ConfigFactory[ConfigStub]] {
@@ -42,16 +43,41 @@ class ConfigFactorySpec
 
         "create configuration instance" >> {
             "by reading from" >> {
-                "file" >> new Mocked() {
-                    m_sysUtil.loadProperties(PROP_FILE) returns props
-                    target.get()
-                    expect {
-                        one(m_conf).setHost("host.com")
-                        one(m_conf).setPort("66")
-                        one(m_conf).setSync("true")
-                        one(m_conf).setSecure("true")
-                        one(m_conf).setSSLPort("66")
-                        one(m_conf).setVersion("1.0")
+                "file" >> {
+                    "with default location" >> new Mocked() {
+                        m_sysUtil.loadProperties(PROP_FILE) returns props
+                        target.get()
+                        expect {
+                            one(m_conf).setHost("host.com")
+                            one(m_conf).setPort("66")
+                            one(m_conf).setSync("true")
+                            one(m_conf).setSecure("true")
+                            one(m_conf).setSSLPort("66")
+                            one(m_conf).setVersion("1.0")
+                        }
+                    }
+                    "with location specified by system" >> new Mocked() {
+                        m_sysUtil.getProperty(PROP_FILE_CONF, PROP_FILE) returns "sys.properties"
+                        m_sysUtil.loadProperties("sys.properties") returns props
+
+                        target.get()
+                        there was one(m_conf).setHost("host.com")
+                    }
+                    "with location specified by env" >> new Mocked() {
+                        m_sysUtil.getEnv(PROP_FILE_CONF, PROP_FILE) returns "env.properties"
+                        m_sysUtil.getProperty(PROP_FILE_CONF, "env.properties") returns "env.properties"
+                        m_sysUtil.loadProperties("env.properties") returns props
+
+                        target.get()
+                        there was one(m_conf).setHost("host.com")
+                    }
+                    "with location specified by system AND env" >> new Mocked() {
+                        m_sysUtil.getEnv(PROP_FILE_CONF, PROP_FILE) returns "env.properties"
+                        m_sysUtil.getProperty(PROP_FILE_CONF, "env.properties") returns "sys.properties"
+                        m_sysUtil.loadProperties("sys.properties") returns props
+
+                        target.get()
+                        there was one(m_conf).setHost("host.com")
                     }
                 }
                 "environment" >> new Mocked() {
@@ -124,5 +150,9 @@ class ConfigFactorySpec
 
     override def mock() {
         m_sysUtil = _mock[SystemUtil]
+
+        m_sysUtil.loadProperties(anyString) returns new Properties()
+        m_sysUtil.getEnv(PROP_FILE_CONF, PROP_FILE) returns PROP_FILE
+        m_sysUtil.getProperty(PROP_FILE_CONF, PROP_FILE) returns PROP_FILE
     }
 }
