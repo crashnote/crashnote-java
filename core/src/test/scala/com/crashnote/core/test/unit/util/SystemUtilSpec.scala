@@ -24,7 +24,7 @@ class SystemUtilSpec extends UnitSpec {
 
         val util = new SystemUtil()
 
-        "access global props" >> {
+        "access system props" >> {
             "find out if a property exists" >> {
                 System.setProperty("i-do-exist", "groovy!")
 
@@ -34,12 +34,25 @@ class SystemUtilSpec extends UnitSpec {
                 val keys = util.getPropertyKeys
                 keys must not be empty
             }
+            "get a key" >> {
+                System.setProperty("test", "data")
+                util.getProperty("test") === "data"
+                util.getProperty("nonsense") === null
+
+                "and use default value" >> {
+                    util.getProperty("nonsense", "default") === "default"
+                }
+            }
         }
 
         "access env props" >> {
             val keys = util.getEnvKeys
             if (!keys.isEmpty) util.getEnv(keys.iterator().next())
             keys !== null
+
+            "and return custom default value" >> {
+                util.getEnv("nonsense", "default") === "default"
+            }
         }
 
         "access network props" >> {

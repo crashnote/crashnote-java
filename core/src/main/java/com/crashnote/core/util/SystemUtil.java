@@ -43,7 +43,11 @@ public class SystemUtil {
      * @return the string value of the system property, or null if there is no property with that key
      */
     public String getProperty(final String key) {
-        return System.getProperty(key, null);
+        return getProperty(key, null);
+    }
+
+    public String getProperty(final String key, final String def) {
+        return System.getProperty(key, def);
     }
 
     public Set<Object> getPropertyKeys() {
@@ -52,8 +56,8 @@ public class SystemUtil {
 
     public Properties loadProperties(final String fileName) {
         final Properties p = new Properties();
-        final URL url = ClassLoader.getSystemResource(fileName);
         try {
+            final URL url = ClassLoader.getSystemResource(fileName);
             p.load(url.openStream());
         } catch (Exception ignored) {
         }
@@ -78,6 +82,11 @@ public class SystemUtil {
      */
     public String getEnv(final String key) {
         return System.getenv(key);
+    }
+
+    public String getEnv(final String key, final String def) {
+        final String val = System.getenv(key);
+        return val == null ? def : val;
     }
 
     public Properties getEnvProperties() {
