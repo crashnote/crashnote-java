@@ -76,7 +76,7 @@ public class SharedLogSession
     }
 
     public boolean isEmpty() {
-        return !heap.isEmpty();
+        return heap.isEmpty();
     }
 
     // ===== CONTEXT
