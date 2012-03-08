@@ -67,7 +67,7 @@ class RequestCollectorSpec
         config.getRequestFilters returns Array(".*password.*")
         config.getMaxRequestParameterSize returns 10
         config.getSkipHeaderData returns false
-        config.getSkipRemoteIP returns true
+        config.getHashRemoteIP returns true
         config.getBuilder returns new Builder
         config
     }
@@ -95,6 +95,6 @@ class RequestCollectorSpec
         res
     }
 
-    lazy val WITH_IP = (config: C) => config.getSkipRemoteIP returns false
+    lazy val WITH_IP = (config: C) => config.getHashRemoteIP returns false
     lazy val WITHOUT_HEADER = (config: C) => config.getSkipHeaderData returns true
 }

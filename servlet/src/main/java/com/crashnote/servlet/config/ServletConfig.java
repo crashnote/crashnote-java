@@ -27,7 +27,7 @@ public class ServletConfig<C extends ServletConfig<C>>
     /**
      * Property names of servlet-specific settings
      */
-    public static final String PROP_REP_IP_SKIP = "skipRemoteIP";
+    public static final String PROP_REP_IP_SKIP = "hashRemoteIP";
 
     public static final String PROP_REP_REQ_PARAM_SIZE = "maxRequestDataSize";
     public static final String PROP_REP_REQ_IGNORE_LOCAL = "ignoreLocalRequests";
@@ -57,8 +57,8 @@ public class ServletConfig<C extends ServletConfig<C>>
         addRequestFilter(".*creditcard.*");
         addRequestFilter(".*secret.*");
 
-        // skip remote IPs (might not be legal in some countries, force user to enable manually)
-        setSkipRemoteIP(true);
+        // hash remote IPs (might not be legal in some countries, force user to enable manually)
+        setHashRemoteIP(true);
 
         // DO report header data
         setSkipHeaderData(false);
@@ -91,7 +91,7 @@ public class ServletConfig<C extends ServletConfig<C>>
         return getBoolSetting(PROP_REP_HEADER_SKIP);
     }
 
-    public boolean getSkipRemoteIP() {
+    public boolean getHashRemoteIP() {
         return getBoolSetting(PROP_REP_IP_SKIP);
     }
 
@@ -132,11 +132,11 @@ public class ServletConfig<C extends ServletConfig<C>>
         addBoolSetting(PROP_REP_SESSION_SKIP, skip);
     }
 
-    public void setSkipRemoteIP(final boolean skip) {
+    public void setHashRemoteIP(final boolean skip) {
         addSetting(PROP_REP_IP_SKIP, skip);
     }
 
-    public void setSkipRemoteIP(final String skip) {
+    public void setHashRemoteIP(final String skip) {
         addBoolSetting(PROP_REP_IP_SKIP, skip);
     }
 

@@ -35,7 +35,7 @@ public class RequestCollector
 
     protected String[] requestFilters;
     protected boolean skipHeaderData;
-    protected boolean skipRemoteIP;
+    protected boolean hashRemoteIP;
     protected int maxRequestParamSize;
 
     // SETUP ======================================================================================
@@ -47,7 +47,7 @@ public class RequestCollector
 
     public void updateConfig(final ServletConfig config) {
         config.addListener(this);
-        this.skipRemoteIP = config.getSkipRemoteIP();
+        this.hashRemoteIP = config.getHashRemoteIP();
         this.requestFilters = config.getRequestFilters();
         this.skipHeaderData = config.getSkipHeaderData();
         this.maxRequestParamSize = config.getMaxRequestParameterSize();
@@ -73,7 +73,7 @@ public class RequestCollector
             data.put("url", req.getRequestURL().toString());
 
             final String remoteIP = req.getRemoteAddr();
-            if (skipRemoteIP) // skip? -> include hashed version
+            if (hashRemoteIP) // hash or raw?
                 data.put("ip_hash", ChksumUtil.hash(remoteIP));
             else
                 data.put("ip", remoteIP);

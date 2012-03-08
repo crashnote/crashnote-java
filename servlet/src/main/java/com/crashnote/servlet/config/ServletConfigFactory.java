@@ -60,7 +60,7 @@ public class ServletConfigFactory<C extends ServletConfig>
     protected void applyProperties(final Properties props, final boolean strict) {
         super.applyProperties(props, strict);
 
-        config.setSkipRemoteIP(getProperty(props, ServletConfig.PROP_REP_IP_SKIP, strict));
+        config.setHashRemoteIP(getProperty(props, ServletConfig.PROP_REP_IP_SKIP, strict));
         config.setSkipHeaderData(getProperty(props, ServletConfig.PROP_REP_HEADER_SKIP, strict));
         config.setSkipSessionData(getProperty(props, ServletConfig.PROP_REP_SESSION_SKIP, strict));
         config.setIgnoreLocalRequests(getProperty(props, ServletConfig.PROP_REP_REQ_IGNORE_LOCAL, strict));
