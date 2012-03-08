@@ -43,7 +43,7 @@ public class ConfigFactory<C extends Config> {
     /**
      * indicates whether the external configuration sources are already processed
      */
-    private boolean extConfigLoaded = false;
+    private boolean externalConfigLoaded = false;
 
     /**
      * name of the configuration file to parse for settings
@@ -72,7 +72,7 @@ public class ConfigFactory<C extends Config> {
 
     public C get() {
         if (!validated) {
-            prepare();
+            loadExternalConfig(); // load external configuration (e.g. property file)
             validate(); // validate first to fail fast if necessary
             validated = true;
         }
@@ -80,10 +80,6 @@ public class ConfigFactory<C extends Config> {
     }
 
     // SHARED =====================================================================================
-
-    protected void prepare() {
-        loadExt(); // load external configuration (e.g. property file)
-    }
 
     protected void applyProperties(final Properties props, final boolean strict) {
         config.setClientInfo(getProperty(props, PROP_CLIENT, strict));
@@ -123,12 +119,14 @@ public class ConfigFactory<C extends Config> {
         return null;
     }
 
-    protected void loadExt() {
-        if (!extConfigLoaded) {
+    protected void loadExternalConfig() {
+        if (!externalConfigLoaded) {
             loadFileProperties();       // #1: load file props
             loadEnvProperties();        // #2: load environment props
             loadSystemProperties();     // #3: load system props
-            extConfigLoaded = true;
+
+            config.print(); // print final config to console (only in debug)
+            externalConfigLoaded = true;
         }
     }
 

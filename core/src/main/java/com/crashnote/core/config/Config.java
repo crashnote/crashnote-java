@@ -131,6 +131,15 @@ public class Config<C extends Config<C>> {
 
     // INTERFACE ==================================================================================
 
+    public void print() {
+        if(logger.isDebug()) {
+            logger.debug("final configuration:");
+            for(final String key : settings.keySet()) {
+                logger.debug(" -> {} = {}", key, settings.get(key));
+            }
+        }
+    }
+
     // ==== Config Listener
 
     public void addListener(final IConfigChangeListener<C> listener) {

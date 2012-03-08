@@ -37,7 +37,7 @@ public class ServletConfigFactory<C extends ServletConfig>
     }
 
     @Override
-    protected void loadExt() {
+    protected void loadExternalConfig() {
         // first: gather properties from filter config
         if (filterConfig != null) {
             final Properties props = new Properties();
@@ -51,7 +51,7 @@ public class ServletConfigFactory<C extends ServletConfig>
         }
 
         // then: load other props
-        super.loadExt();
+        super.loadExternalConfig();
     }
 
     // SHARED =====================================================================================
