@@ -82,7 +82,7 @@ public class ServletReporter<C extends ServletConfig>
      * @param th      the exception details
      */
     public void uncaughtException(final ServletRequest request, final Thread t, final Throwable th) {
-        if (!ignoreRequest(request))
+        if (!isRequestFromLocalhost(request))
             uncaughtException(t, th);
     }
 
@@ -97,7 +97,7 @@ public class ServletReporter<C extends ServletConfig>
 
         if (!isSessionEmpty()) { // log session empty? just skip this then..
 
-            if (ignoreLocalhost && ignoreRequest(request)) {
+            if (ignoreLocalhost && isRequestFromLocalhost(request)) {
                 // ignore requests made from localhost
                 getLogger().debug("error for '{} {}' is ignored (local requests are disabled in config)",
                         httpReq.getMethod(), httpReq.getRequestURL().toString());
@@ -121,7 +121,7 @@ public class ServletReporter<C extends ServletConfig>
         return false;
     }
 
-    protected boolean ignoreRequest(final ServletRequest req) {
+    protected boolean isRequestFromLocalhost(final ServletRequest req) {
         return localAddresses.contains(req.getRemoteAddr());
     }
 }
