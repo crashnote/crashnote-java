@@ -114,7 +114,6 @@ public class Sender<C extends Config>
 
             if (getClientInfo() != null)
                 conn.setRequestProperty("User-Agent", getClientInfo());
-            conn.setRequestProperty("X-Crashnote-Key", key);
         }
         return conn;
     }
