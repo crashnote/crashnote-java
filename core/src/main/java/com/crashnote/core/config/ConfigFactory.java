@@ -178,7 +178,7 @@ public class ConfigFactory<C extends Config> {
         if (key == null || key.length() == 0) {
             throw new IllegalArgumentException(
                     "The API Key is missing, please login to the web app under [" + LIB_URL_BOARD + "], " +
-                            "browse to your app and consult the 'Install' instructions.");
+                            "browse to your app and consult the 'Docs'.");
 
         } else if (key.length() != 32)
             throw new IllegalArgumentException(
