@@ -43,7 +43,7 @@
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <configuration>
                     <sources>
-                        <source>target/gen-src</source>
+                        <source>src/main/generated</source>
                     </sources>
                 </configuration>
             </plugin>

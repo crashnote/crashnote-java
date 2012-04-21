@@ -133,6 +133,7 @@
                     <debug>false</debug>
                     <optimize>true</optimize>
                     <encoding>UTF-8</encoding>
+                    <generatedSourcesDirectory>src/main/generated</generatedSourcesDirectory>
                 </configuration>
             </plugin>
 
@@ -271,7 +272,7 @@
                     </executions>
                     <configuration>
                         <file>src/main/resources/About.java.template</file>
-                        <outputFile>target/gen-src/com/crashnote/About.java</outputFile>
+                        <outputFile>src/main/generated/com/crashnote/About.java</outputFile>
                         <replacements>
                             <replacement>
                                 <token>@name@</token>
