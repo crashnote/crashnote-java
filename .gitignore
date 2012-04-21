@@ -3,8 +3,9 @@
 *.tmp
 *.temp
 *.iml
+*.gpg*
+
 .idea/
 target/
 project/
-About.java
-crashnote.gpg*
+generated/

@@ -23,9 +23,9 @@ obeys the according restrictions:
 - works with JDK 1.5+
 - smaller than 150 KB
 - single JAR, no dependencies
-- works asynchronously by default
+- runs asynchronously
 - uses JSON format and GZIP compression
-- supports all major logging tools: JUL, Log4j and Logback
+- supports all major logging APIs: JUL, Log4j and Logback
 
 
 # License

@@ -1,0 +1,53 @@
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.crashnote.module</groupId>
+    <artifactId>module-logger</artifactId>
+    <version>0.1.1</version>
+    <packaging>jar</packaging>
+
+    <!-- ==== Module is NOT deployed, it is embedded within the released artifacts ==== -->
+
+    <name>Crashnote Logger Module</name>
+    <description>
+        Module to report exceptions that are logged with a Java logging API.
+    </description>
+
+    <parent>
+        <groupId>com.crashnote</groupId>
+        <artifactId>parent-module</artifactId>
+        <version>0.1.1</version>
+        <relativePath>../../parents/module</relativePath>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.crashnote.module</groupId>
+            <artifactId>module-core</artifactId>
+            <version>0.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <testSourceDirectory>src/test/scala</testSourceDirectory>
+    </build>
+
+    <properties>
+        <client-name>cn-logger</client-name>
+    </properties>
+
+</project>

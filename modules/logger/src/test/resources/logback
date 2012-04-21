@@ -1,0 +1,20 @@
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="CLOUD" class="CloudAppender">
+        <key>0000000-00000-0000-0000-000000000000</key>
+        <host>127.0.0.3</host>
+        <enabled>true</enabled>
+    </appender>
+
+    <root level="warn">
+        <appender-ref ref="CLOUD"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>

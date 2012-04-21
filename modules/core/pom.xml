@@ -1,0 +1,49 @@
+<project
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://maven.apache.org/POM/4.0.0">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.crashnote.module</groupId>
+    <artifactId>module-core</artifactId>
+    <version>0.1.1</version>
+    <packaging>jar</packaging>
+
+    <!-- ==== Module is NOT deployed, it is embedded within the released artifacts ==== -->
+
+    <name>Crashnote Core Module</name>
+    <description>
+        Module for catching, serializing and sending Java exceptions to the crashnote.com service.
+    </description>
+
+    <parent>
+        <groupId>com.crashnote</groupId>
+        <artifactId>parent-module</artifactId>
+        <version>0.1.1</version>
+        <relativePath>../../parents/module</relativePath>
+    </parent>
+
+    <build>
+        <testSourceDirectory>src/test/scala</testSourceDirectory>
+
+        <plugins>
+            <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/build/json/**/*.java</exclude>
+                        <exclude>**/BoundedList.java</exclude>
+                        <exclude>**/ChksumUtil.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+        <client-name>cn-core</client-name>
+    </properties>
+
+</project>
