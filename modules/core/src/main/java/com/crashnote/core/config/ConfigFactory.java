@@ -184,7 +184,7 @@ public class ConfigFactory<C extends Config> {
             throw new IllegalArgumentException(
                     "The API Key appears to be invalid (it should be 32 characters long with 4 dashes), " +
                             "please login to the web app under [" + LIB_URL_BOARD + "], " +
-                            "browse to your app and consult the 'Install' instructions.");
+                            "browse to your app and consult the 'Docs'.");
     }
 
     // SET ========================================================================================
