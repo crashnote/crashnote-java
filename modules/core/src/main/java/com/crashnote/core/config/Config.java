@@ -169,8 +169,8 @@ public class Config<C extends Config<C>> {
         return getConfigKey(propName, '.');
     }
 
-    public static String getConfigKey(final String propName, final char seperator) {
-        return (propName.startsWith(PROP_PREFIX) ? propName : PROP_PREFIX + seperator + propName).toLowerCase();
+    public static String getConfigKey(final String propName, final char separation) {
+        return (propName.startsWith(PROP_PREFIX) ? propName : PROP_PREFIX + separation + propName).toLowerCase();
     }
 
     // FACTORY ====================================================================================
