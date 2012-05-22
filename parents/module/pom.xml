@@ -8,7 +8,7 @@
     <groupId>com.crashnote</groupId>
     <artifactId>parent-module</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.1</version>
+    <version>0.2</version>
 
     <name>Crashnote Module Parent POM</name>
     <description>The base POM for all Crashnote modules.</description>
@@ -16,7 +16,7 @@
     <parent>
         <groupId>com.crashnote</groupId>
         <artifactId>parent</artifactId>
-        <version>0.1.1</version>
+        <version>0.2</version>
         <relativePath>../../</relativePath>
     </parent>
 
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>com.crashnote.module</groupId>
             <artifactId>module-test</artifactId>
-            <version>0.1.1</version>
+            <version>0.2</version>
             <scope>test</scope>
         </dependency>
 

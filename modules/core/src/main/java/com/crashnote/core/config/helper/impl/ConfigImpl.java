@@ -12,14 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import com.crashnote.core.config.helper.Config;
-import com.crashnote.core.config.helper.ConfigException;
-import com.crashnote.core.config.helper.ConfigIncluder;
-import com.crashnote.core.config.helper.ConfigObject;
-import com.crashnote.core.config.helper.ConfigOrigin;
-import com.crashnote.core.config.helper.ConfigParseOptions;
-import com.crashnote.core.config.helper.ConfigParseable;
-import com.crashnote.core.config.helper.ConfigValue;
+import com.crashnote.core.config.helper.*;
 import com.crashnote.core.config.helper.impl.SimpleIncluder.NameSource;
 
 /** This is public but is only supposed to be used by the "config" package */
@@ -342,6 +335,8 @@ public class ConfigImpl {
 
     /** For use ONLY by library internals, DO NOT TOUCH not guaranteed ABI */
     public static Config defaultReference(final ClassLoader loader) {
+        return ConfigFactory.empty();
+        /* skip search for "reference.conf"
         return computeCachedConfig(loader, "defaultReference", new Callable<Config>() {
             @Override
             public Config call() {
@@ -352,6 +347,7 @@ public class ConfigImpl {
                 return systemPropertiesAsConfig().withFallback(unresolvedResources).resolve();
             }
         });
+        */
     }
 
     private static class DebugHolder {

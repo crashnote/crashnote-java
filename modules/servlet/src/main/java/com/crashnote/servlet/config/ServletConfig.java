@@ -45,15 +45,15 @@ public class ServletConfig<C extends ServletConfig<C>>
     // GET ========================================================================================
 
     public boolean getSkipSessionData() {
-        return getBool("request.skip-session");
+        return getBool("request.exclude-session");
     }
 
     public boolean getIgnoreLocalRequests() {
-        return getBool("request.skip-localhost");
+        return getBool("request.ignore-localhost");
     }
 
     public boolean getSkipHeaderData() {
-        return getBool("request.skip-headers");
+        return getBool("request.exclude-headers");
     }
 
     public boolean getHashRemoteIP() {

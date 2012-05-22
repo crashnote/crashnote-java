@@ -7,7 +7,7 @@
 
     <groupId>com.crashnote</groupId>
     <artifactId>crashnote-servlet</artifactId>
-    <version>0.1.1</version>
+    <version>0.2</version>
     <packaging>jar</packaging>
 
     <name>Crashnote Servlet Notifier</name>
@@ -47,7 +47,7 @@
     <parent>
         <groupId>com.crashnote</groupId>
         <artifactId>parent-notifier</artifactId>
-        <version>0.1.1</version>
+        <version>0.2</version>
         <relativePath>../parents/notifier</relativePath>
     </parent>
 
@@ -88,7 +88,7 @@
                 <dependency>
                     <groupId>com.crashnote.module</groupId>
                     <artifactId>module-servlet</artifactId>
-                    <version>0.1.1</version>
+                    <version>0.2</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -109,20 +109,53 @@
                         <artifactId>build-helper-maven-plugin</artifactId>
                         <version>1.7</version>
                         <executions>
+                            <!-- add module source files -->
                             <execution>
-                                <id>add-source</id>
+                                <id>add-sources</id>
                                 <phase>generate-sources</phase>
                                 <goals>
                                     <goal>add-source</goal>
                                 </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>../modules/core/src/main/java</source>
+                                        <source>../modules/logger/src/main/java</source>
+                                        <source>../modules/servlet/src/main/java</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+
+                            <!-- add module conf files -->
+                            <execution>
+                                <id>add-resources</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>add-resource</goal>
+                                </goals>
+                                <configuration>
+                                    <resources>
+                                        <resource>
+                                            <directory>
+                                                ../modules/core/src/main/resources
+                                            </directory>
+                                            <targetPath>${build.directory}/classes</targetPath>
+                                            <includes>
+                                                <include>*.conf</include>
+                                            </includes>
+                                        </resource>
+                                        <resource>
+                                            <directory>
+                                                ../modules/servlet/src/main/resources
+                                            </directory>
+                                            <targetPath>${build.directory}/classes</targetPath>
+                                            <includes>
+                                                <include>*.conf</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                </configuration>
                             </execution>
                         </executions>
-                        <configuration>
-                            <sources>
-                                <source>../modules/core/src/main/java</source>
-                                <source>../modules/logger/src/main/java</source>
-                            </sources>
-                        </configuration>
                     </plugin>
 
                     <plugin>

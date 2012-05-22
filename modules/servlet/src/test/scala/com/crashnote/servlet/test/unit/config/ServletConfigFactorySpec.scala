@@ -53,7 +53,7 @@ class ServletConfigFactorySpec
         toProps(Map(
             "request.skipHeaders" -> "false",
             "request.skip-session" -> "true",
-            "request.skip-localhost" -> "false"
+            "request.ignore-localhost" -> "false"
         ))
 
     def configure(config: C) = {

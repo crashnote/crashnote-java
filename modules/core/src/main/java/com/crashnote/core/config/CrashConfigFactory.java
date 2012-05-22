@@ -76,7 +76,7 @@ public class CrashConfigFactory<C extends CrashConfig> {
     }
 
     protected Config getConfFile(final String name) {
-        return ConfigFactory.load(name);
+        return ConfigFactory.load(name + ".conf");
     }
 
     protected Config getConfStr(final String str) {

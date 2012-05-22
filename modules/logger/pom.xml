@@ -7,7 +7,7 @@
 
     <groupId>com.crashnote.module</groupId>
     <artifactId>module-logger</artifactId>
-    <version>0.1.1</version>
+    <version>0.2</version>
     <packaging>jar</packaging>
 
     <!-- ==== Module is NOT deployed, it is embedded within the released artifacts ==== -->
@@ -20,7 +20,7 @@
     <parent>
         <groupId>com.crashnote</groupId>
         <artifactId>parent-module</artifactId>
-        <version>0.1.1</version>
+        <version>0.2</version>
         <relativePath>../../parents/module</relativePath>
     </parent>
 
@@ -28,7 +28,7 @@
         <dependency>
             <groupId>com.crashnote.module</groupId>
             <artifactId>module-core</artifactId>
-            <version>0.1.1</version>
+            <version>0.2</version>
         </dependency>
 
         <dependency>

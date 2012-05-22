@@ -242,7 +242,7 @@ public class CrashConfig<C extends CrashConfig<C>> {
     private String getBaseUrl() {
         final boolean ssl = getBool("network.ssl");
         final String host = getString("network.host");
-        final int port = (ssl ? getInt("network.port-ssl") : conf.getInt("network.port"));
+        final int port = (ssl ? getInt("network.port-ssl") : getInt("network.port"));
         final String protocol = ssl ? "https://" : "http://";
         return protocol + host + ":" + port;
     }

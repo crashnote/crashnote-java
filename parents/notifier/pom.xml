@@ -8,7 +8,7 @@
     <groupId>com.crashnote</groupId>
     <artifactId>parent-notifier</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.1</version>
+    <version>0.2</version>
 
     <name>Crashnote Notifier Parent POM</name>
     <description>The base POM for all Crashnote notifiers.</description>
@@ -16,7 +16,7 @@
     <parent>
         <groupId>com.crashnote</groupId>
         <artifactId>parent-module</artifactId>
-        <version>0.1.1</version>
+        <version>0.2</version>
         <relativePath>../module</relativePath>
     </parent>
 

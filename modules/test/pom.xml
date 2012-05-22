@@ -7,7 +7,7 @@
 
     <groupId>com.crashnote.module</groupId>
     <artifactId>module-test</artifactId>
-    <version>0.1.1</version>
+    <version>0.2</version>
     <packaging>jar</packaging>
 
     <!-- ==== Module is NOT deployed, it is embedded within the released artifacts ==== -->

@@ -43,7 +43,7 @@ public class AppengineConfigFactory
 
         // create dynamic config file .. (ONLY enable client if running on AppEngine, local requests can just be passed through then)
         final String enabled = new AppengineUtil().isRunningOnAppengine() ? "true" : "false";
-        final Config appengineConf = getConfStr("crashnote { enabled = " + enabled + ", request { skip-localhost = false } }");
+        final Config appengineConf = getConfStr("crashnote { enabled = " + enabled + ", request { ignore-localhost = false } }");
 
         // .. and add it to the application conf
         return super.readConf()
