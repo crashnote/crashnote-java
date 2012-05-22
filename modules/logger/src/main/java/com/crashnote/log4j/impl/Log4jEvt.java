@@ -36,6 +36,7 @@ public class Log4jEvt
         super(event, context);
     }
 
+
     // GET ========================================================================================
 
     @Override
@@ -75,6 +76,7 @@ public class Log4jEvt
     public long getTimeStamp() {
         return event.timeStamp;
     }
+
 
     // INTERNALS ==================================================================================
 

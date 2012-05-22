@@ -29,14 +29,18 @@ import java.util.Map;
 public class LogbackEvt
     extends LogEvt<ILoggingEvent> {
 
+    // VARS =======================================================================================
+
     private Throwable th;
     private static final long serialVersionUID = 1L;
+
 
     // SETUP ======================================================================================
 
     public LogbackEvt(final ILoggingEvent event, final Map context) {
         super(event, context);
     }
+
 
     // GET ========================================================================================
 
@@ -84,6 +88,7 @@ public class LogbackEvt
     public long getTimeStamp() {
         return event.getTimeStamp();
     }
+
 
     // INTERNALS ==================================================================================
 

@@ -33,6 +33,7 @@
                 <artifactId>maven-license-plugin</artifactId>
                 <configuration>
                     <excludes>
+                        <exclude>**/config/helper/**/*.java</exclude>
                         <exclude>**/build/json/**/*.java</exclude>
                         <exclude>**/BoundedList.java</exclude>
                         <exclude>**/ChksumUtil.java</exclude>

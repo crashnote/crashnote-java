@@ -18,7 +18,6 @@ package com.crashnote.core.report.impl.processor.impl;
 import com.crashnote.core.collect.Collector;
 import com.crashnote.core.config.*;
 import com.crashnote.core.model.log.*;
-import com.crashnote.core.model.types.*;
 import com.crashnote.core.report.impl.processor.Processor;
 import com.crashnote.core.send.Sender;
 
@@ -27,11 +26,14 @@ import com.crashnote.core.send.Sender;
  * it receives a {@link ILogSession} it creates a {@link LogReport} and sends it right away,
  * blocking the current thread.
  */
-public class SyncProcessor<C extends Config>
+public class SyncProcessor<C extends CrashConfig>
         extends Processor<C> {
+
+    // VARS =======================================================================================
 
     private final Sender<C> sender;
     private final Collector<C> collector;
+
 
     // SETUP ======================================================================================
 
@@ -41,8 +43,10 @@ public class SyncProcessor<C extends Config>
         this.collector = config.getCollector();
     }
 
+
     // LIFECYCLE ==================================================================================
 
+    @Override
     public boolean start() {
         if (!started) {
             started = true;
@@ -54,6 +58,7 @@ public class SyncProcessor<C extends Config>
         return started;
     }
 
+    @Override
     public boolean stop() {
         if (started) {
             started = false;
@@ -64,6 +69,7 @@ public class SyncProcessor<C extends Config>
         }
         return started;
     }
+
 
     // SHARED =====================================================================================
 

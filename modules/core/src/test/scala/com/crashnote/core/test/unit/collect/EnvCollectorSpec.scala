@@ -73,7 +73,7 @@ class EnvCollectorSpec
         config.getStartTime returns 123456789L
         config.getVersion returns "1.0"
         config.getClientInfo returns "cn:1.0"
-        config.getEnvironmentFilters returns Array("secret")
+        config.getEnvironmentFilters returns List("secret")
 
         config.getBuilder returns new Builder
         new EnvCollector[C](config)

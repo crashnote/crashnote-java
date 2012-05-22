@@ -28,7 +28,10 @@ import org.apache.log4j.*;
 public class Log4jConnector
     extends LogConnector<LoggerConfig, CrashAppender> {
 
+    // VARS =======================================================================================
+
     private static final Logger log = CrashAppender.getTargetLogger(Log4jConnector.class);
+
 
     // INTERFACE ==================================================================================
 
@@ -41,6 +44,7 @@ public class Log4jConnector
     public void debug(final String msg) {
         log.debug(msg);
     }
+
 
     // SHARED =====================================================================================
 

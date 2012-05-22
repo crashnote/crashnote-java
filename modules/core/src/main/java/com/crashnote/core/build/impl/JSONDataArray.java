@@ -31,6 +31,7 @@ public class JSONDataArray
         super();
     }
 
+
     // INTERFACE ==================================================================================
 
     @Override
@@ -38,6 +39,7 @@ public class JSONDataArray
         return value != null && super.add(value);
     }
 
+    @Override
     public boolean addAll(final DataArray arr) {
         return arr != null && !arr.isEmpty() && super.addAll(arr);
     }

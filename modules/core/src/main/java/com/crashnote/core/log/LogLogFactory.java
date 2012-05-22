@@ -15,20 +15,24 @@
  */
 package com.crashnote.core.log;
 
-import com.crashnote.core.config.Config;
+import com.crashnote.core.config.CrashConfig;
 
 /**
  * Factory class that can instantiate an implementation of {@link LogLog}.
  */
-public class LogLogFactory<C extends Config<C>> {
+public class LogLogFactory<C extends CrashConfig<C>> {
+
+    // VARS =======================================================================================
 
     private final boolean debug;
+
 
     // SETUP ======================================================================================
 
     public LogLogFactory(final C config) {
         this.debug = config.isDebug();
     }
+
 
     // INTERFACE ==================================================================================
 
@@ -43,6 +47,7 @@ public class LogLogFactory<C extends Config<C>> {
     public LogLog getLogger() {
         return getLogger("CRASHNOTE");
     }
+
 
     // GET ========================================================================================
 

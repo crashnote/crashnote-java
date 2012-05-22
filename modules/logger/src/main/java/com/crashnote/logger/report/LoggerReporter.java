@@ -30,11 +30,12 @@ public class LoggerReporter<C extends LoggerConfig>
         super(config);
     }
 
+
     // INTERFACE ==================================================================================
 
     public boolean doAcceptLog(final String loggerName) {
         return isEnabled() &&
-                !loggerName.startsWith(LoggerConfig.PCKG_BASE); // prevents endless loops
+                !loggerName.startsWith("com.crashnote"); // prevents endless loops
     }
 
 }

@@ -23,6 +23,7 @@ public enum LogType {
     ENV("env", "Environment"),
     ERR("err", "Error");
 
+
     // SETUP ======================================================================================
 
     LogType(final String code, final String name) {
@@ -30,10 +31,12 @@ public enum LogType {
         this.name = name;
     }
 
+
     // FIELDS =====================================================================================
 
     private final String code;
     private final String name;
+
 
     // INTERFACE ==================================================================================
 
@@ -51,6 +54,7 @@ public enum LogType {
     public String getExt() {
         return "." + code + ".log";
     }
+
 
     // GET ========================================================================================
 

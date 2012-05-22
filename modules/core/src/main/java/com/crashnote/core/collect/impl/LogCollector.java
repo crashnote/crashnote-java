@@ -16,7 +16,7 @@
 package com.crashnote.core.collect.impl;
 
 import com.crashnote.core.collect.BaseCollector;
-import com.crashnote.core.config.Config;
+import com.crashnote.core.config.CrashConfig;
 import com.crashnote.core.model.data.*;
 import com.crashnote.core.model.log.LogEvt;
 
@@ -25,10 +25,13 @@ import java.util.*;
 /**
  * Collector to transform one or multiple {@link LogEvt}(s) into a structured data format.
  */
-public class LogCollector<C extends Config>
+public class LogCollector<C extends CrashConfig>
     extends BaseCollector<C> {
 
+    // VARS =======================================================================================
+
     private final ExcpCollector<C> excpCollector;
+
 
     // SETUP ======================================================================================
 
@@ -36,6 +39,7 @@ public class LogCollector<C extends Config>
         super(config);
         this.excpCollector = createExcpCollector(config);
     }
+
 
     // INTERFACE ==================================================================================
 
@@ -46,6 +50,7 @@ public class LogCollector<C extends Config>
     public DataArray collect(final List<LogEvt<?>> evts) {
         return collectEvts(evts);
     }
+
 
     // FACTORY ====================================================================================
 
@@ -90,6 +95,7 @@ public class LogCollector<C extends Config>
         }
         return res;
     }
+
 
     // INTERNALS ==================================================================================
 

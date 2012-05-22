@@ -33,11 +33,14 @@ import java.util.Set;
 public class ServletReporter<C extends ServletConfig>
         extends LoggerReporter<C> {
 
+    // VARS =======================================================================================
+
     private final RequestCollector reqCollector;
     private final SessionCollector sesCollector;
 
     private boolean ignoreLocalhost;
     private final Set<String> localAddresses;
+
 
     // SETUP ======================================================================================
 
@@ -62,6 +65,7 @@ public class ServletReporter<C extends ServletConfig>
         super.updateConfig(config);
         this.ignoreLocalhost = config.getIgnoreLocalRequests();
     }
+
 
     // INTERFACE ==================================================================================
 
@@ -110,6 +114,7 @@ public class ServletReporter<C extends ServletConfig>
             }
         }
     }
+
 
     // SHARED =====================================================================================
 

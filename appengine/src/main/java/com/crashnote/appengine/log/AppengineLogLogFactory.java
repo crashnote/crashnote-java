@@ -27,6 +27,7 @@ public class AppengineLogLogFactory
         super(config);
     }
 
+
     // INTERFACE ==================================================================================
 
     @Override

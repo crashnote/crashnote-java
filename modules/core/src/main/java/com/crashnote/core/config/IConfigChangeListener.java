@@ -15,7 +15,7 @@
  */
 package com.crashnote.core.config;
 
-public interface IConfigChangeListener<C extends Config> {
+public interface IConfigChangeListener<C extends CrashConfig> {
 
     void updateConfig(C config);
 }

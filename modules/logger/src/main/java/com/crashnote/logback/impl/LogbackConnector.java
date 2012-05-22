@@ -29,7 +29,10 @@ import org.slf4j.LoggerFactory;
 public class LogbackConnector
         extends LogConnector<LoggerConfig, CrashAppender> {
 
+    // VARS =======================================================================================
+
     private static final Logger log = CrashAppender.getTargetLogger(LogbackConnector.class);
+
 
     // INTERFACE ==================================================================================
 
@@ -42,6 +45,7 @@ public class LogbackConnector
     public void debug(final String msg) {
         log.debug(msg);
     }
+
 
     // SHARED =====================================================================================
 

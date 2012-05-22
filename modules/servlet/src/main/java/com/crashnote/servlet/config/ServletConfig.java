@@ -15,8 +15,11 @@
  */
 package com.crashnote.servlet.config;
 
+import com.crashnote.core.config.helper.Config;
 import com.crashnote.logger.config.LoggerConfig;
 import com.crashnote.servlet.report.ServletReporter;
+
+import java.util.List;
 
 /**
  * Customized {@link LoggerConfig} for dealing with servlet environments.
@@ -24,51 +27,12 @@ import com.crashnote.servlet.report.ServletReporter;
 public class ServletConfig<C extends ServletConfig<C>>
         extends LoggerConfig<C> {
 
-    /**
-     * Property names of servlet-specific settings
-     */
-    public static final String PROP_REP_IP_SKIP = "hashRemoteIP";
-
-    public static final String PROP_REP_REQ_PARAM_SIZE = "maxRequestDataSize";
-    public static final String PROP_REP_REQ_IGNORE_LOCAL = "ignoreLocalRequests";
-    public static final String PROP_REP_REQ_PARAM_FILTER = "requestParameterFilter";
-
-    public static final String PROP_REP_HEADER_SKIP = "skipHeaders";
-    public static final String PROP_REP_SESSION_SKIP = "skipSession";
-
     // SETUP ======================================================================================
 
-    public ServletConfig() {
-        super();
+    public ServletConfig(final Config c) {
+        super(c);
     }
 
-    @Override
-    public void initDefaults() {
-        super.initDefaults();
-
-        // DO enable by default, but ...
-        setEnabled(true);
-
-        // ... DO ignore requests made from local machine
-        setIgnoreLocalRequests(true);
-
-        // filter common request parameters by default
-        addRequestFilter(".*password.*");
-        addRequestFilter(".*creditcard.*");
-        addRequestFilter(".*secret.*");
-
-        // hash remote IPs (might not be legal in some countries, force user to enable manually)
-        setHashRemoteIP(true);
-
-        // DO report header data
-        setSkipHeaderData(false);
-
-        // DO NOT report session data (yet)
-        setSkipSessionData(true);
-
-        // limit request parameters in size to prevent huge POST data to be included
-        setMaxRequestParameterSize(250);
-    }
 
     // INTERFACE ==================================================================================
 
@@ -77,82 +41,31 @@ public class ServletConfig<C extends ServletConfig<C>>
         return new ServletReporter(this);
     }
 
+
     // GET ========================================================================================
 
     public boolean getSkipSessionData() {
-        return getBoolSetting(PROP_REP_SESSION_SKIP);
+        return getBool("request.skip-session");
     }
 
     public boolean getIgnoreLocalRequests() {
-        return getBoolSetting(PROP_REP_REQ_IGNORE_LOCAL);
+        return getBool("request.skip-localhost");
     }
 
     public boolean getSkipHeaderData() {
-        return getBoolSetting(PROP_REP_HEADER_SKIP);
+        return getBool("request.skip-headers");
     }
 
     public boolean getHashRemoteIP() {
-        return getBoolSetting(PROP_REP_IP_SKIP);
+        return getBool("request.hash-ip");
     }
 
     public int getMaxRequestParameterSize() {
-        return getIntSetting(PROP_REP_REQ_PARAM_SIZE);
+        return getInt("request.max-parameter-size");
     }
 
-    public String[] getRequestFilters() {
-        final String filters = getStringSetting(PROP_REP_REQ_PARAM_FILTER);
-        if (filters == null || filters.length() == 0) return new String[0];
-        else return filters.split(":");
+    public List<String> getRequestFilters() {
+        return getStrings("filter.request");
     }
 
-    // SET+ =======================================================================================
-
-    public void addRequestFilter(final String filter) {
-        String filters = getStringSetting(PROP_REP_REQ_PARAM_FILTER);
-        if (filters == null || filters.length() == 0) filters = filter;
-        else filters += ":" + filter;
-        addSetting(PROP_REP_REQ_PARAM_FILTER, filters.toLowerCase());
-    }
-
-    // SET ========================================================================================
-
-    public void setIgnoreLocalRequests(final boolean skip) {
-        addSetting(PROP_REP_REQ_IGNORE_LOCAL, skip);
-    }
-
-    public void setIgnoreLocalRequests(final String skip) {
-        addSetting(PROP_REP_REQ_IGNORE_LOCAL, skip);
-    }
-
-    public void setSkipSessionData(final boolean skip) {
-        addSetting(PROP_REP_SESSION_SKIP, skip);
-    }
-
-    public void setSkipSessionData(final String skip) {
-        addBoolSetting(PROP_REP_SESSION_SKIP, skip);
-    }
-
-    public void setHashRemoteIP(final boolean skip) {
-        addSetting(PROP_REP_IP_SKIP, skip);
-    }
-
-    public void setHashRemoteIP(final String skip) {
-        addBoolSetting(PROP_REP_IP_SKIP, skip);
-    }
-
-    public void setSkipHeaderData(final boolean skip) {
-        addSetting(PROP_REP_HEADER_SKIP, skip);
-    }
-
-    public void setSkipHeaderData(final String skip) {
-        addBoolSetting(PROP_REP_HEADER_SKIP, skip);
-    }
-
-    public void setMaxRequestParameterSize(final int size) {
-        addSetting(PROP_REP_REQ_PARAM_SIZE, size);
-    }
-
-    public void setMaxRequestParameterSize(final String size) {
-        addIntSetting(PROP_REP_REQ_PARAM_SIZE, size);
-    }
 }

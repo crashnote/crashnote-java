@@ -15,6 +15,8 @@
  */
 package com.crashnote.core.collect.impl;
 
+import java.util.List;
+
 import com.crashnote.core.collect.BaseCollector;
 import com.crashnote.core.config.*;
 import com.crashnote.core.model.data.DataObject;
@@ -25,8 +27,10 @@ import static com.crashnote.core.util.FilterUtil.doFilter;
  * Collector to transform an application's environment data (e.g. version, system hardware etc.)
  * into a structured form.
  */
-public class EnvCollector<C extends Config>
+public class EnvCollector<C extends CrashConfig>
     extends BaseCollector<C> implements IConfigChangeListener<C> {
+
+    // VARS =======================================================================================
 
     // configuration settings:
     private Long startTime;
@@ -34,7 +38,8 @@ public class EnvCollector<C extends Config>
     private String version;
     private String build;
     private String clientInfo;
-    private String[] envFilters;
+    private List<String> envFilters;
+
 
     // SETUP ======================================================================================
 
@@ -43,6 +48,7 @@ public class EnvCollector<C extends Config>
         updateConfig(config);
     }
 
+    @Override
     public void updateConfig(final C config) {
         config.addListener(this);
         this.profile = config.getAppProfile();
@@ -52,6 +58,7 @@ public class EnvCollector<C extends Config>
         this.clientInfo = config.getClientInfo();
         this.envFilters = config.getEnvironmentFilters();
     }
+
 
     // INTERFACE ==================================================================================
 
@@ -67,6 +74,7 @@ public class EnvCollector<C extends Config>
         }
         return data;
     }
+
 
     // SHARED =====================================================================================
 
@@ -156,6 +164,7 @@ public class EnvCollector<C extends Config>
             || name.startsWith("sun.")
             || name.endsWith(".separator");
     }
+
 
     // GET / SET ==================================================================================
 

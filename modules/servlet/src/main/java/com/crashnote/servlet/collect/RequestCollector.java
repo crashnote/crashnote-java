@@ -33,10 +33,13 @@ import static com.crashnote.core.util.FilterUtil.doFilter;
 public class RequestCollector
     extends BaseCollector<ServletConfig> implements IConfigChangeListener<ServletConfig> {
 
-    protected String[] requestFilters;
+    // VARS =======================================================================================
+
+    protected List<String> requestFilters;
     protected boolean skipHeaderData;
     protected boolean hashRemoteIP;
     protected int maxRequestParamSize;
+
 
     // SETUP ======================================================================================
 
@@ -45,6 +48,7 @@ public class RequestCollector
         updateConfig(config);
     }
 
+    @Override
     public void updateConfig(final ServletConfig config) {
         config.addListener(this);
         this.hashRemoteIP = config.getHashRemoteIP();
@@ -52,6 +56,7 @@ public class RequestCollector
         this.skipHeaderData = config.getSkipHeaderData();
         this.maxRequestParamSize = config.getMaxRequestParameterSize();
     }
+
 
     // INTERFACE ==================================================================================
 
@@ -63,6 +68,7 @@ public class RequestCollector
         }
         return data;
     }
+
 
     // SHARED =====================================================================================
 

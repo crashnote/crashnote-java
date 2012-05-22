@@ -29,15 +29,18 @@ public enum LogLevel {
     CRASH(2), // = Uncaught Exceptions
     FATAL(0);
 
+
     // SETUP ======================================================================================
 
     LogLevel(final int lvl) {
         this.lvl = lvl;
     }
 
+
     // FIELDS =====================================================================================
 
     private final int lvl;
+
 
     // INTERFACE ==================================================================================
 
@@ -56,6 +59,7 @@ public enum LogLevel {
     public static LogLevel getMaxLevel(final LogLevel lvl1, final LogLevel lvl2) {
         return (lvl1.getLvl() > lvl2.getLvl()) ? lvl2 : lvl1;
     }
+
 
     // GET ========================================================================================
 

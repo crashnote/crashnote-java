@@ -16,14 +16,14 @@
 package com.crashnote.appengine.collect.impl;
 
 import com.crashnote.core.collect.impl.LogCollector;
-import com.crashnote.core.config.Config;
+import com.crashnote.core.config.CrashConfig;
 import com.crashnote.core.model.data.DataObject;
 import com.crashnote.core.model.log.LogEvt;
 
 /**
  * Customized {@link LogCollector} that post-processes the collected logging data.
  */
-public class AppengineLogCollector<C extends Config>
+public class AppengineLogCollector<C extends CrashConfig>
     extends LogCollector<C> {
 
     // SETUP ======================================================================================
@@ -31,6 +31,7 @@ public class AppengineLogCollector<C extends Config>
     public AppengineLogCollector(final C config) {
         super(config);
     }
+
 
     // SHARED =====================================================================================
 

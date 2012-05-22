@@ -48,6 +48,7 @@ public class AutoLogConnector
 
     // LIFECYCLE ==================================================================================
 
+    @Override
     public boolean start() {
         if (!started) {
             started = true;
@@ -60,6 +61,7 @@ public class AutoLogConnector
         return started;
     }
 
+    @Override
     public boolean stop() {
         if (started) {
             started = false;

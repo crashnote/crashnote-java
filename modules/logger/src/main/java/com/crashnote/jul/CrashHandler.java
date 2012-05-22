@@ -18,19 +18,25 @@ package com.crashnote.jul;
 import com.crashnote.ICrashAppender;
 import com.crashnote.core.model.types.LogLevel;
 import com.crashnote.jul.impl.JulEvt;
-import com.crashnote.logger.config.*;
+import com.crashnote.logger.config.LoggerConfig;
+import com.crashnote.logger.config.LoggerConfigFactory;
 import com.crashnote.logger.report.LoggerReporter;
 import org.slf4j.MDC;
 import org.slf4j.spi.MDCAdapter;
 
 import java.util.Map;
-import java.util.logging.*;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 /**
  * Appender that writes logs from 'Java Logging API (JUL)' to the cloud
  */
 public class CrashHandler
-    extends Handler implements ICrashAppender {
+        extends Handler implements ICrashAppender {
+
+    // VARS =======================================================================================
 
     private boolean started;
     private Level logLevel = Level.INFO;
@@ -41,6 +47,7 @@ public class CrashHandler
     // config
     private LoggerConfig config;
     private final LoggerConfigFactory configFactory;
+
 
     // SETUP ======================================================================================
 
@@ -69,6 +76,7 @@ public class CrashHandler
         start();
     }
 
+
     // INTERFACE ==================================================================================
 
     @Override
@@ -82,6 +90,7 @@ public class CrashHandler
         // nothing to do
     }
 
+    @Override
     public boolean isStarted() {
         return started;
     }
@@ -90,6 +99,7 @@ public class CrashHandler
      * Set the minimum log level for the handler, so it does not accept records with lower level.
      * Cannot use setLevel() from base class since it throws an AccessControlException on AppEngine.
      */
+    @Override
     public void setLogLevel(final LogLevel lvl) {
         if (lvl == LogLevel.DEBUG)
             logLevel = Level.FINE;
@@ -104,7 +114,7 @@ public class CrashHandler
     @Override
     public boolean isLoggable(final LogRecord record) {
         return record.getLevel().intValue() >= logLevel.intValue() &&
-            getReporter().doAcceptLog(record.getLoggerName());
+                getReporter().doAcceptLog(record.getLoggerName());
     }
 
     @Override
@@ -119,6 +129,7 @@ public class CrashHandler
         return Logger.getLogger(clazz.getName());
     }
 
+
     // INTERNALS ==================================================================================
 
     private void start() {
@@ -130,7 +141,8 @@ public class CrashHandler
     }
 
     private LoggerConfig getConfig() {
-        if (config == null) config = (LoggerConfig) configFactory.get();
+        if (config == null)
+            config = (LoggerConfig) configFactory.get();
         return config;
     }
 
@@ -143,33 +155,4 @@ public class CrashHandler
         return (mdc != null) ? mdc.getCopyOfContextMap() : null;
     }
 
-    // PARAMETERS =================================================================================
-
-    public void setPort(final String port) {
-        configFactory.setPort(port);
-    }
-
-    public void setHost(final String host) {
-        configFactory.setHost(host);
-    }
-
-    public void setKey(final String key) {
-        configFactory.setKey(key);
-    }
-
-    public void setEnabled(final String enabled) {
-        configFactory.setEnabled(enabled);
-    }
-
-    public void setSslPort(final String sslPort) {
-        configFactory.setSslPort(sslPort);
-    }
-
-    public void setSecure(final String secure) {
-        configFactory.setSecure(secure);
-    }
-
-    public void setSync(final String on) {
-        configFactory.setSync(on);
-    }
 }

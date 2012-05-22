@@ -33,12 +33,15 @@ public class JSONDataObject
         super();
     }
 
+
     // INTERFACE ==================================================================================
 
+    @Override
     public void streamTo(final Writer out) throws IOException {
         writeJSONString(out);
     }
 
+    @Override
     public void appendTo(final String key, final Object data) {
         if (!containsKey(key)) put(key, new JSONDataArray());
         final JSONArray arr = (JSONArray) get(key);
@@ -51,10 +54,12 @@ public class JSONDataObject
         else return super.put(key, value);
     }
 
+    @Override
     public Object putArr(final String key, final DataArray value) {
         return (value == null || value.isEmpty()) ? null : super.put(key, value);
     }
 
+    @Override
     public Object putObj(final String key, final DataObject value) {
         return (value == null || value.isEmpty()) ? null : super.put(key, value);
     }

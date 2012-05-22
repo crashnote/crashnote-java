@@ -56,6 +56,7 @@ public final class ChksumUtil implements Serializable {
         return hash(s.toCharArray());
     }
 
+
     // INTERNALS ==================================================================================
 
     private final static int P_DEGREE = 64;

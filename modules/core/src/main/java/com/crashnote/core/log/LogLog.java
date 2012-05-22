@@ -15,7 +15,7 @@
  */
 package com.crashnote.core.log;
 
-import com.crashnote.core.config.Config;
+import com.crashnote.core.config.CrashConfig;
 
 /**
  * The log within the log: allows the library to issue log statements without them ending up in
@@ -24,19 +24,23 @@ import com.crashnote.core.config.Config;
  */
 public class LogLog {
 
+    // VARS =======================================================================================
+
     private final String name;
     private final boolean debug;
+
 
     // SETUP ======================================================================================
 
     public LogLog(final String name, final boolean debug) {
-        this.name = Config.LIB_NAME;
+        this.name = CrashConfig.LIB_NAME;
         this.debug = debug;
     }
 
     public LogLog(final String name) {
         this(name, false);
     }
+
 
     // INTERFACE ==================================================================================
 
@@ -68,6 +72,7 @@ public class LogLog {
         System.err.println(name + " ERROR - " + buildMsg(msg, args) + ": " + th.getMessage());
     }
 
+
     // SHARED =====================================================================================
 
     protected String buildMsg(final String msg, final Object... args) {
@@ -76,6 +81,7 @@ public class LogLog {
             res = res.replaceFirst("\\{\\}", arg.toString());
         return res;
     }
+
 
     // GET ========================================================================================
 

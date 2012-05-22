@@ -36,9 +36,7 @@ class ServletConfigSpec
         }
     }
 
-    def before = {
-        val f = new ConfigFactoryStub
-        f.setKey("0000000-00000-0000-0000-000000000000")
-        c = f.get
+    def before {
+        c = new ConfigFactoryStub().get()
     }
 }

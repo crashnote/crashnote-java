@@ -22,17 +22,18 @@ import com.crashnote.servlet.report.ServletReporter;
 import javax.servlet.*;
 import java.io.IOException;
 
-/**
- * TODO
- */
 public class CrashnoteFilter
     implements Filter {
+
+    // VARS =======================================================================================
 
     private ServletReporter reporter;
     private AutoLogConnector connector;
 
+
     // INTERFACE ==================================================================================
 
+    @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
 
         // make sure this is not being used on AppEngine (there is a separate library for that)
@@ -61,6 +62,7 @@ public class CrashnoteFilter
      * <p/>
      * PS: Everything inside doFilter() must be thread-safe!
      */
+    @Override
     public void doFilter(final ServletRequest request, final ServletResponse response,
                          final FilterChain chain) throws IOException, ServletException {
 
@@ -91,6 +93,7 @@ public class CrashnoteFilter
         }
     }
 
+    @Override
     public void destroy() {
 
         // disconnect the appenders
@@ -99,6 +102,7 @@ public class CrashnoteFilter
         // close the reporter (and let it quickly flush cached data)
         if (reporter != null) reporter.stop();
     }
+
 
     // SHARED =====================================================================================
 

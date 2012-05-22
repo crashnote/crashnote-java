@@ -15,34 +15,28 @@
  */
 package com.crashnote.logger.config;
 
-import com.crashnote.core.config.Config;
-import com.crashnote.core.log.LogLog;
-import com.crashnote.core.model.types.ApplicationType;
-import com.crashnote.core.report.Reporter;
+import com.crashnote.core.config.CrashConfig;
+import com.crashnote.core.config.helper.Config;
+import com.crashnote.core.config.helper.ConfigFactory;
 import com.crashnote.logger.helper.AutoLogConnector;
 import com.crashnote.logger.report.LoggerReporter;
 
 /**
- * Customized {@link Config} for dealing with log frameworks.
+ * Customized {@link com.crashnote.core.config.CrashConfig} for dealing with log frameworks.
  */
 public class LoggerConfig<C extends LoggerConfig<C>>
-    extends Config<C> {
-
-    public static final String PCKG_BASE = "com.crashnote";
+    extends CrashConfig<C> {
 
     // SETUP ======================================================================================
 
     public LoggerConfig() {
-        super();
+        this(ConfigFactory.empty());
     }
 
-    @Override
-    public void initDefaults() {
-        super.initDefaults();
-
-        // assume this is a server application
-        setAppType(ApplicationType.SERVER);
+    public LoggerConfig(final Config c) {
+        super(c);
     }
+
 
     // FACTORY ====================================================================================
 

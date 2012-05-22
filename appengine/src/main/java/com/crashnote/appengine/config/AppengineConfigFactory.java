@@ -15,6 +15,8 @@
  */
 package com.crashnote.appengine.config;
 
+import com.crashnote.appengine.util.AppengineUtil;
+import com.crashnote.core.config.helper.Config;
 import com.crashnote.servlet.config.ServletConfigFactory;
 
 import javax.servlet.FilterConfig;
@@ -25,7 +27,27 @@ public class AppengineConfigFactory
     // SETUP ======================================================================================
 
     public AppengineConfigFactory(final FilterConfig filterConfig) {
-        super(filterConfig, new AppengineConfig());
+        super(filterConfig);
+    }
+
+
+    // SHARED =====================================================================================
+
+    @Override
+    public AppengineConfig create() {
+        return new AppengineConfig(readConf());
+    }
+
+    @Override
+    protected Config readConf() {
+
+        // create dynamic config file .. (ONLY enable client if running on AppEngine, local requests can just be passed through then)
+        final String enabled = new AppengineUtil().isRunningOnAppengine() ? "true" : "false";
+        final Config appengineConf = getConfStr("crashnote { enabled = " + enabled + ", request { skip-localhost = false } }");
+
+        // .. and add it to the application conf
+        return super.readConf()
+                .withFallback(appengineConf);
     }
 
 }

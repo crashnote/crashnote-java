@@ -68,7 +68,7 @@
         </dependencies>
     </dependencyManagement>
 
-<build>
+    <build>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -77,21 +77,6 @@
         </resources>
 
         <plugins>
-            <!-- use Java to compile the sources -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                    <debug>false</debug>
-                    <optimize>true</optimize>
-                    <encoding>UTF-8</encoding>
-                    <generatedSourcesDirectory>src/main/generated</generatedSourcesDirectory>
-                </configuration>
-            </plugin>
-
             <!-- use Scala to compile the tests -->
             <plugin>
                 <groupId>org.scala-tools</groupId>
@@ -195,24 +180,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.7</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <sources>
-                        <source>src/main/generated</source>
-                    </sources>
-                </configuration>
             </plugin>
         </plugins>
     </build>

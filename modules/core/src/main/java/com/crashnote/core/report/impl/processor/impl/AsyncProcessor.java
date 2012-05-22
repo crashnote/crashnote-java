@@ -15,7 +15,7 @@
  */
 package com.crashnote.core.report.impl.processor.impl;
 
-import com.crashnote.core.config.Config;
+import com.crashnote.core.config.CrashConfig;
 import com.crashnote.core.model.log.ILogSession;
 import com.crashnote.core.report.impl.processor.Processor;
 
@@ -28,11 +28,14 @@ import java.util.concurrent.*;
  * <p/>
  * Because it uses {@link ScheduledExecutorService} the library requires at least JDK 1.5.
  */
-public class AsyncProcessor<C extends Config>
+public class AsyncProcessor<C extends CrashConfig>
     extends Processor<C> {
+
+    // VARS =======================================================================================
 
     private final Processor<C> delegate;
     private final ScheduledExecutorService scheduler;
+
 
     // SETUP ======================================================================================
 
@@ -42,11 +45,13 @@ public class AsyncProcessor<C extends Config>
         this.scheduler = Executors.newSingleThreadScheduledExecutor();
     }
 
+
     // LIFECYCLE ==================================================================================
 
     /**
      * Start the processor.
      */
+    @Override
     public boolean start() {
         if (!started) {
             started = true;
@@ -60,6 +65,7 @@ public class AsyncProcessor<C extends Config>
      * Stop the processor,
      * also shutdown the async scheduler (exit the thread) and wait some time for it to finish.
      */
+    @Override
     public boolean stop() {
         if (started) {
             started = false;
@@ -76,6 +82,7 @@ public class AsyncProcessor<C extends Config>
         return started;
     }
 
+
     // SHARED =====================================================================================
 
     @Override
@@ -83,6 +90,7 @@ public class AsyncProcessor<C extends Config>
         getLogger().debug("deferring log session");
         scheduler.submit(new SendTask(delegate, session.copy()));
     }
+
 
     // INTERNALS ==================================================================================
 
@@ -96,6 +104,7 @@ public class AsyncProcessor<C extends Config>
             this.delegate = delegate;
         }
 
+        @Override
         public Void call() throws Exception {
             delegate.process(session);
             return null;

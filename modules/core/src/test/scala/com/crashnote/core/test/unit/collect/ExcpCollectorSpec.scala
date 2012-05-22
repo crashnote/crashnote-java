@@ -17,7 +17,7 @@ package com.crashnote.core.test.unit.collect
 
 import com.crashnote.core.collect.impl.ExcpCollector
 import com.crashnote.core.test.defs.MockSpec
-import com.crashnote.core.config.Config
+import com.crashnote.core.config.CrashConfig
 import com.crashnote.core.build.Builder
 import com.crashnote.core.model.data._
 import java.lang.StackTraceElement

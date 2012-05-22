@@ -18,31 +18,12 @@ package com.crashnote;
 import com.crashnote.core.model.types.LogLevel;
 
 /**
- * Interface defines setter methods every appender - independent of the library -
- * should implement in order to be configurable by the user.
+ * Interface every appender - independent of the library - must implement.
  */
 public interface ICrashAppender {
-
-    // === Internally
 
     public boolean isStarted();
 
     public void setLogLevel(LogLevel lvl);
 
-
-    // === Externally
-
-    public void setSync(String on);
-
-    public void setPort(String port);
-
-    public void setHost(String host);
-
-    public void setKey(String key);
-
-    public void setEnabled(String enabled);
-
-    public void setSslPort(String sslPort);
-
-    public void setSecure(String secure);
 }

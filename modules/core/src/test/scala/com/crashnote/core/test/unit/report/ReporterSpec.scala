@@ -185,15 +185,7 @@ class ReporterSpec
 
         "create internal" >> {
             "session" >> {
-                "when on server" >> new Configured(SERVER) {
-                    target.getSession must haveClass[SharedLogSession]
-                }
-                "when on client" >> new Configured(CLIENT) {
-                    target.getSession must haveClass[LocalLogSession]
-                }
-                "by default" >> new Configured() {
-                    target.getSession must haveClass[LocalLogSession]
-                }
+                target.getSession must haveClass[LocalLogSession]
             }
             "processor" >> {
                 "when in sync mode" >> new Configured(SYNC) {

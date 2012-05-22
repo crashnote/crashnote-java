@@ -31,8 +31,10 @@ import com.crashnote.core.report.impl.session.*;
  * the same goes for context data. It can automatically or manually flush the session
  * in order to send out a crash report by calling the internal {@link Processor}.
  */
-public class Reporter<C extends Config>
+public class Reporter<C extends CrashConfig>
     implements Thread.UncaughtExceptionHandler, Lifecycle, IConfigChangeListener<C> {
+
+    // VARS =======================================================================================
 
     private boolean started;
 
@@ -45,6 +47,7 @@ public class Reporter<C extends Config>
     // configuration settings:
     private boolean enabled;
 
+
     // SETUP ======================================================================================
 
     public Reporter(final C config) {
@@ -54,6 +57,7 @@ public class Reporter<C extends Config>
         this.processor = createProcessor(config);
     }
 
+    @Override
     public void updateConfig(final C config) {
         config.addListener(this);
         this.enabled = config.isEnabled();
@@ -61,6 +65,7 @@ public class Reporter<C extends Config>
 
     // LIFECYCLE ==================================================================================
 
+    @Override
     public boolean start() {
         if (!started) {
             started = true;
@@ -72,6 +77,7 @@ public class Reporter<C extends Config>
         return started;
     }
 
+    @Override
     public boolean stop() {
         if (started) {
             logger.debug("stopping module [reporter]");
@@ -81,6 +87,7 @@ public class Reporter<C extends Config>
         }
         return started;
     }
+
 
     // INTERFACE ==================================================================================
 
@@ -139,6 +146,7 @@ public class Reporter<C extends Config>
 
     // ===== Uncaught Exceptions
 
+    @Override
     public void uncaughtException(final Thread t, final Throwable th) {
         // first call custom handler ...
         if (isOperable()) reportLog(new ThrowableLogEvt(t, th));
@@ -165,6 +173,7 @@ public class Reporter<C extends Config>
             Thread.setDefaultUncaughtExceptionHandler(defaultHandler);
     }
 
+
     // SHARED =====================================================================================
 
     protected boolean isAutoFlush() {
@@ -175,13 +184,11 @@ public class Reporter<C extends Config>
         return isEnabled() && isStarted();
     }
 
+
     // FACTORY ====================================================================================
 
     protected ILogSession createSessionStore(final C config) {
-        if (config.getApplicationType() == ApplicationType.SERVER)
-            return new SharedLogSession();
-        else
-            return new LocalLogSession();
+        return new LocalLogSession(); // SharedLogSession
     }
 
     protected Processor<C> createProcessor(final C config) {
@@ -191,6 +198,7 @@ public class Reporter<C extends Config>
         else
             return new AsyncProcessor<C>(config, syncPrc);
     }
+
 
     // GET ========================================================================================
 

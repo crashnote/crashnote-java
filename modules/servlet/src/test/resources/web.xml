@@ -18,11 +18,11 @@
             <param-value>0000000-00000-0000-0000-000000000000</param-value>
         </init-param>
         <init-param>
-            <param-name>host</param-name>
+            <param-name>request.host</param-name>
             <param-value>127.0.0.3</param-value>
         </init-param>
         <init-param>
-            <param-name>secure</param-name>
+            <param-name>request.ssl</param-name>
             <param-value>false</param-value>
         </init-param>
     </filter>

@@ -17,7 +17,7 @@ package com.crashnote.core.collect;
 
 import com.crashnote.core.Lifecycle;
 import com.crashnote.core.collect.impl.*;
-import com.crashnote.core.config.Config;
+import com.crashnote.core.config.CrashConfig;
 import com.crashnote.core.model.data.DataObject;
 import com.crashnote.core.model.log.*;
 
@@ -28,12 +28,15 @@ import java.util.*;
  * into a structured form that can be parsed by an external API. The structure is based on
  * abstract object and array containers.
  */
-public class Collector<C extends Config>
+public class Collector<C extends CrashConfig>
     extends BaseCollector<C> implements Lifecycle {
+
+    // VARS =======================================================================================
 
     private boolean started;
     private final EnvCollector<C> env_c;
     private final LogCollector<C> log_c;
+
 
     // SETUP ======================================================================================
 
@@ -44,8 +47,10 @@ public class Collector<C extends Config>
         this.log_c = createLogColl(config);
     }
 
+
     // LIFECYCLE ==================================================================================
 
+    @Override
     public boolean start() {
         if (!started) {
             started = true;
@@ -54,6 +59,7 @@ public class Collector<C extends Config>
         return started;
     }
 
+    @Override
     public boolean stop() {
         if (started) {
             started = false;
@@ -61,6 +67,7 @@ public class Collector<C extends Config>
         }
         return started;
     }
+
 
     // INTERFACE ==================================================================================
 
@@ -92,6 +99,7 @@ public class Collector<C extends Config>
         return data;
     }
 
+
     // FACTORY ====================================================================================
 
     protected EnvCollector<C> createEnvColl(final C config) {
@@ -101,6 +109,7 @@ public class Collector<C extends Config>
     protected LogCollector<C> createLogColl(final C config) {
         return new LogCollector<C>(config);
     }
+
 
     // GET ========================================================================================
 

@@ -15,9 +15,11 @@
  */
 package com.crashnote.core.util;
 
+import java.util.List;
+
 public class FilterUtil {
 
-    public static boolean doFilter(final String name, final String[] filters) {
+    public static boolean doFilter(final String name, final List<String> filters) {
         for (final String filter : filters) {
             final String lcName = name.toLowerCase();
             if (lcName.equalsIgnoreCase(filter) || lcName.matches(filter)) return true;

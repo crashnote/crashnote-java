@@ -35,6 +35,7 @@ public class JulEvt
         super(event, context);
     }
 
+
     // GET ========================================================================================
 
     @Override
@@ -71,6 +72,7 @@ public class JulEvt
     public long getTimeStamp() {
         return event.getMillis();
     }
+
 
     // INTERNALS ==================================================================================
 

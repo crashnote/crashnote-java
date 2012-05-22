@@ -15,9 +15,16 @@
  */
 package com.crashnote.servlet.test.defs.stubs;
 
+import com.crashnote.core.config.helper.Config;
 import com.crashnote.servlet.config.ServletConfig;
 
 public class ConfigStub
     extends ServletConfig<ConfigStub> {
 
+    Config conf;
+
+    public ConfigStub(final Config c) {
+        super(c);
+        this.conf = c;
+    }
 }

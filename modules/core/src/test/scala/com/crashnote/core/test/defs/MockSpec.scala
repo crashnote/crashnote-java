@@ -77,9 +77,6 @@ abstract class MockSpec[T](implicit t: Manifest[T])
     lazy val DISABLED = (config: C) => config.isEnabled returns false
     lazy val ENABLED = (config: C) => config.isEnabled returns true
 
-    lazy val CLIENT = (config: C) => config.getApplicationType returns ApplicationType.CLIENT
-    lazy val SERVER = (config: C) => config.getApplicationType returns ApplicationType.SERVER
-
     lazy val SYNC = (config: C) => config.isSync returns true
     lazy val ASYNC = (config: C) => config.isSync returns false
 }

@@ -15,9 +15,13 @@
  */
 package com.crashnote.logger.test.defs.stubs;
 
+import com.crashnote.core.config.helper.Config;
 import com.crashnote.logger.config.LoggerConfig;
 
 public class ConfigStub
     extends LoggerConfig<ConfigStub> {
 
+    public ConfigStub(final Config c) {
+        super(c);
+    }
 }

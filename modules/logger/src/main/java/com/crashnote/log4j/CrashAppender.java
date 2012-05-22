@@ -29,6 +29,8 @@ import org.apache.log4j.spi.*;
 public class CrashAppender
     extends AppenderSkeleton implements ICrashAppender {
 
+    // VARS =======================================================================================
+
     private boolean started;
 
     private LoggerReporter<LoggerConfig> reporter;
@@ -36,6 +38,7 @@ public class CrashAppender
     // config
     private LoggerConfig config;
     private final LoggerConfigFactory configFactory;
+
 
     // SETUP ======================================================================================
 
@@ -56,6 +59,7 @@ public class CrashAppender
         start();
     }
 
+
     // INTERFACE ==================================================================================
 
     @Override
@@ -75,10 +79,12 @@ public class CrashAppender
         return Logger.getLogger(clazz);
     }
 
+    @Override
     public boolean isStarted() {
         return started;
     }
 
+    @Override
     public void setLogLevel(final LogLevel lvl) {
         if (lvl == LogLevel.DEBUG)
             setThreshold(Level.DEBUG);
@@ -90,6 +96,7 @@ public class CrashAppender
             setThreshold(Level.ERROR);
     }
 
+
     // SHARED =====================================================================================
 
     @Override
@@ -97,6 +104,7 @@ public class CrashAppender
         if (isStarted())
             getReporter().reportLog(new Log4jEvt(event, MDC.getContext()));
     }
+
 
     // INTERNALS ==================================================================================
 
@@ -118,44 +126,13 @@ public class CrashAppender
     }
 
     private LoggerConfig getConfig() {
-        if (config == null) {
+        if (config == null)
             config = (LoggerConfig) configFactory.get();
-        }
         return config;
     }
 
     private LoggerReporter<LoggerConfig> getReporter() {
         if (reporter == null) reporter = getConfig().getReporter();
         return reporter;
-    }
-
-    // PARAMETERS =================================================================================
-
-    public void setPort(final String port) {
-        configFactory.setPort(port);
-    }
-
-    public void setHost(final String host) {
-        configFactory.setHost(host);
-    }
-
-    public void setKey(final String key) {
-        configFactory.setKey(key);
-    }
-
-    public void setEnabled(final String enabled) {
-        configFactory.setEnabled(enabled);
-    }
-
-    public void setSslPort(final String sslPort) {
-        configFactory.setSslPort(sslPort);
-    }
-
-    public void setSecure(final String secure) {
-        configFactory.setSecure(secure);
-    }
-
-    public void setSync(final String on) {
-        configFactory.setSync(on);
     }
 }

@@ -29,7 +29,10 @@ import java.util.logging.*;
 public class JulConnector
         extends LogConnector<LoggerConfig, CrashHandler> {
 
+    // VARS =======================================================================================
+
     private static final Logger log = CrashHandler.getTargetLogger(JulConnector.class);
+
 
     // INTERFACE ==================================================================================
 
@@ -42,6 +45,7 @@ public class JulConnector
     public void debug(final String msg) {
         log.config(msg);
     }
+
 
     // SHARED =====================================================================================
 

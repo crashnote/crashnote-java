@@ -16,7 +16,7 @@
 package com.crashnote.core.collect;
 
 import com.crashnote.core.build.Builder;
-import com.crashnote.core.config.Config;
+import com.crashnote.core.config.CrashConfig;
 import com.crashnote.core.log.LogLog;
 import com.crashnote.core.model.data.*;
 import com.crashnote.core.util.SystemUtil;
@@ -28,11 +28,14 @@ import java.util.List;
  * It provides utility methods to create these containers by using the {@link Builder} class which
  * hides the concrete implementation details.
  */
-public abstract class BaseCollector<C extends Config> {
+public abstract class BaseCollector<C extends CrashConfig> {
+
+    // VARS =======================================================================================
 
     private final LogLog logger;
     private final Builder builder;
     private final SystemUtil sysUtil;
+
 
     // SETUP ======================================================================================
 
@@ -41,6 +44,7 @@ public abstract class BaseCollector<C extends Config> {
         this.logger = config.getLogger(this.getClass());
         this.sysUtil = config.getSystemUtil();
     }
+
 
     // SHARED =====================================================================================
 
@@ -61,6 +65,7 @@ public abstract class BaseCollector<C extends Config> {
     protected SystemUtil getSysUtil() {
         return sysUtil;
     }
+
 
     // GET ========================================================================================
 

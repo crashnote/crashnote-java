@@ -29,8 +29,10 @@ import java.util.zip.GZIPOutputStream;
  * The Dispatcher is responsible for transmitting the data from the client to the server by
  * using Java's build-in capabilities around {@link HttpURLConnection}.
  */
-public class Sender<C extends Config>
+public class Sender<C extends CrashConfig>
     implements IConfigChangeListener<C> {
+
+    // VARS =======================================================================================
 
     // configuration settings:
     private String key;
@@ -39,6 +41,7 @@ public class Sender<C extends Config>
     private int connectionTimeout;
 
     private final LogLog logger;
+
 
     // SETUP ======================================================================================
 
@@ -50,6 +53,7 @@ public class Sender<C extends Config>
         installCustomTrustManager();
     }
 
+    @Override
     public void updateConfig(final C config) {
         config.addListener(this);
         this.key = config.getKey();
@@ -57,6 +61,7 @@ public class Sender<C extends Config>
         this.clientInfo = config.getClientInfo();
         this.connectionTimeout = config.getConnectionTimeout() * 1000;
     }
+
 
     // INTERFACE ==================================================================================
 
@@ -70,6 +75,7 @@ public class Sender<C extends Config>
         }
         return false;
     }
+
 
     // SHARED =====================================================================================
 
@@ -118,6 +124,7 @@ public class Sender<C extends Config>
         return conn;
     }
 
+
     // FACTORY ====================================================================================
 
     protected HttpURLConnection createConnection(final String url) throws IOException {
@@ -143,13 +150,16 @@ public class Sender<C extends Config>
             final SSLContext sc = SSLContext.getInstance("TLS");
             final TrustManager[] mgrs = new TrustManager[]{
                 new X509TrustManager() {
+                    @Override
                     public java.security.cert.X509Certificate[] getAcceptedIssuers() {
                         return null;
                     }
 
+                    @Override
                     public void checkClientTrusted(final X509Certificate[] certs, final String typeOf) {
                     }
 
+                    @Override
                     public void checkServerTrusted(final X509Certificate[] certs, final String typeOf) {
                     }
                 }
@@ -160,6 +170,7 @@ public class Sender<C extends Config>
             logger.warn("unable to install custom SSL manager", e);
         }
     }
+
 
     // GET ========================================================================================
 

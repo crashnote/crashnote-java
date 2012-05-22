@@ -18,9 +18,9 @@ package com.crashnote.appengine.collect;
 import com.crashnote.appengine.collect.impl.*;
 import com.crashnote.core.collect.Collector;
 import com.crashnote.core.collect.impl.*;
-import com.crashnote.core.config.Config;
+import com.crashnote.core.config.CrashConfig;
 
-public class AppengineCollector<C extends Config>
+public class AppengineCollector<C extends CrashConfig>
     extends Collector<C> {
 
     // SETUP ======================================================================================
@@ -28,6 +28,7 @@ public class AppengineCollector<C extends Config>
     public AppengineCollector(final C config) {
         super(config);
     }
+
 
     // FACTORY ====================================================================================
 

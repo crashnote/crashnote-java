@@ -15,9 +15,13 @@
  */
 package com.crashnote.core.test.defs.stubs;
 
-import com.crashnote.core.config.Config;
+import com.crashnote.core.config.CrashConfig;
+import com.crashnote.core.config.helper.Config;
 
 public class ConfigStub
-    extends Config<ConfigStub> {
+    extends CrashConfig<ConfigStub> {
 
+    public ConfigStub(final Config c) {
+        super(c);
+    }
 }

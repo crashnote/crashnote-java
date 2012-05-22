@@ -29,7 +29,10 @@ import java.util.*;
 public class LocalLogSession
     implements ILogSession {
 
+    // VARS =======================================================================================
+
     private final ThreadLocal<SharedLogSession> session;
+
 
     // SETUP ======================================================================================
 
@@ -38,55 +41,68 @@ public class LocalLogSession
         session.set(new SharedLogSession());
     }
 
+
     // INTERFACE ==================================================================================
 
+    @Override
     public ILogSession copy() {
         return new SharedLogSession(session.get());
     }
 
+    @Override
     public void clear() {
         getSession().clear();
     }
 
     // ===== EVENTS
 
+    @Override
     public List<LogEvt<?>> getEvents() {
         return getSession().getEvents();
     }
 
+    @Override
     public void addEvent(final LogEvt<?> evt) {
         getSession().addEvent(evt);
     }
 
+    @Override
     public void clearEvents() {
         getSession().clearEvents();
     }
 
+    @Override
     public boolean isEmpty() {
         return getSession().isEmpty();
     }
 
     // ===== CONTEXT
 
+    @Override
     public void putCtx(final String key, final Object val) {
         getSession().putCtx(key, val);
     }
 
+    @Override
     public void removeCtx(final String key) {
         getSession().removeCtx(key);
     }
 
+    @Override
     public void clearCtx() {
         getSession().clearCtx();
     }
 
+    @Override
     public Map<String, Object> getContext() {
         return getSession().getContext();
     }
 
+    @Override
     public boolean hasContext() {
         return getSession().hasContext();
     }
+
 
     // INTERNALS ==================================================================================
 

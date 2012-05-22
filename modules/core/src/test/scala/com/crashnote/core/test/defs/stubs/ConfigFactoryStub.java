@@ -15,17 +15,18 @@
  */
 package com.crashnote.core.test.defs.stubs;
 
-import com.crashnote.core.config.ConfigFactory;
+import com.crashnote.core.config.CrashConfig;
+import com.crashnote.core.config.CrashConfigFactory;
 
 public class ConfigFactoryStub
-    extends ConfigFactory<ConfigStub> {
+    extends CrashConfigFactory<ConfigStub> {
 
     public ConfigFactoryStub() {
-        super(new ConfigStub());
+        super();
     }
 
-    public ConfigFactoryStub(final ConfigStub config) {
-        super(config);
+    @Override
+    protected ConfigStub create() {
+        return (ConfigStub) new ConfigStub(readConf());
     }
-
 }

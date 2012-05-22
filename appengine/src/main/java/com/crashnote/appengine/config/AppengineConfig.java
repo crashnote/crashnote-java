@@ -20,6 +20,7 @@ import com.crashnote.appengine.log.AppengineLogLogFactory;
 import com.crashnote.appengine.send.AppengineSender;
 import com.crashnote.appengine.util.AppengineUtil;
 import com.crashnote.core.collect.Collector;
+import com.crashnote.core.config.helper.Config;
 import com.crashnote.core.log.LogLogFactory;
 import com.crashnote.core.send.Sender;
 import com.crashnote.servlet.config.ServletConfig;
@@ -32,20 +33,10 @@ public class AppengineConfig
 
     // SETUP ======================================================================================
 
-    public AppengineConfig() {
-        super();
+    public AppengineConfig(final Config c) {
+        super(c);
     }
 
-    @Override
-    public void initDefaults() {
-        super.initDefaults();
-
-        // ONLY enable client if running on AppEngine
-        setEnabled(getSystemUtil().isRunningOnAppengine());
-
-        // since excluding local hits is taken care of (line above), local requests can just be passed through
-        setIgnoreLocalRequests(false);
-    }
 
     // INTERFACE ==================================================================================
 
@@ -67,11 +58,15 @@ public class AppengineConfig
         return new AppengineUtil();
     }
 
+
+    // SHARED ==================================================================================
+
     @Override
     protected LogLogFactory<AppengineConfig> getLogFactory() {
         if (logFactory == null) logFactory = new AppengineLogLogFactory(this);
         return logFactory;
     }
+
 
     // GET ========================================================================================
 

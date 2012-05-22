@@ -25,8 +25,11 @@ import java.util.*;
  */
 public abstract class LogEvt<E> {
 
+    // VARS =======================================================================================
+
     protected E event;
     protected Map<String, Object> mdc;
+
 
     // SETUP ======================================================================================
 
@@ -37,6 +40,7 @@ public abstract class LogEvt<E> {
         this.event = event;
     }
 
+
     // INTERFACE ==================================================================================
 
     public void defer() {
@@ -46,6 +50,7 @@ public abstract class LogEvt<E> {
     public final boolean isExcp() {
         return getLevel().isExcp();
     }
+
 
     // GET ========================================================================================
 

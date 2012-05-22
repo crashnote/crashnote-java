@@ -15,19 +15,21 @@
  */
 package com.crashnote.logger.config;
 
-import com.crashnote.core.config.ConfigFactory;
+import com.crashnote.core.config.CrashConfigFactory;
 
 public class LoggerConfigFactory<C extends LoggerConfig>
-        extends ConfigFactory<C> {
+        extends CrashConfigFactory<C> {
 
     // SETUP ======================================================================================
 
     public LoggerConfigFactory() {
-        this((C) new LoggerConfig());
     }
 
-    protected LoggerConfigFactory(final C config) {
-        super(config);
+    // SHARED ===================================================================================
+
+    @Override
+    protected C create() {
+        return (C) new LoggerConfig(readConf());
     }
 
 }

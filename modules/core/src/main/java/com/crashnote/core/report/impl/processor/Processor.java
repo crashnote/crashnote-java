@@ -16,7 +16,7 @@
 package com.crashnote.core.report.impl.processor;
 
 import com.crashnote.core.Lifecycle;
-import com.crashnote.core.config.Config;
+import com.crashnote.core.config.CrashConfig;
 import com.crashnote.core.log.LogLog;
 import com.crashnote.core.model.log.*;
 import com.crashnote.core.send.Sender;
@@ -29,17 +29,21 @@ import com.crashnote.core.send.Sender;
  * The class is abstract in order to allow sub-classes to define the way they want to get the job
  * done themselves.
  */
-public abstract class Processor<C extends Config>
+public abstract class Processor<C extends CrashConfig>
         implements Lifecycle {
+
+    // VARS =======================================================================================
 
     protected boolean started;
     private final LogLog logger;
+
 
     // SETUP ======================================================================================
 
     public Processor(final C config) {
         this.logger = config.getLogger(this.getClass());
     }
+
 
     // INTERFACE ==================================================================================
 
@@ -48,9 +52,11 @@ public abstract class Processor<C extends Config>
             doProcess(session);
     }
 
+
     // SHARED =====================================================================================
 
     protected abstract void doProcess(ILogSession session);
+
 
     // GET ========================================================================================
 

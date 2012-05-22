@@ -16,13 +16,13 @@
 package com.crashnote.core.collect.impl;
 
 import com.crashnote.core.collect.BaseCollector;
-import com.crashnote.core.config.Config;
+import com.crashnote.core.config.CrashConfig;
 import com.crashnote.core.model.data.*;
 
 /**
  * Collector for serializing a {@link Throwable} into a structured form.
  */
-public class ExcpCollector<C extends Config>
+public class ExcpCollector<C extends CrashConfig>
     extends BaseCollector<C> {
 
     // SETUP ======================================================================================
@@ -30,6 +30,7 @@ public class ExcpCollector<C extends Config>
     public ExcpCollector(final C config) {
         super(config);
     }
+
 
     // INTERFACE ==================================================================================
 
@@ -65,6 +66,7 @@ public class ExcpCollector<C extends Config>
         if (excps.size() == 0) return null;
         return excps;
     }
+
 
     // INTERNALS ==================================================================================
 

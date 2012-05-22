@@ -118,16 +118,20 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>com.google.code.maven-replacer-plugin</groupId>
-                        <artifactId>maven-replacer-plugin</artifactId>
-                    </plugin>
-
-                    <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <id>add-source</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                         <configuration>
                             <sources>
-                                <source>src/main/generated</source>
                                 <source>../modules/core/src/main/java</source>
                                 <source>../modules/logger/src/main/java</source>
                                 <source>../modules/servlet/src/main/java</source>

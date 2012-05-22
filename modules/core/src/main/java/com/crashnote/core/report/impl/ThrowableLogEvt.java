@@ -28,11 +28,14 @@ import java.util.Date;
 public class ThrowableLogEvt
         extends LogEvt<Throwable> {
 
+    // VARS =======================================================================================
+
     private final long time;
     private final Object[] args;
     private final LogLevel lvl;
     private final String msg;
     private final String threadName;
+
 
     // SETUP ======================================================================================
 
@@ -49,6 +52,7 @@ public class ThrowableLogEvt
     public ThrowableLogEvt(final Thread t, final Throwable th) {
         this(Thread.currentThread(), th, LogLevel.CRASH, th.getMessage());
     }
+
 
     // GET ========================================================================================
 

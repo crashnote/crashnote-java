@@ -64,6 +64,7 @@ public class JSONArray
         out.write(']');
     }
 
+    @Override
     public void writeJSONString(final Writer out) throws IOException {
         writeJSONString(this, out);
     }
@@ -102,6 +103,7 @@ public class JSONArray
         return sb.toString();
     }
 
+    @Override
     public String toJSONString() {
         return toJSONString(this);
     }

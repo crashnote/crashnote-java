@@ -77,6 +77,7 @@ public class JSONObject
         out.write('}');
     }
 
+    @Override
     public void writeJSONString(final Writer out) throws IOException {
         writeJSONString(this, out);
     }
@@ -111,6 +112,7 @@ public class JSONObject
         return sb.toString();
     }
 
+    @Override
     public String toJSONString() {
         return toJSONString(this);
     }

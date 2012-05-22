@@ -15,7 +15,7 @@
  */
 package com.crashnote.logback;
 
-import ch.qos.logback.classic.*;
+import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
@@ -24,15 +24,19 @@ import ch.qos.logback.core.spi.FilterReply;
 import com.crashnote.ICrashAppender;
 import com.crashnote.core.model.types.LogLevel;
 import com.crashnote.logback.impl.LogbackEvt;
-import com.crashnote.logger.config.*;
+import com.crashnote.logger.config.LoggerConfig;
+import com.crashnote.logger.config.LoggerConfigFactory;
 import com.crashnote.logger.report.LoggerReporter;
-import org.slf4j.*;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 /**
  * Appender that writes logs from 'Logback' to the cloud
  */
 public class CrashAppender
-    extends AppenderBase<ILoggingEvent> implements ICrashAppender {
+        extends AppenderBase<ILoggingEvent> implements ICrashAppender {
+
+    // VARS =======================================================================================
 
     private Level threshold;
 
@@ -41,6 +45,7 @@ public class CrashAppender
     // config
     private LoggerConfig config;
     private final LoggerConfigFactory configFactory;
+
 
     // SETUP ======================================================================================
 
@@ -55,8 +60,8 @@ public class CrashAppender
             @Override
             public FilterReply decide(final ILoggingEvent event) {
                 final boolean res =
-                    event.getLevel().isGreaterOrEqual(threshold) &&
-                        getReporter().doAcceptLog(event.getLoggerName());
+                        event.getLevel().isGreaterOrEqual(threshold) &&
+                                getReporter().doAcceptLog(event.getLoggerName());
                 return res ? FilterReply.ACCEPT : FilterReply.DENY;
             }
         });
@@ -67,6 +72,7 @@ public class CrashAppender
         this.config = config;
         this.reporter = reporter;
     }
+
 
     // INTERFACE ==================================================================================
 
@@ -87,20 +93,22 @@ public class CrashAppender
         }
     }
 
+    @Override
     public void setLogLevel(final LogLevel lvl) {
         if (lvl == LogLevel.DEBUG)
-            setThreshold(Level.DEBUG);
+            threshold = Level.DEBUG;
         else if (lvl == LogLevel.INFO)
-            setThreshold(Level.INFO);
+            threshold = Level.INFO;
         else if (lvl == LogLevel.WARN)
-            setThreshold(Level.WARN);
+            threshold = Level.WARN;
         else
-            setThreshold(Level.ERROR);
+            threshold = Level.ERROR;
     }
 
     public static Logger getTargetLogger(final Class clazz) {
         return (Logger) LoggerFactory.getLogger(clazz);
     }
+
 
     // SHARED =====================================================================================
 
@@ -110,49 +118,17 @@ public class CrashAppender
             getReporter().reportLog(new LogbackEvt(event, MDC.getCopyOfContextMap()));
     }
 
+
     // INTERNALS ==================================================================================
 
     private LoggerConfig getConfig() {
-        if (config == null) config = (LoggerConfig) configFactory.get();
+        if (config == null)
+            config = (LoggerConfig) configFactory.get();
         return config;
     }
 
     private LoggerReporter<LoggerConfig> getReporter() {
         if (reporter == null) reporter = getConfig().getReporter();
         return reporter;
-    }
-
-    // PARAMETERS =================================================================================
-
-    public void setPort(final String port) {
-        configFactory.setPort(port);
-    }
-
-    public void setHost(final String host) {
-        configFactory.setHost(host);
-    }
-
-    public void setKey(final String key) {
-        configFactory.setKey(key);
-    }
-
-    public void setEnabled(final String enabled) {
-        configFactory.setEnabled(enabled);
-    }
-
-    public void setSslPort(final String sslPort) {
-        configFactory.setSslPort(sslPort);
-    }
-
-    public void setSecure(final String secure) {
-        configFactory.setSecure(secure);
-    }
-
-    public void setThreshold(final Level l) {
-        threshold = l;
-    }
-
-    public void setSync(final String on) {
-        configFactory.setSync(on);
     }
 }

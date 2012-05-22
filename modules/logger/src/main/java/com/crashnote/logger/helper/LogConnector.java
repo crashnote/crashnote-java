@@ -25,7 +25,10 @@ import com.crashnote.logger.report.LoggerReporter;
  */
 public abstract class LogConnector<C extends LoggerConfig, A extends ICrashAppender> {
 
+    // VARS =======================================================================================
+
     protected A myAppender;
+
 
     // LIFECYCLE ==================================================================================
 
@@ -48,11 +51,13 @@ public abstract class LogConnector<C extends LoggerConfig, A extends ICrashAppen
         }
     }
 
+
     // INTERFACE ==================================================================================
 
     public abstract void err(String msg, Throwable th);
 
     public abstract void debug(String msg);
+
 
     // SHARED =====================================================================================
 

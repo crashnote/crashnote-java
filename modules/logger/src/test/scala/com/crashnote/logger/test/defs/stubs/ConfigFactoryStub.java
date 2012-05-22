@@ -21,11 +21,12 @@ public class ConfigFactoryStub
     extends LoggerConfigFactory<ConfigStub> {
 
     public ConfigFactoryStub() {
-        super(new ConfigStub());
+        super();
     }
 
-    public ConfigFactoryStub(final ConfigStub config) {
-        super(config);
+    @Override
+    public ConfigStub create() {
+        return new ConfigStub(readConf());
     }
 
 }

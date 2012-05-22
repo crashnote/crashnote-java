@@ -23,11 +23,15 @@ public class ConfigFactoryStub
     extends ServletConfigFactory<ConfigStub> {
 
     public ConfigFactoryStub() {
-        super(null, new ConfigStub());
+        super(null);
     }
 
-    public ConfigFactoryStub(final FilterConfig filterConfig, final ConfigStub config) {
-        super(filterConfig, config);
+    public ConfigFactoryStub(final FilterConfig filterConfig) {
+        super(filterConfig);
     }
 
+    @Override
+    public ConfigStub create() {
+        return new ConfigStub(readConf());
+    }
 }

@@ -21,7 +21,10 @@ import java.util.logging.*;
 
 public class AppengineLogLog extends LogLog {
 
+    // VARS =======================================================================================
+
     final Logger log;
+
 
     // SETUP ======================================================================================
 
@@ -29,6 +32,7 @@ public class AppengineLogLog extends LogLog {
         super(name, debug);
         log = Logger.getLogger(name);
     }
+
 
     // INTERFACE ==================================================================================
 

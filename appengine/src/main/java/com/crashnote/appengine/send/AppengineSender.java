@@ -33,7 +33,10 @@ import static com.google.appengine.api.urlfetch.FetchOptions.Builder.allowTrunca
 public class AppengineSender<C extends AppengineConfig>
     extends Sender<C> {
 
+    // VARS =======================================================================================
+
     private final AppengineUtil appengineUtil;
+
 
     // SETUP ======================================================================================
 
@@ -41,6 +44,7 @@ public class AppengineSender<C extends AppengineConfig>
         super(config);
         appengineUtil = new AppengineUtil();
     }
+
 
     // SHARED =====================================================================================
 

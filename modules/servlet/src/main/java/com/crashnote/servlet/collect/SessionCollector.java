@@ -29,7 +29,10 @@ import java.util.*;
 public class SessionCollector
     extends BaseCollector<ServletConfig> implements IConfigChangeListener<ServletConfig> {
 
+    // VARS =======================================================================================
+
     protected boolean skipSessionData;
+
 
     // SETUP ======================================================================================
 
@@ -38,10 +41,12 @@ public class SessionCollector
         updateConfig(config);
     }
 
+    @Override
     public void updateConfig(final ServletConfig config) {
         config.addListener(this);
         this.skipSessionData = config.getSkipSessionData();
     }
+
 
     // INTERFACE ==================================================================================
 

@@ -25,13 +25,17 @@ import java.io.*;
  */
 public class LogReport {
 
+    // VARS =======================================================================================
+
     private final DataObject dataObj;
+
 
     // SETUP ======================================================================================
 
     public LogReport(final DataObject data) {
         this.dataObj = data;
     }
+
 
     // INTERFACE ==================================================================================
 

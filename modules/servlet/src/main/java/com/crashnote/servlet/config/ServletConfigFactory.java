@@ -15,64 +15,57 @@
  */
 package com.crashnote.servlet.config;
 
+import com.crashnote.core.config.helper.Config;
 import com.crashnote.logger.config.LoggerConfigFactory;
 
 import javax.servlet.FilterConfig;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Properties;
 
 public class ServletConfigFactory<C extends ServletConfig>
-    extends LoggerConfigFactory<C> {
+        extends LoggerConfigFactory<C> {
+
+    // VARS =======================================================================================
 
     private final FilterConfig filterConfig;
+
 
     // SETUP ======================================================================================
 
     public ServletConfigFactory(final FilterConfig filterConfig) {
-        this(filterConfig, (C) new ServletConfig());
-    }
-
-    protected ServletConfigFactory(final FilterConfig filterConfig, final C internalConfig) {
-        super(internalConfig);
         this.filterConfig = filterConfig;
     }
 
-    @Override
-    protected void loadExternalConfig() {
-        // first: gather properties from filter config
-        if (filterConfig != null) {
-            final Properties props = new Properties();
-            final Enumeration params = filterConfig.getInitParameterNames();
-            while (params.hasMoreElements()) {
-                final String name = (String) params.nextElement();
-                final String value = filterConfig.getInitParameter(name);
-                props.setProperty(name, value);
-            }
-            applyProperties(props, false);
-        }
-
-        // then: load other props
-        super.loadExternalConfig();
-    }
 
     // SHARED =====================================================================================
 
     @Override
-    protected void applyProperties(final Properties props, final boolean strict) {
-        super.applyProperties(props, strict);
-
-        config.setHashRemoteIP(getProperty(props, ServletConfig.PROP_REP_IP_SKIP, strict));
-        config.setSkipHeaderData(getProperty(props, ServletConfig.PROP_REP_HEADER_SKIP, strict));
-        config.setSkipSessionData(getProperty(props, ServletConfig.PROP_REP_SESSION_SKIP, strict));
-        config.setIgnoreLocalRequests(getProperty(props, ServletConfig.PROP_REP_REQ_IGNORE_LOCAL, strict));
-        config.setMaxRequestParameterSize(getProperty(props, ServletConfig.PROP_REP_REQ_PARAM_SIZE, strict));
-
-        final String filterProp = getProperty(props, ServletConfig.PROP_REP_REQ_PARAM_FILTER, strict);
-        if (filterProp != null) {
-            final String[] filters = filterProp.split(",");
-            for (final String filter : filters) {
-                config.addRequestFilter(filter);
-            }
-        }
+    public C create() {
+        return (C) new ServletConfig(readConf());
     }
 
+    @Override
+    protected Config readConf() {
+        return super.readConf()
+                    .withFallback(getConfFile("crashnote.servlet"));
+    }
+
+    @Override
+    protected Config getSysDefault() {
+
+        // extract properties from servlet ..
+        final Properties props = new Properties();
+        if (filterConfig != null) {
+            final Enumeration params = filterConfig.getInitParameterNames();
+            while (params.hasMoreElements()) {
+                final String name = (String) params.nextElement();
+                final String value = filterConfig.getInitParameter(name);
+                props.setProperty("crashnote." + name, value);
+            }
+        }
+
+        // .. and add them to the system defaults
+        return super.getSysDefault()
+                .withFallback(getConfProps(props));
+    }
 }

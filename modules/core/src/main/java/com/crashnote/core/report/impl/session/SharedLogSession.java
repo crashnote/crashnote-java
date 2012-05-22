@@ -15,10 +15,8 @@
  */
 package com.crashnote.core.report.impl.session;
 
-import com.crashnote.core.config.Config;
 import com.crashnote.core.model.log.*;
 
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -27,6 +25,8 @@ import java.util.*;
  */
 public class SharedLogSession
     implements ILogSession {
+
+    // VARS =======================================================================================
 
     /**
      * Collection of log events (=heap)
@@ -37,6 +37,7 @@ public class SharedLogSession
      * Key/Value mapping of context data
      */
     private final Map<String, Object> context;
+
 
     // SETUP ======================================================================================
 
@@ -50,12 +51,15 @@ public class SharedLogSession
         this.context = new HashMap<String, Object>(session.context);
     }
 
+
     // INTERFACE ==================================================================================
 
+    @Override
     public ILogSession copy() {
         return this; // don't actually copy, just reference
     }
 
+    @Override
     public void clear() {
         clearEvents();
         clearCtx();
@@ -63,40 +67,49 @@ public class SharedLogSession
 
     // ===== EVENTS
 
+    @Override
     public List<LogEvt<?>> getEvents() {
         return heap.getEvents();
     }
 
+    @Override
     public void addEvent(final LogEvt<?> evt) {
         heap.addEvt(evt);
     }
 
+    @Override
     public void clearEvents() {
         heap.clear();
     }
 
+    @Override
     public boolean isEmpty() {
         return heap.isEmpty();
     }
 
     // ===== CONTEXT
 
+    @Override
     public void putCtx(final String key, final Object val) {
         context.put(key, val);
     }
 
+    @Override
     public void removeCtx(final String key) {
         context.remove(key);
     }
 
+    @Override
     public void clearCtx() {
         context.clear();
     }
 
+    @Override
     public boolean hasContext() {
         return !context.isEmpty();
     }
 
+    @Override
     public Map<String, Object> getContext() {
         return context;
     }

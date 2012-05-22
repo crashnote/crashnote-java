@@ -73,6 +73,7 @@ class ConfigSpec
         }
     }
 
-    def before =
+    def before {
         c = (new ConfigFactoryStub).get
+    }
 }

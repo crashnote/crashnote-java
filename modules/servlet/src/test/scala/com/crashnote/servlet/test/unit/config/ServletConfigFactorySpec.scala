@@ -17,10 +17,6 @@ package com.crashnote.servlet.test.unit.config
 
 import javax.servlet.FilterConfig
 
-import com.crashnote.core.log.LogLog
-import com.crashnote.core.util.SystemUtil
-import com.crashnote.core.config.ConfigFactory._
-
 import com.crashnote.servlet.test.defs.stubs.ConfigStub
 import com.crashnote.servlet.test.defs.stubs.ConfigFactoryStub
 import com.crashnote.servlet.test.defs.MockSpec
@@ -29,74 +25,48 @@ import com.crashnote.servlet.config.ServletConfigFactory
 class ServletConfigFactorySpec
     extends MockSpec[ServletConfigFactory[ConfigStub]] {
 
-    var m_conf: ConfigStub = _
-    var m_sysUtil: SystemUtil = _
-    var m_filterConf: FilterConfig = _
-
-    val props = toProps(Map(
-        "skipHeaders" -> "true", "crashnote.skipHeaders" -> "false",
-        "skipSession" -> "true", "crashnote-skipSession" -> "false",
-        "maxRequestDataSize" -> "42", "crashnote_maxRequestDataSize" -> "69",
-        "ignoreLocalRequests" -> "true", "crashnote.ignoreLocalRequests" -> "false",
-        "requestParameterFilter" -> "abc,xyz", "crashnote_requestParameterFilter" -> "def,uvw",
-        "port" -> "1"
-    ))
+    setSequential()
 
     "Servlet Config Factory" should {
 
         "create configuration instance" >> {
-            "by reading properties from" >> {
-                "filter" >> new Mocked() {
-                    target.get()
 
-                    expect {
-                        one(m_conf).setMaxRequestParameterSize("42")
-                        one(m_conf).setIgnoreLocalRequests("true")
-                        one(m_conf).setSkipHeaderData("true")
-                        one(m_conf).setSkipSessionData("true")
-                        one(m_conf).addRequestFilter("abc")
-                        one(m_conf).addRequestFilter("xyz")
-                    }
-                }
-                "system" >> new Mocked() {
-                    m_sysUtil.getProperties returns props
-                    target.get()
+            "by reading properties from filter" >> new Mocked()  {
+                val c = target.get()
 
-                    expect {
-                        one(m_conf).setMaxRequestParameterSize("69")
-                        one(m_conf).setIgnoreLocalRequests("false")
-                        one(m_conf).setSkipHeaderData("false")
-                        one(m_conf).setSkipSessionData("false")
-                        one(m_conf).addRequestFilter("def")
-                        one(m_conf).addRequestFilter("uvw")
-                    }
-                }
-                "from filter first" >> new Mocked() {
-                    m_sysUtil.loadProperties(PROP_FILE) returns toProps(Map("port" -> "2"))
-                    target.get()
+                c.getMaxRequestParameterSize === 42
+                c.getIgnoreLocalRequests === false
+                c.getSkipHeaderData === false
+                c.getSkipSessionData === true
+                c.getRequestFilters === List("abc", "xyz")
+            }
 
-                    there was one(m_conf).setPort("1") then one(m_conf).setPort("2")
-                }
+            "and override by system" >> new Mocked() {
+                // prepare
+                System.setProperty("crashnote.request.max-parameter-size", "69");
+
+                val c = target.get()
+                c.getMaxRequestParameterSize === 69
             }
         }
     }
 
+    var m_filterConf: FilterConfig = _
+
+    val filterProps =
+        toProps(Map(
+            "request.skipHeaders" -> "false",
+            "request.skip-session" -> "true",
+            "request.max-parameter-size" -> "42",
+            "request.skip-localhost" -> "false",
+            "request.filter.request" -> "[abc,xyz]"
+        ))
+
     def configure(config: C) = {
-        m_conf = mock[C]
-        m_conf.isEnabled returns true
-        m_conf.getKey returns "0000000-00000-0000-0000-000000000000"
-        m_conf.getLogger(anyClass) returns new LogLog("")
-
         m_filterConf = mock[FilterConfig]
-        m_filterConf.getInitParameterNames.asInstanceOf[javaEnum[Object]] returns props.keys()
-        m_filterConf.getInitParameter(anyString) answers (name => props.getProperty(name.toString))
+        m_filterConf.getInitParameterNames.asInstanceOf[javaEnum[Object]] returns filterProps.keys()
+        m_filterConf.getInitParameter(anyString) answers (name => filterProps.getProperty(name.toString))
 
-        new ConfigFactoryStub(m_filterConf, m_conf)
-    }
-
-    override def mock() {
-        m_sysUtil = _mock[SystemUtil]
-        m_sysUtil.loadProperties(PROP_FILE) returns toProps(Map())
-        m_sysUtil.getProperty(PROP_FILE_CONF, null) returns PROP_FILE
+        new ConfigFactoryStub(m_filterConf)
     }
 }

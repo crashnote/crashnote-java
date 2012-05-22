@@ -18,6 +18,8 @@ package com.crashnote.core.test.unit.util
 import com.crashnote.test.defs.UnitSpec
 import com.crashnote.core.util.FilterUtil
 
+import scala.collection.JavaConversions._
+
 class FilterUtilSpec extends UnitSpec {
 
     "Filter Util" should {
@@ -25,17 +27,17 @@ class FilterUtilSpec extends UnitSpec {
         import FilterUtil._
 
         "filter" >> {
-            doFilter("test", Array("test")) === true
-            doFilter("TEST", Array("test")) === true
-            doFilter("test", Array("t", "test")) === true
+            doFilter("test", List("test")) === true
+            doFilter("TEST", List("test")) === true
+            doFilter("test", List("t", "test")) === true
 
-            doFilter("test", Array("t", "e", "s", "t")) === false
-            doFilter("testing", Array("test")) === false
-            doFilter(" test", Array("test")) === false
+            doFilter("test", List("t", "e", "s", "t")) === false
+            doFilter("testing", List("test")) === false
+            doFilter(" test", List("test")) === false
 
-            doFilter(" Test", Array(".*test")) === true
-            doFilter("this is a test", Array("test", ".*test.*")) === true
-            doFilter("test or not to test", Array("testing", ".*test.*")) === true
+            doFilter(" Test", List(".*test")) === true
+            doFilter("this is a test", List("test", ".*test.*")) === true
+            doFilter("test or not to test", List("testing", ".*test.*")) === true
         }
     }
 }

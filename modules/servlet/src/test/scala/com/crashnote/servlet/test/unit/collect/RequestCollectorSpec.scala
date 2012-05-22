@@ -15,6 +15,7 @@
  */
 package com.crashnote.servlet.test.unit.collect
 
+import scala.collection.JavaConversions._
 import com.sun.security.auth.UnixPrincipal
 import javax.servlet.http.HttpServletRequest
 import com.crashnote.core.build.Builder
@@ -64,7 +65,7 @@ class RequestCollectorSpec
 
     override def mockConfig(): C = {
         val config = super.mockConfig()
-        config.getRequestFilters returns Array(".*password.*")
+        config.getRequestFilters returns List(".*password.*")
         config.getMaxRequestParameterSize returns 10
         config.getSkipHeaderData returns false
         config.getHashRemoteIP returns true

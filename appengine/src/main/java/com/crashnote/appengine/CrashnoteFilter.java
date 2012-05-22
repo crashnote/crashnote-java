@@ -38,7 +38,7 @@ public class CrashnoteFilter
             throw new RuntimeException("Unsupported Platform! It seems you are NOT developing for / running on " +
                     "Google's AppEngine. This library (crashnote-appengine) only works with it - you " +
                     "need the more general crashnote-servlet that runs any servlet-based app. " +
-                    "Please consult your app's online documentation for further details.");
+                    "Please consult crashnote's online docs for further details.");
         }
     }
 
