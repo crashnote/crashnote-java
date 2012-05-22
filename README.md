@@ -20,8 +20,7 @@ Each application platform has it's own specific library that leverages its uniqu
 obeys the according restrictions:
 
 - pure Java
-- works with JDK 1.5+
-- smaller than 150 KB
+- works with JDK6+
 - single JAR, no dependencies
 - runs asynchronously
 - uses JSON format and GZIP compression
