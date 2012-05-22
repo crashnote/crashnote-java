@@ -66,6 +66,6 @@ public class ServletConfigFactory<C extends ServletConfig>
 
         // .. and add them to the system defaults
         return super.getSysDefault()
-                .withFallback(getConfProps(props));
+                .withFallback(getConfProps(props, "servlet filter"));
     }
 }

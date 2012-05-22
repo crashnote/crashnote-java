@@ -34,18 +34,14 @@ class ServletConfigFactorySpec
             "by reading properties from filter" >> new Mocked()  {
                 val c = target.get()
 
-                c.getMaxRequestParameterSize === 42
                 c.getIgnoreLocalRequests === false
                 c.getSkipHeaderData === false
                 c.getSkipSessionData === true
-                c.getRequestFilters === List("abc", "xyz")
             }
 
             "and override by system" >> new Mocked() {
-                // prepare
-                System.setProperty("crashnote.request.max-parameter-size", "69");
-
                 val c = target.get()
+
                 c.getMaxRequestParameterSize === 69
             }
         }
@@ -57,12 +53,12 @@ class ServletConfigFactorySpec
         toProps(Map(
             "request.skipHeaders" -> "false",
             "request.skip-session" -> "true",
-            "request.max-parameter-size" -> "42",
-            "request.skip-localhost" -> "false",
-            "request.filter.request" -> "[abc,xyz]"
+            "request.skip-localhost" -> "false"
         ))
 
     def configure(config: C) = {
+        System.setProperty("crashnote.request.max-parameter-size", "69");
+
         m_filterConf = mock[FilterConfig]
         m_filterConf.getInitParameterNames.asInstanceOf[javaEnum[Object]] returns filterProps.keys()
         m_filterConf.getInitParameter(anyString) answers (name => filterProps.getProperty(name.toString))

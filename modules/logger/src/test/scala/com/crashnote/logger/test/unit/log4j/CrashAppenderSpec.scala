@@ -24,7 +24,7 @@ import org.apache.log4j.spi._
 class CrashAppenderSpec
     extends MockSpec[CrashAppender] with AppenderEnv[CrashAppender, LoggingEvent] {
 
-    "instantiate, append and close appender" >> {
+    "instantiate and append and close appender" >> {
         def example(descr: String, factory: () => CrashAppender) =
             "when created via " + descr >> new Mocked() {
 

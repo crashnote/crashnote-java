@@ -18,7 +18,7 @@ package com.crashnote.core.config;
 import com.crashnote.core.build.Builder;
 import com.crashnote.core.collect.Collector;
 import com.crashnote.core.config.helper.Config;
-import com.crashnote.core.config.helper.ConfigFactory;
+import com.crashnote.core.config.helper.ConfigRenderOptions;
 import com.crashnote.core.log.LogLog;
 import com.crashnote.core.log.LogLogFactory;
 import com.crashnote.core.model.types.LogLevel;
@@ -84,7 +84,7 @@ public class CrashConfig<C extends CrashConfig<C>> {
     // SETUP ======================================================================================
 
     public CrashConfig(final Config c) {
-        conf = c;
+        conf = c.withOnlyPath("crashnote");
         uid = IDUtil.createUID();
         logger = getLogger(this.getClass());
         startTime = new Date().getTime();
@@ -203,6 +203,10 @@ public class CrashConfig<C extends CrashConfig<C>> {
 
 
     // ==== READ CONFIG
+
+    protected void print() {
+        System.out.println(conf.root().render(ConfigRenderOptions.defaults().setComments(false)));
+    }
 
     protected boolean getBool(final String name) {
         return conf.getBoolean("crashnote." + name);

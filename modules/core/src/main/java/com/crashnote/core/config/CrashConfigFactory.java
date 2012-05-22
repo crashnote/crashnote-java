@@ -17,6 +17,7 @@ package com.crashnote.core.config;
 
 import com.crashnote.core.config.helper.Config;
 import com.crashnote.core.config.helper.ConfigFactory;
+import com.crashnote.core.config.helper.ConfigParseOptions;
 
 import java.util.Properties;
 
@@ -35,9 +36,15 @@ public class CrashConfigFactory<C extends CrashConfig> {
 
     // INTERFACE ================================================================================
 
-    public final C get() {
+    public C get() {
         if (config == null) {
+            // 1) create it
             config = create();
+
+            // 2) print it (in debug mode)
+            if(config.isDebug()) config.print();
+
+            // 3) validate it
             config.validate(getConfFile("crashnote.default"));
         }
         return config;
@@ -63,8 +70,9 @@ public class CrashConfigFactory<C extends CrashConfig> {
                 .withFallback(ConfigFactory.systemEnvironment()); // env props
     }
 
-    protected Config getConfProps(final Properties props) {
-        return ConfigFactory.parseProperties(props);
+    protected Config getConfProps(final Properties props, final String descr) {
+        return ConfigFactory.parseProperties(props,
+                ConfigParseOptions.defaults().setOriginDescription(descr));
     }
 
     protected Config getConfFile(final String name) {

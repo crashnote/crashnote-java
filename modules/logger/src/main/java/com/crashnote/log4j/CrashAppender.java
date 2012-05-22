@@ -44,7 +44,6 @@ public class CrashAppender
 
     public CrashAppender() {
         this(new LoggerConfigFactory());
-        start();
     }
 
     public CrashAppender(final LoggerConfigFactory configFactory) {

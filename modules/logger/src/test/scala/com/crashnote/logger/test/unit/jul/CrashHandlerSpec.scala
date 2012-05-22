@@ -23,7 +23,7 @@ import com.crashnote.logger.test.defs._
 class CrashHandlerSpec
     extends MockSpec[CrashHandler] with AppenderEnv[CrashHandler, LogRecord] {
 
-    "instantiate, publish and close handler" >> {
+    "instantiate and publish and close handler" >> {
         def example(descr: String, factory: () => CrashHandler) =
             "when created via " + descr >> new Mocked() {
 
