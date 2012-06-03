@@ -1,8 +1,6 @@
-package com.crashnote.core.util;
-
-import java.io.Serializable;
-
 /**
+ * Copyright
+ *
  * We compute the checksum using Broder s implementation of
  * Rabin s fingerprinting algorithm. Fingerprints offer
  * provably strong probabilistic guarantees that two
@@ -42,6 +40,10 @@ import java.io.Serializable;
  * Springer-Verlag
  * 1993
  */
+package com.crashnote.core.util;
+
+import java.io.Serializable;
+
 public final class ChksumUtil implements Serializable {
 
     // INTERFACE ==================================================================================

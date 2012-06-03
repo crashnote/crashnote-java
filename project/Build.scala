@@ -63,8 +63,6 @@ object Build extends sbt.Build with Settings with Commands {
 
 trait Settings {
 
-    import Licenses._
-
     lazy val javaHome =
         file(Option(System.getenv("JAVA6_HOME")).getOrElse(System.getenv("JAVA_HOME")))
 
@@ -79,13 +77,10 @@ trait Settings {
         organizationHomepage := Some(url("http://www.101loops.com"))
     )
 
-    import LicenseKeys._
     lazy val baseSettings =
         Defaults.defaultSettings ++ buildSettings ++ Licenses.licenseSettings ++ Seq(
             crossPaths := false,
             scalaVersion := "2.9.2",
-
-            license := apache2("Copyright (C) 2011 - 101loops.com <dev@101loops.com>"),
 
             resolvers += "spray repo" at "http://repo.spray.cc/",
 

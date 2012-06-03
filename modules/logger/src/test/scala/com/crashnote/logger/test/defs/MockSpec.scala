@@ -1,5 +1,3 @@
-package com.crashnote.logger.test.defs
-
 /**
  * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
  *
@@ -15,6 +13,7 @@ package com.crashnote.logger.test.defs
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.crashnote.logger.test.defs
 
 import org.specs2.specification.Scope
 import com.crashnote.test.defs.BaseMockSpec

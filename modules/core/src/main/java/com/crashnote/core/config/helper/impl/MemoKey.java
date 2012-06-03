@@ -1,3 +1,6 @@
+/**
+ *   Copyright (C) 2011-2012 Typesafe Inc. <http://typesafe.com>
+ */
 package com.crashnote.core.config.helper.impl;
 
 /** The key used to memoize already-traversed nodes when resolving substitutions */
