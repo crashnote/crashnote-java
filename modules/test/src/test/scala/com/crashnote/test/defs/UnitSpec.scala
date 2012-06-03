@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crashnote;
+package com.crashnote.test.defs
 
-/**
- * Name and version of the notifier (added at compile time).
- * Not using property files since some platforms (e.g. AppEngine) seem to have problems with that.
- */
-public class About {
+import org.specs2.matcher.DataTables
+import org.specs2.mutable._
+import com.crashnote.test.util.FactoryUtil
 
-    public static final String NAME = "@name@";
+trait UnitSpec
+    extends SpecificationWithJUnit with DataTables with FactoryUtil {
 
-    public static final String VERSION = "@version@";
-
-    public static final String TIMESTAMP = "@timestamp@";
+    def setSequential() = sequential
 }

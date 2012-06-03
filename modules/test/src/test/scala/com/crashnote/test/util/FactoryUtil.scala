@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crashnote;
+package com.crashnote.test.util
 
-/**
- * Name and version of the notifier (added at compile time).
- * Not using property files since some platforms (e.g. AppEngine) seem to have problems with that.
- */
-public class About {
+import java.util.Properties
+import scala.collection.JavaConversions._
 
-    public static final String NAME = "@name@";
+trait FactoryUtil {
 
-    public static final String VERSION = "@version@";
+    type javaEnum[T] = java.util.Enumeration[T]
 
-    public static final String TIMESTAMP = "@timestamp@";
+    def toEnum[T](seq: Seq[T]): java.util.Enumeration[T] =
+        seq.iterator
+
+    def toProps(map: Map[String, String]) = {
+        val p = new Properties()
+        map.foreach(kv => p.setProperty(kv._1, kv._2))
+        p
+    }
 }

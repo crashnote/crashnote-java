@@ -19,11 +19,11 @@ import com.crashnote.core.config.*;
 import com.crashnote.core.log.LogLog;
 import com.crashnote.core.model.log.LogReport;
 
-import javax.net.ssl.*;
 import java.io.*;
 import java.net.*;
-import java.security.cert.X509Certificate;
+import javax.net.ssl.*;
 import java.util.zip.GZIPOutputStream;
+import java.security.cert.X509Certificate;
 
 /**
  * The Dispatcher is responsible for transmitting the data from the client to the server by

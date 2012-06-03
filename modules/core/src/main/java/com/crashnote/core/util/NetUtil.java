@@ -15,8 +15,6 @@
  */
 package com.crashnote.core.util;
 
-import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
-
 import java.net.*;
 
 /**
@@ -55,7 +53,6 @@ public class NetUtil {
      *
      * @return numeric value describing the mac address
      */
-    @IgnoreJRERequirement
     public static Long getMacAddress() {
         try {
             final InetAddress addr = getLocalHost();
