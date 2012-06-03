@@ -1,14 +1,15 @@
 import sbt._
 import sbt.Keys._
 
-object Build extends sbt.Build with Settings with Commands {
+object Build extends sbt.Build with Settings {
 
     import Dependency._
     import Dependencies._
 
     lazy val crashnote =
         Project(id = "crashnote", base = file("."))
-            .settings(commands += intellij)
+            .settings(moduleSettings: _*)
+            //.settings(commands += intellij)
             .aggregate(servletNotifier, appengineNotifier, coreModule, loggerModule, servletModule, testModule)
 
     // ### Notifiers ------------------------------------------------------------------------------
@@ -16,19 +17,21 @@ object Build extends sbt.Build with Settings with Commands {
     lazy val servletNotifier =
         Project("Crashnote Servlet Notifier", file("servlet"))
             .settings(notifierSettings: _*)
-            .settings(normalizedName := "notifier-servlet")
+            .settings(normalizedName := "crashnote-servlet")
             .settings(description := "Reports exceptions from Java servlet apps to crashnote.com")
             .settings(libraryDependencies := loggerKit ++ List(Provided.servlet))
-            .settings(unmanagedSourceDirectories in Compile <<= moduleSources("core", "logger", "servlet"))
+            .settings(unmanagedResourceDirectories in Compile <++= modulesResources("core", "logger", "servlet"))
+            .settings(unmanagedSourceDirectories in Compile <++= modulesSources("core", "logger", "servlet"))
             .dependsOn(servletModule, testModule % "test->test") // servletModule
 
     lazy val appengineNotifier =
         Project("Crashnote Appengine Notifier", file("appengine"))
             .settings(notifierSettings: _*)
-            .settings(normalizedName := "notifier-appengine")
+            .settings(normalizedName := "crashnote-appengine")
             .settings(description := "Reports exceptions from Java apps on Appengine to crashnote.com")
             .settings(libraryDependencies := loggerKit ++ List(Provided.servlet, Provided.appengine))
-            .settings(unmanagedSourceDirectories in Compile <<= moduleSources("core", "logger", "servlet"))
+            .settings(unmanagedResourceDirectories in Compile <++= modulesResources("core", "logger", "servlet"))
+            .settings(unmanagedSourceDirectories in Compile <++= modulesSources("core", "logger", "servlet"))
             .dependsOn(servletModule, testModule % "test->test")
 
 
@@ -63,6 +66,8 @@ object Build extends sbt.Build with Settings with Commands {
 
 trait Settings {
 
+    self: Build =>
+
     lazy val javaHome =
         file(Option(System.getenv("JAVA6_HOME")).getOrElse(System.getenv("JAVA_HOME")))
 
@@ -84,25 +89,33 @@ trait Settings {
 
             resolvers += "spray repo" at "http://repo.spray.cc/",
 
-            javacOptions += "-g:none",
-            javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
-            javacOptions ++= Seq("-bootclasspath", (javaHome / "lib" / "rt.jar").getAbsolutePath)
+            javacOptions += "-g:none"
+            //javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
+            //javacOptions ++= Seq("-bootclasspath", (javaHome / "lib" / "rt.jar").getAbsolutePath)
         )
 
     lazy val moduleSettings =
-        baseSettings
+        baseSettings ++ Seq(publish := false, publishLocal := false)
 
     lazy val notifierSettings =
         baseSettings ++ Publish.settings
 
 
-    def moduleSources(mods: String*) =
-        baseDirectory(d => mods.map(d / ".." / "modules" / _ / "src" / "main" / "java"))
+    def modulesSources(mods: String*) =
+        modulesSrcDir("java", mods)
+
+    def modulesResources(mods: String*) =
+        modulesSrcDir("resources", mods)
+
+    private def modulesSrcDir(typeOf: String, mods: Seq[String]) =
+        baseDirectory(d => mods.map(d / ".." / "modules" / _ / "src" / "main" / typeOf))
+
 }
 
 
 // ### Commands -----------------------------------------------------------------------------------
 
+/*
 trait Commands {
 
     def intellij = Command.command("intellij") {
@@ -114,6 +127,7 @@ trait Commands {
     }
 
 }
+*/
 
 // ### Dependencies -------------------------------------------------------------------------------
 
@@ -158,18 +172,49 @@ object Dependency {
 
 object Publish {
 
+    final val Snapshot = "-SNAPSHOT"
+
     lazy val settings =
         Seq(
             publishMavenStyle := true,
+            publishArtifact in Test := false,
+
+            otherResolvers ++= Seq(Resolver.file("m2", file(Path.userHome + "/.m2/repository"))),
+            publishLocalConfiguration <<= (packagedArtifacts, deliverLocal, checksums, ivyLoggingLevel) map {
+                (arts, _, chks, level) => new PublishConfiguration(None, "m2", arts, chks, level)
+            },
+
+            publishTo <<= version {
+                (v: String) =>
+                    val nexus = "https://oss.sonatype.org/"
+                    if (v.trim.endsWith(Snapshot))
+                        Some("snapshot" at nexus + "content/repositories/snapshots")
+                    else
+                        Some("release" at nexus + "service/local/staging/deploy/maven2")
+            },
+
+            credentials += Credentials(Path.userHome / ".sbt" / "sonatype"),
+
             pomIncludeRepository := {
                 x => false
             },
+
             makePomConfiguration ~= {
                 (mpc: MakePomConfiguration) =>
                     mpc.copy(configurations = Some(Seq(Provided)))
             },
+
             pomExtra :=
                 <url>http://www.crashnote.com</url>
+
+                    <developers>
+                        <developer>
+                            <email>dev@101loops.com</email>
+                            <name>101 Loops Developers</name>
+                            <organization>101 Loops</organization>
+                            <organizationUrl>http://www.101loops.com</organizationUrl>
+                        </developer>
+                    </developers>
 
                     <scm>
                         <url>http://github.com/crashnote/crashnote-java</url>
