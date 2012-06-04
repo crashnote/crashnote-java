@@ -68,7 +68,7 @@ trait Settings {
 
     self: Build =>
 
-    lazy val javaHome =
+    lazy val javaDir =
         file(Option(System.getenv("JAVA6_HOME")).getOrElse(System.getenv("JAVA_HOME")))
 
     lazy val buildSettings = Seq(
@@ -89,16 +89,18 @@ trait Settings {
 
             resolvers += "spray repo" at "http://repo.spray.cc/",
 
-            javacOptions += "-g:none"
-            //javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
-            //javacOptions ++= Seq("-bootclasspath", (javaHome / "lib" / "rt.jar").getAbsolutePath)
+            javacOptions += "-g:none",
+            javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
+            //javacOptions ++= Seq("-bootclasspath", (javaDir / "jre" / "lib" / "rt.jar").getAbsolutePath)
+
+            javaHome := Some(javaDir)
         )
 
     lazy val moduleSettings =
         baseSettings ++ Seq(publish := false, publishLocal := false)
 
     lazy val notifierSettings =
-        baseSettings ++ Publish.settings
+        baseSettings ++ About.aboutSettings ++ Publish.settings
 
 
     def modulesSources(mods: String*) =

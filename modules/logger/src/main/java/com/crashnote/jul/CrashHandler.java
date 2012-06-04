@@ -21,8 +21,6 @@ import com.crashnote.jul.impl.JulEvt;
 import com.crashnote.logger.config.LoggerConfig;
 import com.crashnote.logger.config.LoggerConfigFactory;
 import com.crashnote.logger.report.LoggerReporter;
-import org.slf4j.MDC;
-import org.slf4j.spi.MDCAdapter;
 
 import java.util.Map;
 import java.util.logging.Handler;
@@ -41,7 +39,7 @@ public class CrashHandler
     private boolean started;
     private Level logLevel = Level.INFO;
 
-    private MDCAdapter mdc;
+    //private MDCAdapter mdc;
     private LoggerReporter<LoggerConfig> reporter;
 
     // config
@@ -68,11 +66,13 @@ public class CrashHandler
     }
 
     private void init() {
+        /*
         try {
             mdc = MDC.getMDCAdapter();
         } catch (Exception ignored) {
             mdc = null;
         }
+        */
         start();
     }
 
@@ -152,7 +152,8 @@ public class CrashHandler
     }
 
     private Map getContext() {
-        return (mdc != null) ? mdc.getCopyOfContextMap() : null;
+        return null;
+        //return (mdc != null) ? mdc.getCopyOfContextMap() : null;
     }
 
 }

@@ -6,7 +6,7 @@ import sbt.Keys._
  * - https://github.com/T8Webware/sbt-license-plugin
  * - https://github.com/mrico/sbt-license-plugin
  */
-object Licenses extends sbt.Plugin {
+object Licenses extends Plugin {
 
     import LicenseKeys._
 

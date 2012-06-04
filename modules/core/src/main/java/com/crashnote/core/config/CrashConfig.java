@@ -224,6 +224,11 @@ public class CrashConfig<C extends CrashConfig<C>> {
         return conf.getString("crashnote." + name);
     }
 
+    protected String getString(final String name, final String def) {
+        final String r = getOptString(name);
+        return r == null ? def : r;
+    }
+
     protected String getOptString(final String name) {
         try {
             return conf.getString("crashnote." + name);
@@ -264,7 +269,7 @@ public class CrashConfig<C extends CrashConfig<C>> {
     }
 
     public String getClientInfo() {
-        return getString("about.name") + ":" + getString("about.version");
+        return getString("about.name", "crashnote") + ":" + getString("about.version", "?");
     }
 
 
