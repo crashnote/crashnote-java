@@ -1,59 +1,84 @@
 import sbt._
 import sbt.Keys._
 
-object Build extends sbt.Build with Settings {
+object Build
+    extends sbt.Build with Projects {
 
     import Dependency._
     import Dependencies._
 
     lazy val crashnote =
         Project(id = "crashnote", base = file("."))
+            .configs(UnitTest, FuncTest)
             .settings(moduleSettings: _*)
-            //.settings(commands += intellij)
             .aggregate(servletNotifier, appengineNotifier, coreModule, loggerModule, servletModule, testModule)
 
     // ### Notifiers ------------------------------------------------------------------------------
 
     lazy val servletNotifier =
-        Project("Crashnote Servlet Notifier", file("servlet"))
-            .settings(notifierSettings: _*)
-            .settings(normalizedName := "crashnote-servlet")
+        NotifierProject("servlet", "Crashnote Servlet Notifier",
+            withModules = Seq(servletModule),
+            withLibs = loggerKit ++ List(Provided.servlet),
+            withSources = Seq("core", "logger", "servlet"))
             .settings(description := "Reports exceptions from Java servlet apps to crashnote.com")
-            .settings(libraryDependencies := loggerKit ++ List(Provided.servlet))
-            .settings(unmanagedResourceDirectories in Compile <++= modulesResources("core", "logger", "servlet"))
-            .settings(unmanagedSourceDirectories in Compile <++= modulesSources("core", "logger", "servlet"))
-            .dependsOn(servletModule, testModule % "test->test") // servletModule
 
     lazy val appengineNotifier =
-        Project("Crashnote Appengine Notifier", file("appengine"))
-            .settings(notifierSettings: _*)
+        NotifierProject("appengine","Crashnote Appengine Notifier",
+            withModules = Seq(servletModule),
+            withLibs = loggerKit ++ List(Provided.servlet, Provided.appengine),
+            withSources = Seq("core", "logger", "servlet"))
             .settings(normalizedName := "crashnote-appengine")
             .settings(description := "Reports exceptions from Java apps on Appengine to crashnote.com")
-            .settings(libraryDependencies := loggerKit ++ List(Provided.servlet, Provided.appengine))
-            .settings(unmanagedResourceDirectories in Compile <++= modulesResources("core", "logger", "servlet"))
-            .settings(unmanagedSourceDirectories in Compile <++= modulesSources("core", "logger", "servlet"))
-            .dependsOn(servletModule, testModule % "test->test")
 
 
     // ### Modules --------------------------------------------------------------------------------
 
     lazy val coreModule =
-        Project("module-core", file("modules/core"))
-            .settings(moduleSettings: _*)
-            .settings(libraryDependencies := List())
-            .dependsOn(testModule % "test->test")
+        ModuleProject("core")
 
     lazy val loggerModule =
-        Project("module-logger", file("modules/logger"))
-            .settings(moduleSettings: _*)
-            .settings(libraryDependencies := loggerKit)
-            .dependsOn(coreModule, testModule % "test->test")
+        ModuleProject("logger",
+            withModules = Seq(coreModule), withLibs = loggerKit)
 
     lazy val servletModule =
-        Project("module-servlet", file("modules/servlet"))
-            .settings(moduleSettings: _*)
-            .settings(libraryDependencies := List(Provided.servlet))
-            .dependsOn(loggerModule, testModule % "test->test")
+        ModuleProject("servlet",
+            withModules = Seq(loggerModule), withLibs = Seq(Provided.servlet))
+}
+
+
+// ### Project ------------------------------------------------------------------------------------
+
+trait Projects
+    extends Settings {
+
+    self: Build =>
+
+    import Dependencies._
+
+    type ModRef = ClasspathDep[ProjectReference]
+
+    object ModuleProject {
+        def apply(name: String,
+                  withModules: Seq[ModRef] = Seq(), withLibs: Seq[ModuleID] = Seq()) =
+            Project("module-" + name, file("modules/" + name))
+                .configs(UnitTest, FuncTest)
+                .settings(moduleSettings: _*)
+                .settings(libraryDependencies := withLibs)
+                .dependsOn((Seq(testModule % "test->test") ++ withModules): _*)
+    }
+
+    object NotifierProject {
+        def apply(name: String, displayName: String,
+                  withModules: Seq[ModRef], withLibs: Seq[ModuleID] = Seq(), withSources: Seq[String] = Seq()) =
+            Project("crashnote-" + name, file(name))
+                .configs(UnitTest, FuncTest)
+                .settings(notifierSettings: _*)
+                .settings(libraryDependencies := withLibs)
+                .settings(normalizedName := displayName)
+                .settings(unmanagedSourceDirectories in Compile <++= modulesSources(withSources: _*))
+                .settings(unmanagedResourceDirectories in Compile <++= modulesResources(withSources: _*))
+                .dependsOn((Seq(testModule % "test->test") ++ withModules): _*)
+    }
 
     lazy val testModule =
         Project("module-test", file("modules/test"))
@@ -68,9 +93,6 @@ trait Settings {
 
     self: Build =>
 
-    lazy val javaDir =
-        file(Option(System.getenv("JAVA6_HOME")).getOrElse(System.getenv("JAVA_HOME")))
-
     lazy val buildSettings = Seq(
         organization := "com.crashnote",
         version := "0.2.1",
@@ -82,8 +104,14 @@ trait Settings {
         organizationHomepage := Some(url("http://www.101loops.com"))
     )
 
+    lazy val testSettings = Seq(
+        testOptions in Test := Seq(Tests.Filter((n:String) => unitFilter(n) || funcFilter(n))),
+        testOptions in FuncTest := Seq(Tests.Filter(funcFilter)),
+        testOptions in UnitTest := Seq(Tests.Filter(unitFilter))
+    )
+
     lazy val baseSettings =
-        Defaults.defaultSettings ++ buildSettings ++ Licenses.licenseSettings ++ Seq(
+        Defaults.defaultSettings ++ buildSettings ++ testSettings ++ Licenses.licenseSettings ++ Seq(
             crossPaths := false,
             scalaVersion := "2.9.2",
 
@@ -102,6 +130,18 @@ trait Settings {
     lazy val notifierSettings =
         baseSettings ++ About.aboutSettings ++ Publish.settings
 
+    // Test-related
+
+    lazy val FuncTest = config("func") extend (Test)
+    lazy val UnitTest = config("unit") extend (Test)
+
+    private def unitFilter(name: String): Boolean =
+        name contains ".unit."
+
+    private def funcFilter(name: String): Boolean =
+        name contains ".func."
+
+    // Source-related
 
     def modulesSources(mods: String*) =
         modulesSrcDir("java", mods)
@@ -112,24 +152,12 @@ trait Settings {
     private def modulesSrcDir(typeOf: String, mods: Seq[String]) =
         baseDirectory(d => mods.map(d / ".." / "modules" / _ / "src" / "main" / typeOf))
 
+    // Path-related
+
+    lazy val javaDir =
+        file(Option(System.getenv("JAVA6_HOME")).getOrElse(System.getenv("JAVA_HOME")))
 }
 
-
-// ### Commands -----------------------------------------------------------------------------------
-
-/*
-trait Commands {
-
-    def intellij = Command.command("intellij") {
-        state =>
-            val extracted = Project.extract(state)
-            //println("Current build: " + currentRef.)
-
-            state
-    }
-
-}
-*/
 
 // ### Dependencies -------------------------------------------------------------------------------
 
@@ -141,7 +169,8 @@ object Dependencies {
         Seq(Provided.slf4j, Provided.log4j, Provided.logback)
 
     val testKit =
-        Seq(Test.junit, Test.specs2, Test.mockito, Test.jetty, Test.akka, Test.sprayClient, Test.sprayServer)
+        Seq(Test.junit, Test.specs2, Test.mockito, Test.commonsIO,
+            Test.jetty, Test.akka, Test.sprayClient, Test.sprayServer)
 }
 
 object Dependency {
@@ -161,6 +190,7 @@ object Dependency {
         val mockito = "org.mockito" % "mockito-all" % "1.9.0" % "test"
 
         val jetty = "org.eclipse.jetty" % "jetty-webapp" % "7.5.1.v20110908" % "test"
+        val commonsIO = "commons-io" % "commons-io" % "2.3" % "test"
 
         val akka = "se.scalablesolutions.akka" % "akka-actor" % "1.3.1" % "test"
         val sprayServer = "cc.spray" % "spray-server" % "0.9.0" % "test"
