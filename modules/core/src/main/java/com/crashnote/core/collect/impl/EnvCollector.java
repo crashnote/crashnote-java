@@ -65,7 +65,7 @@ public class EnvCollector<C extends CrashConfig>
     public DataObject collect() {
         final DataObject data = createDataObj();
         {
-            data.put("started", startTime);
+            data.put("started_at", startTime);
 
             data.putObj("app", getAppData());
             data.putObj("runtime", getRtData());

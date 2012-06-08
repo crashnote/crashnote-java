@@ -31,7 +31,7 @@ class SessionCollectorSpec
             "default" >> new Mocked() {
                 val res = target.collect(mockReq())
                 res.get("id") === "666"
-                res.get("started") === 123456789L
+                res.get("started_at") === 123456789L
                 res.get("data") === null
             }
 

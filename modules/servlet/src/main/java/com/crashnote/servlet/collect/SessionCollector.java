@@ -57,7 +57,7 @@ public class SessionCollector
 
             // collect basic info
             data.put("id", session.getId());
-            data.put("started", session.getCreationTime());
+            data.put("started_at", session.getCreationTime());
 
             // collect session data
             if (!skipSessionData) {
