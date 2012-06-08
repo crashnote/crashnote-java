@@ -57,16 +57,6 @@ public class SystemUtil {
         return System.getProperties().keySet();
     }
 
-    public Properties loadProperties(final String fileName) {
-        final Properties p = new Properties();
-        try {
-            final URL url = ClassLoader.getSystemResource(fileName);
-            p.load(url.openStream());
-        } catch (Exception ignored) {
-        }
-        return p;
-    }
-
     public Properties getProperties() {
         return System.getProperties();
     }

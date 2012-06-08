@@ -82,11 +82,5 @@ class SystemUtilSpec extends UnitSpec {
             util.getOSName must not be empty
             util.getOSVersion must not be empty
         }
-
-        "load properties file from classpath" >> {
-            val props = util.loadProperties("test.properties")
-            props.size() === 1
-            props.get("marco") === "polo"
-        }
     }
 }
