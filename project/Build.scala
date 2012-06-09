@@ -19,22 +19,24 @@ object Build
         NotifierProject("servlet", "Crashnote Servlet Notifier",
             withModules = Seq(servletModule),
             withLibs = loggerKit ++ List(Provided.servlet),
-            withSources = Seq("core", "logger", "servlet"))
+            withSources = servletSrc)
             .settings(description := "Reports exceptions from Java servlet apps to crashnote.com")
 
     lazy val appengineNotifier =
         NotifierProject("appengine","Crashnote Appengine Notifier",
             withModules = Seq(servletModule),
             withLibs = loggerKit ++ List(Provided.servlet, Provided.appengine),
-            withSources = Seq("core", "logger", "servlet"))
+            withSources = servletSrc)
             .settings(normalizedName := "crashnote-appengine")
             .settings(description := "Reports exceptions from Java apps on Appengine to crashnote.com")
 
 
     // ### Modules --------------------------------------------------------------------------------
 
+    // Internal
+
     lazy val coreModule =
-        ModuleProject("core")
+        ModuleProject("core", withModules = Seq(jsonModule, configModule))
 
     lazy val loggerModule =
         ModuleProject("logger",
@@ -43,6 +45,14 @@ object Build
     lazy val servletModule =
         ModuleProject("servlet",
             withModules = Seq(loggerModule), withLibs = Seq(Provided.servlet))
+
+    // External
+
+    lazy val jsonModule =
+        ModuleProject("ext-json")
+
+    lazy val configModule =
+        ModuleProject("ext-config")
 }
 
 
@@ -95,7 +105,7 @@ trait Settings {
 
     lazy val buildSettings = Seq(
         organization := "com.crashnote",
-        version := "0.2.1",
+        version := "0.2.2",
 
         startYear := Some(2011),
         licenses +=("Apache 2", url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
@@ -143,6 +153,8 @@ trait Settings {
 
     // Source-related
 
+    lazy val servletSrc = Seq("ext-json", "ext-config", "core", "logger", "servlet")
+
     def modulesSources(mods: String*) =
         modulesSrcDir("java", mods)
 
@@ -165,10 +177,10 @@ object Dependencies {
 
     import Dependency._
 
-    val loggerKit =
+    lazy val loggerKit =
         Seq(Provided.slf4j, Provided.log4j, Provided.logback)
 
-    val testKit =
+    lazy val testKit =
         Seq(Test.junit, Test.specs2, Test.mockito, Test.commonsIO,
             Test.jetty, Test.akka, Test.sprayClient, Test.sprayServer)
 }

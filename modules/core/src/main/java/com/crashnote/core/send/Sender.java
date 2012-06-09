@@ -35,7 +35,6 @@ public class Sender<C extends CrashConfig>
     // VARS =======================================================================================
 
     // configuration settings:
-    private String key;
     private String url_post;
     private String clientInfo;
     private int connectionTimeout;
@@ -56,7 +55,6 @@ public class Sender<C extends CrashConfig>
     @Override
     public void updateConfig(final C config) {
         config.addListener(this);
-        this.key = config.getKey();
         this.url_post = config.getPostUrl();
         this.clientInfo = config.getClientInfo();
         this.connectionTimeout = config.getConnectionTimeout() * 1000;

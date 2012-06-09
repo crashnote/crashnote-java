@@ -15,9 +15,9 @@
  */
 package com.crashnote.core.config;
 
-import com.crashnote.core.config.helper.Config;
-import com.crashnote.core.config.helper.ConfigFactory;
-import com.crashnote.core.config.helper.ConfigParseOptions;
+import com.crashnote.external.config.Config;
+import com.crashnote.external.config.ConfigFactory;
+import com.crashnote.external.config.ConfigParseOptions;
 
 import java.util.Properties;
 

@@ -16,7 +16,7 @@
 package com.crashnote.appengine.config;
 
 import com.crashnote.appengine.util.AppengineUtil;
-import com.crashnote.core.config.helper.Config;
+import com.crashnote.external.config.Config;
 import com.crashnote.servlet.config.ServletConfigFactory;
 
 import javax.servlet.FilterConfig;

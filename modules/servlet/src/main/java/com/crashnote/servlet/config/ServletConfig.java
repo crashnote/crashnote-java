@@ -15,7 +15,7 @@
  */
 package com.crashnote.servlet.config;
 
-import com.crashnote.core.config.helper.Config;
+import com.crashnote.external.config.Config;
 import com.crashnote.logger.config.LoggerConfig;
 import com.crashnote.servlet.report.ServletReporter;
 

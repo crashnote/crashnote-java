@@ -20,7 +20,7 @@ import com.crashnote.appengine.log.AppengineLogLogFactory;
 import com.crashnote.appengine.send.AppengineSender;
 import com.crashnote.appengine.util.AppengineUtil;
 import com.crashnote.core.collect.Collector;
-import com.crashnote.core.config.helper.Config;
+import com.crashnote.external.config.Config;
 import com.crashnote.core.log.LogLogFactory;
 import com.crashnote.core.send.Sender;
 import com.crashnote.servlet.config.ServletConfig;

@@ -15,8 +15,8 @@
  */
 package com.crashnote.core.build.impl;
 
-import com.crashnote.core.build.json.JSONArray;
 import com.crashnote.core.model.data.DataArray;
+import com.crashnote.external.json.JSONArray;
 
 /**
  * Implementation of a {@link DataArray}, unifies the interface with the functionality of a

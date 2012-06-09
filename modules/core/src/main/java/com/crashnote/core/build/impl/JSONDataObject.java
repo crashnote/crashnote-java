@@ -15,8 +15,9 @@
  */
 package com.crashnote.core.build.impl;
 
-import com.crashnote.core.build.json.*;
 import com.crashnote.core.model.data.*;
+import com.crashnote.external.json.JSONArray;
+import com.crashnote.external.json.JSONObject;
 
 import java.io.*;
 

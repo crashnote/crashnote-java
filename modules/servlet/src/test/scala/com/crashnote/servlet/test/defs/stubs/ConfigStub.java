@@ -15,7 +15,7 @@
  */
 package com.crashnote.servlet.test.defs.stubs;
 
-import com.crashnote.core.config.helper.Config;
+import com.crashnote.external.config.Config;
 import com.crashnote.servlet.config.ServletConfig;
 
 public class ConfigStub

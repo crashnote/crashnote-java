@@ -16,8 +16,8 @@
 package com.crashnote.logger.config;
 
 import com.crashnote.core.config.CrashConfig;
-import com.crashnote.core.config.helper.Config;
-import com.crashnote.core.config.helper.ConfigFactory;
+import com.crashnote.external.config.Config;
+import com.crashnote.external.config.ConfigFactory;
 import com.crashnote.logger.helper.AutoLogConnector;
 import com.crashnote.logger.report.LoggerReporter;
 

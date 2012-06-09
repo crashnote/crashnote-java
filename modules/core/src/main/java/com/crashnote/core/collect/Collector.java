@@ -86,10 +86,8 @@ public class Collector<C extends CrashConfig>
             final DataObject ctx = createDataObj();
             {
                 final Map<String, Object> map = session.getContext();
-                for (final String key : map.keySet()) {
-                    final Object val = map.get(key);
-                    ctx.put(key, val);
-                }
+                for (final Map.Entry<String, Object> entry : map.entrySet())
+                    ctx.put(entry.getKey(), entry.getValue());
             }
             data.putObj("ctx", ctx);
 

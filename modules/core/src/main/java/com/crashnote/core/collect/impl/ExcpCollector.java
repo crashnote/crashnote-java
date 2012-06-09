@@ -51,11 +51,8 @@ public class ExcpCollector<C extends CrashConfig>
                         final String meth = element.getMethodName();
                         final String file = element.getFileName();
                         final String cls = element.getClassName();
-                        final StringBuilder sb = new StringBuilder(cls)
-                            .append(':').append(file)
-                            .append(":").append(meth)
-                            .append(":").append(line);
-                        trace.add(sb.toString());
+                        final String sb = cls + ':' + file + ":" + meth + ":" + line;
+                        trace.add(sb);
                     }
                     excp.put("trace", trace);
                 }

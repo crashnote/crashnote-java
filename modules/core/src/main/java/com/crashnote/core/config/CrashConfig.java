@@ -17,14 +17,13 @@ package com.crashnote.core.config;
 
 import com.crashnote.core.build.Builder;
 import com.crashnote.core.collect.Collector;
-import com.crashnote.core.config.helper.Config;
-import com.crashnote.core.config.helper.ConfigRenderOptions;
+import com.crashnote.external.config.Config;
+import com.crashnote.external.config.ConfigRenderOptions;
 import com.crashnote.core.log.LogLog;
 import com.crashnote.core.log.LogLogFactory;
 import com.crashnote.core.model.types.LogLevel;
 import com.crashnote.core.report.Reporter;
 import com.crashnote.core.send.Sender;
-import com.crashnote.core.util.IDUtil;
 import com.crashnote.core.util.SystemUtil;
 
 import java.util.ArrayList;
@@ -66,11 +65,6 @@ public class CrashConfig<C extends CrashConfig<C>> {
     private Config conf;
 
     /**
-     * unique identifier for environment
-     */
-    private long uid;
-
-    /**
      * list of listeners that are notified on any change to the configuration
      */
     private volatile List<IConfigChangeListener> listeners = new ArrayList<IConfigChangeListener>();
@@ -85,7 +79,6 @@ public class CrashConfig<C extends CrashConfig<C>> {
 
     public CrashConfig(final Config c) {
         conf = c.withOnlyPath("crashnote");
-        uid = IDUtil.createUID();
         logger = getLogger(this.getClass());
         startTime = new Date().getTime();
     }
