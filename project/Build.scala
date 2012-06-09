@@ -126,6 +126,7 @@ trait Settings {
             scalaVersion := "2.9.2",
 
             resolvers += "spray repo" at "http://repo.spray.cc/",
+            resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
 
             javacOptions += "-g:none",
             javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
