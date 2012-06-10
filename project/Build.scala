@@ -13,6 +13,7 @@ object Build
             .settings(moduleSettings: _*)
             .aggregate(servletNotifier, appengineNotifier, coreModule, loggerModule, servletModule, testModule)
 
+
     // ### Notifiers ------------------------------------------------------------------------------
 
     lazy val servletNotifier =
@@ -123,7 +124,7 @@ trait Settings {
     lazy val baseSettings =
         Defaults.defaultSettings ++ buildSettings ++ testSettings ++ Licenses.licenseSettings ++ Seq(
             crossPaths := false,
-            scalaVersion := "2.9.2",
+            scalaVersion := "2.9.1",
 
             resolvers += "spray repo" at "http://repo.spray.cc/",
             resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
@@ -189,7 +190,8 @@ object Dependencies {
 object Dependency {
 
     object Provided {
-        val slf4j = "org.slf4j" % "slf4j-api" % "1.6.4" % "provided"
+        val slf4j = "org.slf4j" % "slf4j-api" % "1.6.0" % "provided"
+
         val log4j = "log4j" % "log4j" % "1.2.16" % "provided"
         val logback = "ch.qos.logback" % "logback-classic" % "1.0.0" % "provided"
 
@@ -201,9 +203,9 @@ object Dependency {
         val junit = "junit" % "junit" % "4.10" % "test"
         val specs2 = "org.specs2" % "specs2_2.9.1" % "1.9" % "test"
         val mockito = "org.mockito" % "mockito-all" % "1.9.0" % "test"
+        val commonsIO = "commons-io" % "commons-io" % "2.3" % "test"
 
         val jetty = "org.eclipse.jetty" % "jetty-webapp" % "7.5.1.v20110908" % "test"
-        val commonsIO = "commons-io" % "commons-io" % "2.3" % "test"
 
         val akka = "se.scalablesolutions.akka" % "akka-actor" % "1.3.1" % "test"
         val sprayServer = "cc.spray" % "spray-server" % "0.9.0" % "test"
