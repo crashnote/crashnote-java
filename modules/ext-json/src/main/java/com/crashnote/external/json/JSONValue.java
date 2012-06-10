@@ -15,13 +15,15 @@
 */
 package com.crashnote.external.json;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author FangYidong<fangyidong@yahoo.com.cn>
  */
-class JSONValue {
+public class JSONValue {
 
     /**
      * Encode an object into JSON text and write it to out.
@@ -168,7 +170,7 @@ class JSONValue {
      * @param s  - Must not be null.
      * @param sb
      */
-    public static void escape(final String s, final StringBuffer sb) {
+    static void escape(final String s, final StringBuffer sb) {
         for (int i = 0; i < s.length(); i++) {
             final char ch = s.charAt(i);
             switch (ch) {
@@ -193,9 +195,9 @@ class JSONValue {
                 case '\t':
                     sb.append("\\t");
                     break;
-                /*case '/':
+                case '/':
                     sb.append("\\/");
-                    break;*/
+                    break;
                 default:
                     //Reference: http://www.unicode.org/versions/Unicode5.1.0/
                     if ((ch >= '\u0000' && ch <= '\u001F') || (ch >= '\u007F' && ch <= '\u009F') || (ch >= '\u2000' && ch <= '\u20FF')) {

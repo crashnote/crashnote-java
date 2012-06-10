@@ -15,21 +15,24 @@
 */
 package com.crashnote.external.json;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * A JSON object. Key value pairs are unordered. JSONObject supports java.util.Map interface.
  *
  * @author FangYidong<fangyidong@yahoo.com.cn>
  */
+
 public class JSONObject
-        extends HashMap<String, Object> implements JSONAware, JSONStreamAware {
+        extends HashMap<String, Object> implements Map<String, Object>, JSONAware, JSONStreamAware {
 
     private static final long serialVersionUID = -503443796854799292L;
 
-
-    protected JSONObject() {
+    public JSONObject() {
         super();
     }
 
@@ -148,7 +151,7 @@ public class JSONObject
      * @return
      * @see JSONValue#escape(String)
      */
-    private static String escape(final String s) {
+    public static String escape(final String s) {
         return JSONValue.escape(s);
     }
 }

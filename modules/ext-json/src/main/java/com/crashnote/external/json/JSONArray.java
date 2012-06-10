@@ -15,9 +15,11 @@
 */
 package com.crashnote.external.json;
 
-import java.io.*;
-import java.util.*;
-
+import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A JSON array. JSONObject supports java.util.List interface.
@@ -25,7 +27,7 @@ import java.util.*;
  * @author FangYidong<fangyidong@yahoo.com.cn>
  */
 public class JSONArray
-        extends ArrayList<Object> implements JSONAware, JSONStreamAware {
+        extends ArrayList<Object> implements List<Object>, JSONAware, JSONStreamAware {
 
     private static final long serialVersionUID = 3957988303675231981L;
 
@@ -82,7 +84,7 @@ public class JSONArray
             return "null";
 
         boolean first = true;
-        final StringBuilder sb = new StringBuilder();
+        final StringBuffer sb = new StringBuffer();
         final Iterator iter = list.iterator();
 
         sb.append('[');
