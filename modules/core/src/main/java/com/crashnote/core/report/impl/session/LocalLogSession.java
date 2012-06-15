@@ -15,9 +15,11 @@
  */
 package com.crashnote.core.report.impl.session;
 
-import com.crashnote.core.model.log.*;
+import com.crashnote.core.model.log.ILogSession;
+import com.crashnote.core.model.log.LogEvt;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of a {@link ILogSession} which wraps a {@link SharedLogSession} within a
@@ -27,19 +29,17 @@ import java.util.*;
  * request/response threads.
  */
 public class LocalLogSession
-    implements ILogSession {
+        implements ILogSession {
 
     // VARS =======================================================================================
 
-    private final ThreadLocal<SharedLogSession> session;
-
-
-    // SETUP ======================================================================================
-
-    public LocalLogSession() {
-        session = new InheritableThreadLocal<SharedLogSession>();
-        session.set(new SharedLogSession());
-    }
+    private final ThreadLocal<SharedLogSession> session =
+            new InheritableThreadLocal<SharedLogSession>() {
+                @Override
+                protected SharedLogSession initialValue() {
+                    return new SharedLogSession();
+                }
+            };
 
 
     // INTERFACE ==================================================================================
