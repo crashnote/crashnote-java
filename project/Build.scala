@@ -105,7 +105,7 @@ trait Settings {
 
     lazy val buildSettings = Seq(
         organization := "com.crashnote",
-        version := "0.2.2",
+        version := "0.3.0",
 
         startYear := Some(2011),
         licenses +=("Apache 2", url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
