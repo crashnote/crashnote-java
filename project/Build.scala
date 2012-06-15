@@ -28,7 +28,6 @@ object Build
             withModules = Seq(servletModule),
             withLibs = loggerKit ++ List(Provided.servlet, Provided.appengine),
             withSources = servletSrc)
-            .settings(normalizedName := "crashnote-appengine")
             .settings(description := "Reports exceptions from Java apps on Appengine to crashnote.com")
 
 
@@ -81,11 +80,11 @@ trait Projects
     object NotifierProject {
         def apply(name: String, displayName: String,
                   withModules: Seq[ModRef], withLibs: Seq[ModuleID] = Seq(), withSources: Seq[String] = Seq()) =
-            Project("crashnote-" + name, file(name))
+            Project(displayName, file(name))
                 .configs(UnitTest, FuncTest)
                 .settings(notifierSettings: _*)
                 .settings(libraryDependencies := withLibs)
-                .settings(normalizedName := displayName)
+                .settings(normalizedName := "crashnote-" + name)
                 .settings(unmanagedSourceDirectories in Compile <++= modulesSources(withSources: _*))
                 .settings(unmanagedResourceDirectories in Compile <++= modulesResources(withSources: _*))
                 .dependsOn((Seq(testModule % "test->test") ++ withModules): _*)
@@ -129,7 +128,6 @@ trait Settings {
             resolvers += "spray repo" at "http://repo.spray.cc/",
             resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
 
-            javacOptions += "-g:none",
             javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
             //javacOptions ++= Seq("-bootclasspath", (javaDir / "jre" / "lib" / "rt.jar").getAbsolutePath)
 
