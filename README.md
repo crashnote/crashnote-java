@@ -13,6 +13,8 @@ The Java notifier is designed to work in all **Java Servlet applications** (even
 2. install notifier
 3. deploy and track errors
 
+A detailed guide can be found in the [Official Documentation](http://www.crashnote.com/docs)
+
 
 ## General Features
 
@@ -20,14 +22,13 @@ Each application platform has it's own specific library that leverages its uniqu
 obeys the according restrictions:
 
 - pure Java
-- works with JDK6+
-- single JAR, no dependencies
 - runs asynchronously
+- single JAR, no dependencies
 - uses JSON format and GZIP compression
 - supports all major logging APIs: JUL, Log4j and Logback
 
 
-# License
+## License
 
 This software is licensed under the Apache 2 license, quoted below.
 
