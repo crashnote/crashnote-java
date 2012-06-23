@@ -24,7 +24,7 @@ object Build
             .settings(description := "Reports exceptions from Java servlet apps to crashnote.com")
 
     lazy val appengineNotifier =
-        NotifierProject("appengine","Crashnote Appengine Notifier",
+        NotifierProject("appengine", "Crashnote Appengine Notifier",
             withModules = Seq(servletModule),
             withLibs = loggerKit ++ List(Provided.servlet, Provided.appengine),
             withSources = servletSrc)
@@ -115,7 +115,7 @@ trait Settings {
     )
 
     lazy val testSettings = Seq(
-        testOptions in Test := Seq(Tests.Filter((n:String) => unitFilter(n) || funcFilter(n))),
+        testOptions in Test := Seq(Tests.Filter((n: String) => unitFilter(n) || funcFilter(n))),
         testOptions in FuncTest := Seq(Tests.Filter(funcFilter)),
         testOptions in UnitTest := Seq(Tests.Filter(unitFilter))
     )
@@ -188,13 +188,13 @@ object Dependencies {
 object Dependency {
 
     object Provided {
-        val slf4j = "org.slf4j" % "slf4j-api" % "1.6.0" % "provided"
+        val slf4j = "org.slf4j" % "slf4j-api" % "1.6.0"
 
-        val log4j = "log4j" % "log4j" % "1.2.16" % "provided"
-        val logback = "ch.qos.logback" % "logback-classic" % "1.0.0" % "provided"
+        val log4j = "log4j" % "log4j" % "1.2.16"
+        val logback = "ch.qos.logback" % "logback-classic" % "1.0.0"
 
-        val servlet = "javax.servlet" % "servlet-api" % "2.5" % "provided"
-        val appengine = "com.google.appengine" % "appengine-api-1.0-sdk" % "1.5.0" % "provided"
+        val servlet = "javax.servlet" % "servlet-api" % "2.5"
+        val appengine = "com.google.appengine" % "appengine-api-1.0-sdk" % "1.5.0"
     }
 
     object Test {
@@ -244,9 +244,19 @@ object Publish {
                 x => false
             },
 
+            pomPostProcess := {
+                import scala.xml._
+                Rewrite.rewriter {
+                    case e@Elem(_, "dependency", _, _, child@_*) => // remove module dependencies
+                        if (child.seq.find(_.text contains "crashnote").isDefined) NodeSeq.Empty else e
+                    case Elem(_, "scope", _, _, _) => // set every scope to "provided"
+                        <scope>provided</scope>
+                }
+            },
+
             makePomConfiguration ~= {
                 (mpc: MakePomConfiguration) =>
-                    mpc.copy(configurations = Some(Seq(Provided)))
+                    mpc.copy(configurations = Some(Seq(Compile, Provided)))
             },
 
             pomExtra :=
@@ -274,4 +284,16 @@ object Publish {
                         <url>https://github.com/crashnote/crashnote-java/issues</url>
                     </issueManagement>
         )
+}
+
+import xml.{NodeSeq, Node => XNode}
+import xml.transform.{RewriteRule, RuleTransformer}
+
+object Rewrite {
+
+    def rewriter(f: PartialFunction[XNode, NodeSeq]): RuleTransformer = new RuleTransformer(rule(f))
+
+    def rule(f: PartialFunction[XNode, NodeSeq]): RewriteRule = new RewriteRule {
+        override def transform(n: XNode) = if (f.isDefinedAt(n)) f(n) else n
+    }
 }
