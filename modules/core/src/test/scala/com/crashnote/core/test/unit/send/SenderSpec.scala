@@ -85,9 +85,9 @@ class SenderSpec
             m_conn.getURL.toURI.toString === url
             if (typeOf == "POST") {
                 expect {
-                    one(m_conn).setRequestProperty("Accept", "application/x-gzip");
-                    one(m_conn).setRequestProperty("Content-Type", "application/json");
-                    one(m_conn).setRequestProperty("Content-Encoding", "gzip");
+                    one(m_conn).setRequestProperty("Accept", "application/x-gzip")
+                    one(m_conn).setRequestProperty("Content-Type", "application/json")
+                    one(m_conn).setRequestProperty("Content-Encoding", "gzip")
                     one(m_writer).close()
                     one(m_stream).close()
                 }
@@ -103,7 +103,7 @@ class SenderSpec
         }
 
     val key = "0000000000000000000000000000000"
-    val url = "https://api.crashnote.com:443/errors"
+    val url = "https://api.crashnote.com:443/api/errors"
     val client = "spec-1.0"
 
     override def mockConfig() = {

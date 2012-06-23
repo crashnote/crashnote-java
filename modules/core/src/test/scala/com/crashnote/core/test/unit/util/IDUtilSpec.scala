@@ -25,8 +25,8 @@ class IDUtilSpec extends UnitSpec {
         import IDUtil._
 
         "generate a numeric ID" >> {
-            val id1 = createUID();
-            val id2 = createUID();
+            val id1 = createUID()
+            val id2 = createUID()
 
             id1 !== 0
             id1 !== id2

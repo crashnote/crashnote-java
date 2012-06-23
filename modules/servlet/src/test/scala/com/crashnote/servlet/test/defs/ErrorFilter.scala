@@ -27,7 +27,7 @@ class ErrorFilter extends Filter {
 
     def doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
 
-        if (request.asInstanceOf[HttpServletRequest].getRequestURI.contains("/errors")) {
+        if (request.asInstanceOf[HttpServletRequest].getRequestURI.contains("/api/errors")) {
 
             // add test data to context
             MDC.put("TEST", "data")
@@ -35,7 +35,7 @@ class ErrorFilter extends Filter {
             // raise error
             sys.error("default error")
         } else {
-            chain.doFilter(request, response);
+            chain.doFilter(request, response)
         }
     }
 

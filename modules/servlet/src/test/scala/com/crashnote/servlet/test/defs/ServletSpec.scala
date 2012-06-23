@@ -53,7 +53,7 @@ trait ServletSpec
 
         System.setProperty("crashnote.port", serverPort.toString)
         servlet = new Server(servletPort)
-        servlet.setHandler(context);
+        servlet.setHandler(context)
 
         servlet.start()
         while (!servlet.isRunning) {
@@ -87,7 +87,7 @@ trait ServletSpec
     // INTERFACE ==================================================================================
 
     def callURL() {
-        router ! "http://127.0.0.1:" + servletPort + "/errors"
+        router ! "http://127.0.0.1:" + servletPort + "/api/errors"
     }
 
     // INTERNALS ==================================================================================

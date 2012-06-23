@@ -249,7 +249,7 @@ public class CrashConfig<C extends CrashConfig<C>> {
     // GET+ =======================================================================================
 
     public String getPostUrl() {
-        final String url = getBaseUrl() + "/errors?key=" + getKey();
+        final String url = getBaseUrl() + "/api/errors?key=" + getKey();
         logger.debug("resolved POST target URL: {}", url);
         return url;
     }
