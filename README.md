@@ -13,7 +13,7 @@ The Java notifier is designed to work in all **Java Servlet applications** (even
 2. install notifier
 3. deploy and track errors
 
-A detailed guide can be found in the [Official Documentation](http://www.crashnote.com/docs)
+A detailed guide can be found in the [Official Documentation](http://www.crashnote.com/docs).
 
 
 ## General Features
