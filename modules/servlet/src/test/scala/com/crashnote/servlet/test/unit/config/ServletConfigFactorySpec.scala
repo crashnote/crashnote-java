@@ -57,7 +57,7 @@ class ServletConfigFactorySpec
         ))
 
     def configure(config: C) = {
-        System.setProperty("crashnote.request.max-parameter-size", "69");
+        System.setProperty("crashnote.request.max-parameter-size", "69")
 
         m_filterConf = mock[FilterConfig]
         m_filterConf.getInitParameterNames.asInstanceOf[javaEnum[Object]] returns filterProps.keys()

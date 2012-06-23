@@ -84,9 +84,9 @@ class BaseMockSpec[T](implicit t: Manifest[T])
     protected def _set[F](field: Field, value: F)(implicit m: Manifest[F]): F = {
         field.setAccessible(true)
 
-        val modifier = classOf[Field].getDeclaredField("modifiers");
-        modifier.setAccessible(true);
-        modifier.setInt(field, field.getModifiers & ~Modifier.FINAL);
+        val modifier = classOf[Field].getDeclaredField("modifiers")
+        modifier.setAccessible(true)
+        modifier.setInt(field, field.getModifiers & ~Modifier.FINAL)
 
         field.set(target, value)
 

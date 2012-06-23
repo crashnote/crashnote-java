@@ -35,7 +35,7 @@ class Benchmark
     }
 
     def execClients() {
-        val t_hist = new BoundedList[Long](20);
+        val t_hist = new BoundedList[Long](20)
 
         (0 to 249).foreach {
             arg =>
