@@ -11,23 +11,21 @@ object Build
         Project(id = "crashnote", base = file("."))
             .configs(UnitTest, FuncTest)
             .settings(moduleSettings: _*)
-            .aggregate(servletNotifier, appengineNotifier, coreModule, loggerModule, servletModule, testModule)
+            .aggregate(servletNotifier, appengineNotifier, coreModule, loggerModule, testModule)
 
 
     // ### Notifiers ------------------------------------------------------------------------------
 
     lazy val servletNotifier =
         NotifierProject("servlet", "Crashnote Servlet Notifier",
-            withModules = Seq(servletModule),
-            withLibs = loggerKit ++ List(Provided.servlet),
-            withSources = servletSrc)
+            withProjects = Seq(loggerModule),
+            withLibraries = loggerKit ++ List(Provided.servlet))
             .settings(description := "Reports exceptions from Java servlet apps to crashnote.com")
 
     lazy val appengineNotifier =
         NotifierProject("appengine", "Crashnote Appengine Notifier",
-            withModules = Seq(servletModule),
-            withLibs = loggerKit ++ List(Provided.servlet, Provided.appengine),
-            withSources = servletSrc)
+            withProjects = Seq(servletNotifier),
+            withLibraries = loggerKit ++ List(Provided.servlet, Provided.appengine))
             .settings(description := "Reports exceptions from Java apps on Appengine to crashnote.com")
 
 
@@ -41,10 +39,6 @@ object Build
     lazy val loggerModule =
         ModuleProject("logger",
             withModules = Seq(coreModule), withLibs = loggerKit)
-
-    lazy val servletModule =
-        ModuleProject("servlet",
-            withModules = Seq(loggerModule), withLibs = Seq(Provided.servlet))
 
     // External
 
@@ -65,11 +59,11 @@ trait Projects
 
     import Dependencies._
 
-    type ModRef = ClasspathDep[ProjectReference]
+    type ClasspathRef = ClasspathDep[ProjectReference]
 
     object ModuleProject {
         def apply(name: String,
-                  withModules: Seq[ModRef] = Seq(), withLibs: Seq[ModuleID] = Seq()) =
+                  withModules: Seq[ClasspathRef] = Seq(), withLibs: Seq[ModuleID] = Seq()) =
             Project("module-" + name, file("modules/" + name))
                 .configs(UnitTest, FuncTest)
                 .settings(moduleSettings: _*)
@@ -79,15 +73,13 @@ trait Projects
 
     object NotifierProject {
         def apply(name: String, displayName: String,
-                  withModules: Seq[ModRef], withLibs: Seq[ModuleID] = Seq(), withSources: Seq[String] = Seq()) =
+                  withProjects: Seq[ClasspathRef], withLibraries: Seq[ModuleID] = Seq(), withSources: Seq[ClasspathRef] = Seq()) =
             Project(displayName, file(name))
                 .configs(UnitTest, FuncTest)
                 .settings(notifierSettings: _*)
-                .settings(libraryDependencies := withLibs)
+                .settings(libraryDependencies := withLibraries)
                 .settings(normalizedName := "crashnote-" + name)
-                .settings(unmanagedSourceDirectories in Compile <++= modulesSources(withSources: _*))
-                .settings(unmanagedResourceDirectories in Compile <++= modulesResources(withSources: _*))
-                .dependsOn((Seq(testModule % "test->test") ++ withModules): _*)
+                .dependsOn((Seq(testModule % "test->test") ++ withProjects): _*)
     }
 
     lazy val testModule =
@@ -101,7 +93,7 @@ trait Projects
 
 trait Settings {
 
-    self: Build =>
+    self: Build with Projects =>
 
     lazy val buildSettings = Seq(
         organization := "com.crashnote",
@@ -138,7 +130,23 @@ trait Settings {
         baseSettings ++ Seq(publish := false, publishLocal := false)
 
     lazy val notifierSettings =
-        baseSettings ++ About.aboutSettings ++ Publish.settings
+        baseSettings ++ About.aboutSettings ++ Publish.settings ++ Seq(
+
+            //managedClasspath in Compile <<=
+            //    (managedClasspath in Compile) map {(cp) => cp}
+
+            unmanagedSourceDirectories in Compile <++= (thisProject in Compile, loadedBuild) {
+                (p, struct) => srcDirs(getAllDeps(p, struct))
+            },
+            unmanagedResourceDirectories in Compile <++= (thisProject in Compile, loadedBuild) {
+                (p, struct) => resDirs(getAllDeps(p, struct))
+            }
+        )
+
+    // Dependency-related
+
+    private def getAllDeps(p: ResolvedProject, struct: Load.LoadedBuild): Seq[ResolvedProject] =
+        Seq(p) ++ p.dependencies.flatMap(r => getAllDeps(Project.getProject(r.project, struct).get, struct))
 
     // Test-related
 
@@ -153,16 +161,14 @@ trait Settings {
 
     // Source-related
 
-    lazy val servletSrc = Seq("ext-json", "ext-config", "core", "logger", "servlet")
+    def srcDirs(projects: Seq[ResolvedProject]) =
+        getDirs(projects, "java")
 
-    def modulesSources(mods: String*) =
-        modulesSrcDir("java", mods)
+    def resDirs(projects: Seq[ResolvedProject]) =
+        getDirs(projects, "resources")
 
-    def modulesResources(mods: String*) =
-        modulesSrcDir("resources", mods)
-
-    private def modulesSrcDir(typeOf: String, mods: Seq[String]) =
-        baseDirectory(d => mods.map(d / ".." / "modules" / _ / "src" / "main" / typeOf))
+    private def getDirs(projects: Seq[ResolvedProject], dirType: String) =
+        projects.map(p => p.base / "src" / "main" / dirType)
 
     // Path-related
 
