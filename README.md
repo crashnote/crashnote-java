@@ -9,9 +9,9 @@ The Java notifier is designed to work in all **Java Servlet applications** (even
 
 ## Quick Guide
 
-1. sign up
-2. install notifier
-3. deploy and track errors
+1. [sign up](https://www.crashnote.com)
+2. embed notifier
+3. deploy
 
 A detailed guide can be found in the [Official Documentation](https://www.crashnote.com/docs).
 
