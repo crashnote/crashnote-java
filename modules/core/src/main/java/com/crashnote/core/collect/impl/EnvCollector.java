@@ -131,7 +131,7 @@ public class EnvCollector<C extends CrashConfig>
             final DataObject props = createDataObj();
             {
                 for (final String name : getSysUtil().getEnvKeys())
-                    props.put(name, doFilter(name, envFilters) ? "#" : getSysUtil().getEnv(name));
+                    props.put(name, doFilter(name, envFilters) ? filtered : getSysUtil().getEnv(name));
             }
             sysData.putObj("props", props);
         }

@@ -1,6 +1,6 @@
-# [Crashnote](http://crashnote.com#java): Error tracking for Java-based web apps
+# [Crashnote](https://www.crashnote.com): Error tracking for Java-based web apps
 
-[crashnote.com](http://crashnote.com#java) is an online service that tracks errors in applications.
+[crashnote.com](https://www.crashnote.com) is an online service that tracks errors in applications.
 
 This makes it easier to understand where problems are and helps you to fix bugs faster.
 
@@ -13,13 +13,10 @@ The Java notifier is designed to work in all **Java Servlet applications** (even
 2. install notifier
 3. deploy and track errors
 
-A detailed guide can be found in the [Official Documentation](http://www.crashnote.com/docs).
+A detailed guide can be found in the [Official Documentation](https://www.crashnote.com/docs).
 
 
 ## General Features
-
-Each application platform has it's own specific library that leverages its unique features and
-obeys the according restrictions:
 
 - pure Java
 - runs asynchronously

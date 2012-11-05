@@ -21,6 +21,7 @@ import com.crashnote.core.log.LogLog;
 import com.crashnote.core.model.data.*;
 import com.crashnote.core.util.SystemUtil;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,6 +36,8 @@ public abstract class BaseCollector<C extends CrashConfig> {
     private final LogLog logger;
     private final Builder builder;
     private final SystemUtil sysUtil;
+
+    protected final String filtered = "#";
 
 
     // SETUP ======================================================================================
@@ -56,9 +59,15 @@ public abstract class BaseCollector<C extends CrashConfig> {
         return builder.createDataArr();
     }
 
-    protected DataArray createDataArr(final List<String> values) {
+    protected DataArray createDataArr(final Object[] values) {
         final DataArray arr = createDataArr();
-        for (final String v : values) arr.add(v);
+        Collections.addAll(arr, values);
+        return arr;
+    }
+
+    protected DataArray createDataArr(final List<Object> values) {
+        final DataArray arr = createDataArr();
+        for (final Object v : values) arr.add(v);
         return arr;
     }
 
