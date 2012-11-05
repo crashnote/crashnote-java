@@ -276,7 +276,7 @@ object Publish {
             },
 
             pomExtra :=
-                <url>http://www.crashnote.com</url>
+                <url>https://www.crashnote.com</url>
 
                     <developers>
                         <developer>
