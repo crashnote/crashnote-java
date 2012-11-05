@@ -15,19 +15,19 @@
  */
 package com.crashnote.servlet.collect;
 
-import com.crashnote.core.collect.BaseCollector;
-import com.crashnote.core.config.IConfigChangeListener;
 import com.crashnote.core.model.data.DataObject;
 import com.crashnote.servlet.config.ServletConfig;
+import com.crashnote.web.collect.SessionCollector;
 
-import javax.servlet.http.*;
-import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Enumeration;
 
 /**
  * Collector to transform a HTTP session into a structured data format.
  */
-public class SessionCollector
-    extends BaseCollector<ServletConfig> implements IConfigChangeListener<ServletConfig> {
+public class ServletSessionCollector
+        extends SessionCollector<ServletConfig, HttpServletRequest> {
 
     // VARS =======================================================================================
 
@@ -36,7 +36,7 @@ public class SessionCollector
 
     // SETUP ======================================================================================
 
-    public SessionCollector(final ServletConfig config) {
+    public ServletSessionCollector(final ServletConfig config) {
         super(config);
         updateConfig(config);
     }
@@ -50,6 +50,7 @@ public class SessionCollector
 
     // INTERFACE ==================================================================================
 
+    @Override
     public DataObject collect(final HttpServletRequest req) {
         final DataObject data = createDataObj();
         {
@@ -75,5 +76,4 @@ public class SessionCollector
         }
         return data;
     }
-
 }

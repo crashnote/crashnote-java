@@ -22,7 +22,7 @@ import com.crashnote.core.model.data.DataObject
 import com.crashnote.servlet.collect._
 
 class SessionCollectorSpec
-    extends MockSpec[SessionCollector] {
+    extends MockSpec[ServletSessionCollector] {
 
     "Session Collector" should {
 
@@ -52,7 +52,7 @@ class SessionCollectorSpec
     }
 
     def configure(config: C) =
-        new SessionCollector(config)
+        new ServletSessionCollector(config)
 
     def mockReq() = {
         val m_ses = mock[HttpSession]

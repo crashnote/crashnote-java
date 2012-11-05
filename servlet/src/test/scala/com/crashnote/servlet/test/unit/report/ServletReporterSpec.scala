@@ -31,8 +31,8 @@ class ServletReporterSpec
 
     var m_session: ILogSession = _
     var m_processor: Processor[C] = _
-    var m_reqColl: RequestCollector = _
-    var m_sesColl: SessionCollector = _
+    var m_reqColl: ServletRequestCollector = _
+    var m_sesColl: ServletSessionCollector = _
 
     "Reporter" should {
 
@@ -58,7 +58,7 @@ class ServletReporterSpec
 
         "end session after request" >> new Started() {
             val req = mock[HttpServletRequest]
-            target.afterRequest(req, null)
+            target.afterRequest(req)
 
             expect {
                 one(m_reqColl).collect(req)
@@ -75,8 +75,8 @@ class ServletReporterSpec
     override def mock() {
         m_session = _mock[ILogSession]
         m_processor = _mock[Processor[C]]
-        m_reqColl = _mock[RequestCollector]
-        m_sesColl = _mock[SessionCollector]
+        m_reqColl = _mock[ServletRequestCollector]
+        m_sesColl = _mock[ServletSessionCollector]
     }
 
     override def afterStarted() {

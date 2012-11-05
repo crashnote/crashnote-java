@@ -88,7 +88,7 @@ public class CrashnoteFilter
 
             } finally {
                 // cleanup after request
-                reporter.afterRequest(request, response);
+                reporter.afterRequest(request);
             }
         }
     }

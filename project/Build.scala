@@ -11,22 +11,30 @@ object Build
         Project(id = "crashnote", base = file("."))
             .configs(UnitTest, FuncTest)
             .settings(moduleSettings: _*)
-            .aggregate(servletNotifier, appengineNotifier, coreModule, loggerModule, testModule)
+            .aggregate(/*play2Notifier,*/ servletNotifier, appengineNotifier, coreModule, loggerModule, webModule, testModule)
 
 
     // ### Notifiers ------------------------------------------------------------------------------
 
     lazy val servletNotifier =
         NotifierProject("servlet", "Crashnote Servlet Notifier",
-            withProjects = Seq(loggerModule),
-            withLibraries = loggerKit ++ List(Provided.servlet))
+            withProjects = Seq(webModule),
+            withLibraries = loggerKit ++ List(servlet))
             .settings(description := "Reports exceptions from Java servlet apps to crashnote.com")
 
     lazy val appengineNotifier =
         NotifierProject("appengine", "Crashnote Appengine Notifier",
             withProjects = Seq(servletNotifier),
-            withLibraries = loggerKit ++ List(Provided.servlet, Provided.appengine))
+            withLibraries = loggerKit ++ List(servlet, appengine))
             .settings(description := "Reports exceptions from Java apps on Appengine to crashnote.com")
+
+    /*
+    lazy val play2Notifier =
+        NotifierProject("play2", "Crashnote Play2 Notifier",
+            withProjects = Seq(webModule),
+            withLibraries = loggerKit ++ List(play2))
+            .settings(description := "Reports exceptions from play2 apps to crashnote.com")
+    */
 
 
     // ### Modules --------------------------------------------------------------------------------
@@ -39,6 +47,9 @@ object Build
     lazy val loggerModule =
         ModuleProject("logger",
             withModules = Seq(coreModule), withLibs = loggerKit)
+
+    lazy val webModule =
+        ModuleProject("web", withModules = Seq(loggerModule))
 
     // External
 
@@ -113,7 +124,7 @@ trait Settings {
     )
 
     lazy val baseSettings =
-        Defaults.defaultSettings ++ buildSettings ++ testSettings ++ Licenses.licenseSettings ++ Seq(
+        Defaults.defaultSettings ++ buildSettings ++ testSettings ++ org.sbtidea.SbtIdeaPlugin.ideaSettings ++ Licenses.licenseSettings ++ Seq(
             crossPaths := false,
             scalaVersion := "2.9.1",
 
@@ -184,7 +195,7 @@ object Dependencies {
     import Dependency._
 
     lazy val loggerKit =
-        Seq(Provided.slf4j, Provided.log4j, Provided.logback)
+        Seq(slf4j, log4j, logback)
 
     lazy val testKit =
         Seq(Test.junit, Test.specs2, Test.mockito, Test.commonsIO,
@@ -193,20 +204,19 @@ object Dependencies {
 
 object Dependency {
 
-    object Provided {
-        val slf4j = "org.slf4j" % "slf4j-api" % "1.6.0"
+    val slf4j = "org.slf4j" % "slf4j-api" % "1.7.0"
 
-        val log4j = "log4j" % "log4j" % "1.2.16"
-        val logback = "ch.qos.logback" % "logback-classic" % "1.0.0"
+    val log4j = "log4j" % "log4j" % "1.2.16"
+    val logback = "ch.qos.logback" % "logback-classic" % "1.0.0"
 
-        val servlet = "javax.servlet" % "servlet-api" % "2.5"
-        val appengine = "com.google.appengine" % "appengine-api-1.0-sdk" % "1.5.0"
-    }
+    val play2 = "play" %% "play" % "2.0"
+    val servlet = "javax.servlet" % "servlet-api" % "2.5"
+    val appengine = "com.google.appengine" % "appengine-api-1.0-sdk" % "1.5.0"
 
     object Test {
         val junit = "junit" % "junit" % "4.10" % "test"
-        val specs2 = "org.specs2" % "specs2_2.9.1" % "1.9" % "test"
-        val mockito = "org.mockito" % "mockito-all" % "1.9.0" % "test"
+        val specs2 = "org.specs2" % "specs2_2.9.1" % "1.12.1" % "test"
+        val mockito = "org.mockito" % "mockito-all" % "1.9.5" % "test"
         val commonsIO = "commons-io" % "commons-io" % "2.3" % "test"
 
         val jetty = "org.eclipse.jetty" % "jetty-webapp" % "7.5.1.v20110908" % "test"

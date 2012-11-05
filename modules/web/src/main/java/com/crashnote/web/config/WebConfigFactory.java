@@ -13,30 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crashnote.servlet.config;
+package com.crashnote.web.config;
 
-import com.crashnote.external.config.Config;
-import com.crashnote.servlet.report.ServletReporter;
-import com.crashnote.web.config.WebConfig;
+import com.crashnote.logger.config.LoggerConfigFactory;
 
-/**
- * Customized {@link WebConfig} for dealing with servlet environments.
- */
-public class ServletConfig<C extends ServletConfig<C>>
-        extends WebConfig<C> {
+public class WebConfigFactory<C extends WebConfig>
+        extends LoggerConfigFactory<C> {
 
     // SETUP ======================================================================================
 
-    public ServletConfig(final Config c) {
-        super(c);
+    public WebConfigFactory() {
     }
 
-
-    // INTERFACE ==================================================================================
+    // SHARED =====================================================================================
 
     @Override
-    public ServletReporter<C> getReporter() {
-        return new ServletReporter(this);
+    public C create() {
+        return (C) new WebConfig(readConf());
     }
-
 }

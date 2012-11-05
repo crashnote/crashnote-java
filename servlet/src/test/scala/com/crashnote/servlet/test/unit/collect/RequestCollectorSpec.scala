@@ -16,15 +16,14 @@
 package com.crashnote.servlet.test.unit.collect
 
 import scala.collection.JavaConversions._
-import com.sun.security.auth.UnixPrincipal
 import javax.servlet.http.HttpServletRequest
 import com.crashnote.core.build.Builder
 import com.crashnote.servlet.test.defs.MockSpec
-import com.crashnote.servlet.collect.RequestCollector
+import com.crashnote.servlet.collect.ServletRequestCollector
 import com.crashnote.core.model.data._
 
 class RequestCollectorSpec
-    extends MockSpec[RequestCollector] {
+    extends MockSpec[ServletRequestCollector] {
 
     "Request Collector" should {
 
@@ -35,7 +34,6 @@ class RequestCollectorSpec
                 res.get("method") === "PUT"
                 res.get("url") === "http://test.com"
                 res.get("ip_hash") === 6279231751978338320L
-                res.get("principal") === "admin"
 
                 val params = res.get("parameters").asInstanceOf[DataObject]
                 params.size() === 3
@@ -74,7 +72,7 @@ class RequestCollectorSpec
     }
 
     def configure(config: C) =
-        new RequestCollector(config)
+        new ServletRequestCollector(config)
 
     def mockReq() = {
         val res = mock[HttpServletRequest]
@@ -82,7 +80,6 @@ class RequestCollectorSpec
         res.getMethod returns "PUT"
         res.getRequestURL returns new StringBuffer("http://test.com")
         res.getRemoteAddr returns "127.0.0.1"
-        res.getUserPrincipal returns new UnixPrincipal("admin")
 
         res.getHeaderNames.asInstanceOf[javaEnum[String]] returns toEnum(List("User-Agent", "Accept"))
         res.getHeaders("Accept").asInstanceOf[javaEnum[String]] returns toEnum(List("text/plain", "text/html"))
