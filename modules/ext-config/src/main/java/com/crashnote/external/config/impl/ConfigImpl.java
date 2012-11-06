@@ -12,29 +12,43 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import com.crashnote.external.config.*;
-import com.crashnote.external.config.*;
+import com.crashnote.external.config.Config;
+import com.crashnote.external.config.ConfigException;
+import com.crashnote.external.config.ConfigIncluder;
+import com.crashnote.external.config.ConfigObject;
+import com.crashnote.external.config.ConfigOrigin;
+import com.crashnote.external.config.ConfigParseOptions;
+import com.crashnote.external.config.ConfigParseable;
+import com.crashnote.external.config.ConfigValue;
 import com.crashnote.external.config.impl.SimpleIncluder.NameSource;
 
 /** This is public but is only supposed to be used by the "config" package */
 public class ConfigImpl {
 
     private static class LoaderCache {
-        private ClassLoader current;
+        private Config currentSystemProperties;
+        private ClassLoader currentLoader;
         private Map<String, Config> cache;
 
         LoaderCache() {
-            this.current = null;
+            this.currentSystemProperties = null;
+            this.currentLoader = null;
             this.cache = new HashMap<String, Config>();
         }
 
         // for now, caching as long as the loader remains the same,
         // drop entire cache if it changes.
         synchronized Config getOrElseUpdate(final ClassLoader loader, final String key, final Callable<Config> updater) {
-            if (loader != current) {
+            if (loader != currentLoader) {
                 // reset the cache if we start using a different loader
                 cache.clear();
-                current = loader;
+                currentLoader = loader;
+            }
+
+            final Config systemProperties = systemPropertiesAsConfig();
+            if (systemProperties != currentSystemProperties) {
+                cache.clear();
+                currentSystemProperties = systemProperties;
             }
 
             Config config = cache.get(key);
@@ -282,7 +296,7 @@ public class ConfigImpl {
 
     private static class SystemPropertiesHolder {
         // this isn't final due to the reloadSystemPropertiesConfig() hack below
-        static AbstractConfigObject systemProperties = loadSystemProperties();
+        static volatile AbstractConfigObject systemProperties = loadSystemProperties();
     }
 
     static AbstractConfigObject systemPropertiesAsConfigObject() {
@@ -298,9 +312,10 @@ public class ConfigImpl {
         return systemPropertiesAsConfigObject().toConfig();
     }
 
-    // this is a hack to let us set system props in the test suite.
-    // obviously not thread-safe.
-    static void reloadSystemPropertiesConfig() {
+    /** For use ONLY by library internals, DO NOT TOUCH not guaranteed ABI */
+    public static void reloadSystemPropertiesConfig() {
+        // ConfigFactory.invalidateCaches() relies on this having the side
+        // effect that it drops all caches
         SystemPropertiesHolder.systemProperties = loadSystemProperties();
     }
 
@@ -336,8 +351,6 @@ public class ConfigImpl {
 
     /** For use ONLY by library internals, DO NOT TOUCH not guaranteed ABI */
     public static Config defaultReference(final ClassLoader loader) {
-        return ConfigFactory.empty();
-        /* skip search for "reference.conf"
         return computeCachedConfig(loader, "defaultReference", new Callable<Config>() {
             @Override
             public Config call() {
@@ -348,7 +361,6 @@ public class ConfigImpl {
                 return systemPropertiesAsConfig().withFallback(unresolvedResources).resolve();
             }
         });
-        */
     }
 
     private static class DebugHolder {

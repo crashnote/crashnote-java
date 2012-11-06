@@ -131,6 +131,45 @@ final class SimpleConfigObject extends AbstractConfigObject implements Serializa
     }
 
     @Override
+    public SimpleConfigObject withValue(final String key, final ConfigValue v) {
+        if (v == null)
+            throw new ConfigException.BugOrBroken(
+                    "Trying to store null ConfigValue in a ConfigObject");
+
+        final Map<String, AbstractConfigValue> newMap;
+        if (value.isEmpty()) {
+            newMap = Collections.singletonMap(key, (AbstractConfigValue) v);
+        } else {
+            newMap = new HashMap<String, AbstractConfigValue>(value);
+            newMap.put(key, (AbstractConfigValue) v);
+        }
+
+        return new SimpleConfigObject(origin(), newMap, ResolveStatus.fromValues(newMap.values()),
+                ignoresFallbacks);
+    }
+
+    @Override
+    SimpleConfigObject withValue(final Path path, final ConfigValue v) {
+        final String key = path.first();
+        final Path next = path.remainder();
+
+        if (next == null) {
+            return withValue(key, v);
+        } else {
+            final AbstractConfigValue child = value.get(key);
+            if (child != null && child instanceof AbstractConfigObject) {
+                // if we have an object, add to it
+                return withValue(key, ((AbstractConfigObject) child).withValue(next, v));
+            } else {
+                // as soon as we have a non-object, replace it entirely
+                final SimpleConfig subtree = ((AbstractConfigValue) v).atPath(
+                        SimpleConfigOrigin.newSimple("withValue(" + next.render() + ")"), next);
+                return withValue(key, subtree.root());
+            }
+        }
+    }
+
+    @Override
     protected AbstractConfigValue attemptPeekWithPartialResolve(final String key) {
         return value.get(key);
     }
@@ -329,9 +368,15 @@ final class SimpleConfigObject extends AbstractConfigObject implements Serializa
         if (isEmpty()) {
             sb.append("{}");
         } else {
-            sb.append("{");
+            final boolean outerBraces = indent > 0 || options.getJson();
+
+            if (outerBraces)
+                sb.append("{");
+
             if (options.getFormatted())
                 sb.append('\n');
+
+            int separatorCount = 0;
             for (final String k : keySet()) {
                 final AbstractConfigValue v;
                 v = value.get(k);
@@ -352,18 +397,29 @@ final class SimpleConfigObject extends AbstractConfigObject implements Serializa
                 }
                 indent(sb, indent + 1, options);
                 v.render(sb, indent + 1, k, options);
-                sb.append(",");
-                if (options.getFormatted())
+
+                if (options.getFormatted()) {
+                    if (options.getJson()) {
+                        sb.append(",");
+                        separatorCount = 2;
+                    } else {
+                        separatorCount = 1;
+                    }
                     sb.append('\n');
+                } else {
+                    sb.append(",");
+                    separatorCount = 1;
+                }
             }
-            // chop comma or newline
-            sb.setLength(sb.length() - 1);
+            // chop last commas/newlines
+            sb.setLength(sb.length() - separatorCount);
             if (options.getFormatted()) {
-                sb.setLength(sb.length() - 1); // also chop comma
                 sb.append("\n"); // put a newline back
                 indent(sb, indent, options);
             }
-            sb.append("}");
+
+            if (outerBraces)
+                sb.append("}");
         }
     }
 

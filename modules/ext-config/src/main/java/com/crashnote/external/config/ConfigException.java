@@ -3,15 +3,20 @@
  */
 package com.crashnote.external.config;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+
+import com.crashnote.external.config.impl.ConfigImplUtil;
 
 /**
  * All exceptions thrown by the library are subclasses of
  * <code>ConfigException</code>.
  */
-public abstract class ConfigException extends RuntimeException {
+public abstract class ConfigException extends RuntimeException implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    final private ConfigOrigin origin;
+    final private transient ConfigOrigin origin;
 
     protected ConfigException(final ConfigOrigin origin, final String message,
             final Throwable cause) {
@@ -43,6 +48,37 @@ public abstract class ConfigException extends RuntimeException {
      */
     public ConfigOrigin origin() {
         return origin;
+    }
+
+    // we customize serialization because ConfigOrigin isn't
+    // serializable and we don't want it to be (don't want to
+    // support it)
+    private void writeObject(final java.io.ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        ConfigImplUtil.writeOrigin(out, origin);
+    }
+
+    private void readObject(final java.io.ObjectInputStream in) throws IOException,
+            ClassNotFoundException {
+        in.defaultReadObject();
+        final ConfigOrigin origin = ConfigImplUtil.readOrigin(in);
+        // circumvent "final"
+        final Field f;
+        try {
+            f = ConfigException.class.getDeclaredField("origin");
+        } catch (NoSuchFieldException e) {
+            throw new IOException("ConfigException has no origin field?", e);
+        } catch (SecurityException e) {
+            throw new IOException("unable to fill out origin field in ConfigException", e);
+        }
+        f.setAccessible(true);
+        try {
+            f.set(this, origin);
+        } catch (IllegalArgumentException e) {
+            throw new IOException("unable to set origin field", e);
+        } catch (IllegalAccessException e) {
+            throw new IOException("unable to set origin field", e);
+        }
     }
 
     /**

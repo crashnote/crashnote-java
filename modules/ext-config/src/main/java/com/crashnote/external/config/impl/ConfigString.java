@@ -38,7 +38,12 @@ final class ConfigString extends AbstractConfigValue implements Serializable {
 
     @Override
     protected void render(final StringBuilder sb, final int indent, final ConfigRenderOptions options) {
-        sb.append(ConfigImplUtil.renderJsonString(value));
+        final String rendered;
+        if (options.getJson())
+            rendered = ConfigImplUtil.renderJsonString(value);
+        else
+            rendered = ConfigImplUtil.renderStringUnquotedIfPossible(value);
+        sb.append(rendered);
     }
 
     @Override

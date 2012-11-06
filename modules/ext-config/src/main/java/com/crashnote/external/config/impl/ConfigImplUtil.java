@@ -3,13 +3,18 @@
  */
 package com.crashnote.external.config.impl;
 
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.crashnote.external.config.ConfigException;
+import com.crashnote.external.config.ConfigOrigin;
 
 
 /** This is public just for the "config" package to use, don't touch it */
@@ -65,6 +70,30 @@ final public class ConfigImplUtil {
         }
         sb.append('"');
         return sb.toString();
+    }
+
+    static String renderStringUnquotedIfPossible(final String s) {
+        // this can quote unnecessarily as long as it never fails to quote when
+        // necessary
+        if (s.length() == 0)
+            return renderJsonString(s);
+
+        final int first = s.codePointAt(0);
+        if (Character.isDigit(first))
+            return renderJsonString(s);
+
+        if (s.startsWith("include") || s.startsWith("true") || s.startsWith("false")
+                || s.startsWith("null") || s.contains("//"))
+            return renderJsonString(s);
+
+        // only unquote if it's pure alphanumeric
+        for (int i = 0; i < s.length(); ++i) {
+            final char c = s.charAt(i);
+            if (!(Character.isLetter(c) || Character.isDigit(c)))
+                return renderJsonString(s);
+        }
+
+        return s;
     }
 
     static boolean isWhitespace(final int codepoint) {
@@ -185,5 +214,14 @@ final public class ConfigImplUtil {
             p = p.remainder();
         }
         return elements;
+    }
+
+    public static ConfigOrigin readOrigin(final ObjectInputStream in) throws IOException {
+        return SerializedConfigValue.readOrigin(in, null);
+    }
+
+    public static void writeOrigin(final ObjectOutputStream out, final ConfigOrigin origin) throws IOException {
+        SerializedConfigValue.writeOrigin(new DataOutputStream(out), (SimpleConfigOrigin) origin,
+                null);
     }
 }

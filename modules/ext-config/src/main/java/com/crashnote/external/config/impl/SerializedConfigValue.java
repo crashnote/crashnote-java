@@ -196,7 +196,8 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
         }
     }
 
-    private static void writeOrigin(final DataOutput out, final SimpleConfigOrigin origin,
+    // not private because we use it to serialize ConfigException
+    static void writeOrigin(final DataOutput out, final SimpleConfigOrigin origin,
             final SimpleConfigOrigin baseOrigin) throws IOException {
         final Map<SerializedField, Object> m = origin.toFieldsDelta(baseOrigin);
         for (final Map.Entry<SerializedField, Object> e : m.entrySet()) {
@@ -208,7 +209,8 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
         writeEndMarker(out);
     }
 
-    private static SimpleConfigOrigin readOrigin(final DataInput in, final SimpleConfigOrigin baseOrigin)
+    // not private because we use it to deserialize ConfigException
+    static SimpleConfigOrigin readOrigin(final DataInput in, final SimpleConfigOrigin baseOrigin)
             throws IOException {
         final Map<SerializedField, Object> m = new EnumMap<SerializedField, Object>(SerializedField.class);
         while (true) {

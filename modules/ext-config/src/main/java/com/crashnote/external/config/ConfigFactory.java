@@ -166,6 +166,18 @@ public final class ConfigFactory {
     }
 
     private static Config loadDefaultConfig(final ClassLoader loader) {
+        return loadDefaultConfig(loader, ConfigParseOptions.defaults());
+    }
+
+    private static Config loadDefaultConfig(final ClassLoader loader, final ConfigParseOptions parseOptions) {
+        return loadDefaultConfig(loader, parseOptions, ConfigResolveOptions.defaults());
+    }
+
+    private static Config loadDefaultConfig(final ClassLoader loader, final ConfigResolveOptions resolveOptions) {
+        return loadDefaultConfig(loader, ConfigParseOptions.defaults(), resolveOptions);
+    }
+
+    private static Config loadDefaultConfig(final ClassLoader loader, final ConfigParseOptions parseOptions, final ConfigResolveOptions resolveOptions) {
         int specified = 0;
 
         // override application.conf with config.file, config.resource,
@@ -181,7 +193,7 @@ public final class ConfigFactory {
             specified += 1;
 
         if (specified == 0) {
-            return load(loader, "application");
+            return load(loader, "application", parseOptions, resolveOptions);
         } else if (specified > 1) {
             throw new ConfigException.Generic("You set more than one of config.file='" + file
                     + "', config.url='" + url + "', config.resource='" + resource
@@ -192,18 +204,16 @@ public final class ConfigFactory {
                     resource = resource.substring(1);
                 // this deliberately does not parseResourcesAnySyntax; if
                 // people want that they can use an include statement.
-                return load(loader, parseResources(loader, resource));
+                return load(loader, parseResources(loader, resource, parseOptions), resolveOptions);
             } else if (file != null) {
                 return load(
                         loader,
-                        parseFile(new File(file),
-                                ConfigParseOptions.defaults().setClassLoader(loader)));
+                        parseFile(new File(file), parseOptions), resolveOptions);
             } else {
                 try {
                     return load(
                             loader,
-                            parseURL(new URL(url),
-                                    ConfigParseOptions.defaults().setClassLoader(loader)));
+                            parseURL(new URL(url), parseOptions), resolveOptions);
                 } catch (MalformedURLException e) {
                     throw new ConfigException.Generic("Bad URL in config.url system property: '"
                             + url + "': " + e.getMessage(), e);
@@ -217,7 +227,9 @@ public final class ConfigFactory {
      * load("application")} in most cases. This configuration should be used by
      * libraries and frameworks unless an application provides a different one.
      * <p>
-     * This method may return a cached singleton.
+     * This method may return a cached singleton so will not see changes to
+     * system properties or config files. (Use {@link #invalidateCaches()} to
+     * force it to reload.)
      * <p>
      * If the system properties <code>config.resource</code>,
      * <code>config.file</code>, or <code>config.url</code> are set, then the
@@ -244,6 +256,17 @@ public final class ConfigFactory {
     }
 
     /**
+     * Like {@link #load()} but allows specifying parse options
+     *
+     * @param parseOptions
+     *            Options for parsing resources
+     * @return configuration for an application
+     */
+    public static Config load(final ConfigParseOptions parseOptions) {
+        return load(Thread.currentThread().getContextClassLoader(), parseOptions);
+    }
+
+    /**
      * Like {@link #load()} but allows specifying a class loader other than the
      * thread's current context class loader.
      *
@@ -258,6 +281,51 @@ public final class ConfigFactory {
                 return loadDefaultConfig(loader);
             }
         });
+    }
+
+    /**
+     * Like {@link #load()} but allows specifying a class loader other than the
+     * thread's current context class loader, and parse options
+     *
+     * @param loader
+     *            class loader for finding resources
+     * @param parseOptions
+     *            Options for parsing resources
+     * @return configuration for an application
+     */
+    public static Config load(final ClassLoader loader, final ConfigParseOptions parseOptions) {
+        return loadDefaultConfig(loader, parseOptions);
+    }
+
+    /**
+     * Like {@link #load()} but allows specifying a class loader other than the
+     * thread's current context class loader, and resolve options
+     *
+     * @param loader
+     *            class loader for finding resources
+     * @param resolveOptions
+     *            options for resolving the assembled config stack
+     * @return configuration for an application
+     */
+    public static Config load(final ClassLoader loader, final ConfigResolveOptions resolveOptions) {
+        return loadDefaultConfig(loader, resolveOptions);
+    }
+
+
+    /**
+     * Like {@link #load()} but allows specifying a class loader other than the
+     * thread's current context class loader, parse options, and resolve options
+     *
+     * @param loader
+     *            class loader for finding resources
+     * @param parseOptions
+     *            Options for parsing resources
+     * @param resolveOptions
+     *            options for resolving the assembled config stack
+     * @return configuration for an application
+     */
+    public static Config load(final ClassLoader loader, final ConfigParseOptions parseOptions, final ConfigResolveOptions resolveOptions) {
+        return loadDefaultConfig(loader, parseOptions, resolveOptions);
     }
 
     /**
@@ -334,6 +402,31 @@ public final class ConfigFactory {
     }
 
     /**
+     * Reloads any cached configs, picking up changes to system properties for
+     * example. Because a {@link Config} is immutable, anyone with a reference
+     * to the old configs will still have the same outdated objects. However,
+     * new calls to {@link #load()} or {@link #defaultOverrides()} or
+     * {@link #defaultReference} may return a new object.
+     * <p>
+     * This method is primarily intended for use in unit tests, for example,
+     * that may want to update a system property then confirm that it's used
+     * correctly. In many cases, use of this method may indicate there's a
+     * better way to set up your code.
+     * <p>
+     * Caches may be reloaded immediately or lazily; once you call this method,
+     * the reload can occur at any time, even during the invalidation process.
+     * So FIRST make the changes you'd like the caches to notice, then SECOND
+     * call this method to invalidate caches. Don't expect that invalidating,
+     * making changes, then calling {@link #load()}, will work. Make changes
+     * before you invalidate.
+     */
+    public static void invalidateCaches() {
+        // We rely on this having the side effect that it drops
+        // all caches
+        ConfigImpl.reloadSystemPropertiesConfig();
+    }
+
+    /**
      * Gets an empty configuration. See also {@link #empty(String)} to create an
      * empty configuration with a description, which may improve user-visible
      * error messages.
@@ -363,16 +456,19 @@ public final class ConfigFactory {
     /**
      * Gets a <code>Config</code> containing the system properties from
      * {@link java.lang.System#getProperties()}, parsed and converted as with
-     * {@link #parseProperties}. This method can return a global immutable
-     * singleton, so it's preferred over parsing system properties yourself.
-     *
+     * {@link #parseProperties}.
+     * <p>
+     * This method can return a global immutable singleton, so it's preferred
+     * over parsing system properties yourself.
      * <p>
      * {@link #load} will include the system properties as overrides already, as
      * will {@link #defaultReference} and {@link #defaultOverrides}.
      *
      * <p>
      * Because this returns a singleton, it will not notice changes to system
-     * properties made after the first time this method is called.
+     * properties made after the first time this method is called. Use
+     * {@link #invalidateCaches()} to force the singleton to reload if you
+     * modify system properties.
      *
      * @return system properties parsed into a <code>Config</code>
      */
@@ -575,16 +671,16 @@ public final class ConfigFactory {
     /**
      * Parses all resources on the classpath with the given name and merges them
      * into a single <code>Config</code>.
-     * 
+     *
      * <p>
      * This works like {@link java.lang.ClassLoader#getResource}, not like
      * {@link java.lang.Class#getResource}, so the name never begins with a
      * slash.
-     * 
+     *
      * <p>
      * See {@link #parseResources(Class,String,ConfigParseOptions)} for full
      * details.
-     * 
+     *
      * @param loader
      *            will be used to load resources by setting this loader on the
      *            provided options

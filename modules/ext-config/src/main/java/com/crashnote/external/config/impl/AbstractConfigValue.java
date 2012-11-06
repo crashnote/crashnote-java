@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import com.crashnote.external.config.ConfigException;
 import com.crashnote.external.config.ConfigMergeable;
+import com.crashnote.external.config.ConfigObject;
 import com.crashnote.external.config.ConfigOrigin;
 import com.crashnote.external.config.ConfigRenderOptions;
 import com.crashnote.external.config.ConfigValue;
@@ -293,11 +295,28 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
 
     protected void render(final StringBuilder sb, final int indent, final String atKey, final ConfigRenderOptions options) {
         if (atKey != null) {
-            sb.append(ConfigImplUtil.renderJsonString(atKey));
-            if (options.getFormatted())
-                sb.append(" : ");
+            final String renderedKey;
+            if (options.getJson())
+                renderedKey = ConfigImplUtil.renderJsonString(atKey);
             else
-                sb.append(":");
+                renderedKey = ConfigImplUtil.renderStringUnquotedIfPossible(atKey);
+
+            sb.append(renderedKey);
+
+            if (options.getJson()) {
+                if (options.getFormatted())
+                    sb.append(" : ");
+                else
+                    sb.append(":");
+            } else {
+                // in non-JSON we can omit the colon or equals before an object
+                if (this instanceof ConfigObject) {
+                    if (options.getFormatted())
+                        sb.append(' ');
+                } else {
+                    sb.append("=");
+                }
+            }
         }
         render(sb, indent, options);
     }
@@ -326,5 +345,32 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
     // other strings or by the DefaultTransformer.
     String transformToString() {
         return null;
+    }
+
+    SimpleConfig atKey(final ConfigOrigin origin, final String key) {
+        final Map<String, AbstractConfigValue> m = Collections.singletonMap(key, this);
+        return (new SimpleConfigObject(origin, m)).toConfig();
+    }
+
+    @Override
+    public SimpleConfig atKey(final String key) {
+        return atKey(SimpleConfigOrigin.newSimple("atKey(" + key + ")"), key);
+    }
+
+    SimpleConfig atPath(final ConfigOrigin origin, final Path path) {
+        Path parent = path.parent();
+        SimpleConfig result = atKey(origin, path.last());
+        while (parent != null) {
+            final String key = parent.last();
+            result = result.atKey(origin, key);
+            parent = parent.parent();
+        }
+        return result;
+    }
+
+    @Override
+    public SimpleConfig atPath(final String pathExpression) {
+        final SimpleConfigOrigin origin = SimpleConfigOrigin.newSimple("atPath(" + pathExpression + ")");
+        return atPath(origin, Path.newPath(pathExpression));
     }
 }
