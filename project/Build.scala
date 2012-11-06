@@ -68,34 +68,37 @@ trait Projects
 
     self: Build =>
 
+    import Dependency._
     import Dependencies._
 
     type ClasspathRef = ClasspathDep[ProjectReference]
 
     object ModuleProject {
+
         def apply(name: String,
                   withModules: Seq[ClasspathRef] = Seq(), withLibs: Seq[ModuleID] = Seq()) =
             Project("module-" + name, file("modules/" + name))
                 .configs(UnitTest, FuncTest)
                 .settings(moduleSettings: _*)
-                .settings(libraryDependencies := withLibs)
+                .settings(libraryDependencies := withLibs ++ Seq(scalaLib))
                 .dependsOn((Seq(testModule % "test->test") ++ withModules): _*)
     }
 
     object NotifierProject {
+
         def apply(name: String, displayName: String,
                   withProjects: Seq[ClasspathRef], withLibraries: Seq[ModuleID] = Seq(), withSources: Seq[ClasspathRef] = Seq()) =
             Project(name, file(name))
                 .configs(UnitTest, FuncTest)
                 .settings(notifierSettings: _*)
-                .settings(libraryDependencies := withLibraries)
+                .settings(libraryDependencies := withLibraries ++ Seq(scalaLib))
                 .settings(normalizedName := "crashnote-" + name)
                 .dependsOn((Seq(testModule % "test->test") ++ withProjects): _*)
     }
 
     lazy val testModule =
         Project("module-test", file("modules/test"))
-            .settings(libraryDependencies ++= testKit)
+            .settings(libraryDependencies ++= testKit ++ Seq(scalaLib))
             .settings(moduleSettings: _*)
 }
 
@@ -213,7 +216,10 @@ object Dependency extends Global {
     val servlet = "javax.servlet" % "servlet-api" % "2.5"
     val appengine = "com.google.appengine" % "appengine-api-1.0-sdk" % "1.5.0"
 
+    val scalaLib = "org.scala-lang" % "scala-library" % scalaV
+
     object Test {
+
         val junit = "junit" % "junit" % "4.10" % "test"
         val specs2 = "org.specs2" % ("specs2_" + scalaV) % "1.12.2" % "test"
         val mockito = "org.mockito" % "mockito-all" % "1.9.5" % "test"
@@ -223,6 +229,7 @@ object Dependency extends Global {
         val jetty = "org.eclipse.jetty" % "jetty-webapp" % "7.5.1.v20110908" % "test"
         //val spray = "io.spray" % "spray-can" % "1.1-M4.2" % "test"
     }
+
 }
 
 
@@ -262,12 +269,16 @@ object Publish {
                 var displayName: String = null
                 Rewrite.rewriter {
                     // remove module dependencies
-                    case e@Elem(_, "dependency", _, _, child@_*) =>
-                        if (child.seq.find(_.text contains "crashnote").isDefined) NodeSeq.Empty else e
+                    case e@Elem(_, "dependency", _, _, child@_*) if (child.exists(_.text contains "crashnote")) =>
+                        NodeSeq.Empty
 
-                    // set every scope to "provided"
-                    case e: Elem if e.label == "scope" =>
-                        <scope>provided</scope>
+                    // remove Scala dependencies
+                    case e@Elem(_, "dependency", _, _, child@_*) if (child.exists(_.text contains "scala")) =>
+                         NodeSeq.Empty
+
+                    // add scope "provided" for dependencies
+                    case e: Elem if e.label == "dependency" =>
+                        e.copy(child = e.child ++ Seq(<scope>provided</scope>))
 
                     // extract artifactId and convert to display name
                     case e: Elem if e.label == "artifactId" && (e.text).contains("crashnote") =>
@@ -311,21 +322,23 @@ object Publish {
                     </issueManagement>
         )
 
-  object Rewrite {
+    object Rewrite {
 
-    import xml.{NodeSeq, Node => XNode}
-    import xml.transform.{RewriteRule, RuleTransformer}
+        import xml.{NodeSeq, Node => XNode}
+        import xml.transform.{RewriteRule, RuleTransformer}
 
-    def rewriter(f: PartialFunction[XNode, NodeSeq]): RuleTransformer = new RuleTransformer(rule(f))
+        def rewriter(f: PartialFunction[XNode, NodeSeq]): RuleTransformer = new RuleTransformer(rule(f))
 
-    def rule(f: PartialFunction[XNode, NodeSeq]): RewriteRule = new RewriteRule {
-      override def transform(n: XNode) = if (f.isDefinedAt(n)) f(n) else n
+        def rule(f: PartialFunction[XNode, NodeSeq]): RewriteRule = new RewriteRule {
+            override def transform(n: XNode) = if (f.isDefinedAt(n)) f(n) else n
+        }
     }
-  }
+
 }
 
 // ### GLOBAL ----------------------------------------------------------------------------------
 
 trait Global {
+
     val scalaV = "2.9.2"
 }
