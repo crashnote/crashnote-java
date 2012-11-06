@@ -46,7 +46,7 @@ object Build
 
     lazy val loggerModule =
         ModuleProject("logger",
-            withModules = Seq(coreModule), withLibs = loggerKit)
+            withModules = Seq(coreModule), withLibraries = loggerKit)
 
     lazy val webModule =
         ModuleProject("web", withModules = Seq(loggerModule))
@@ -68,7 +68,6 @@ trait Projects
 
     self: Build =>
 
-    import Dependency._
     import Dependencies._
 
     type ClasspathRef = ClasspathDep[ProjectReference]
@@ -76,11 +75,11 @@ trait Projects
     object ModuleProject {
 
         def apply(name: String,
-                  withModules: Seq[ClasspathRef] = Seq(), withLibs: Seq[ModuleID] = Seq()) =
+                  withModules: Seq[ClasspathRef] = Seq(), withLibraries: Seq[ModuleID] = Seq()) =
             Project("module-" + name, file("modules/" + name))
                 .configs(UnitTest, FuncTest)
                 .settings(moduleSettings: _*)
-                .settings(libraryDependencies := withLibs ++ Seq(scalaLib))
+                .settings(libraryDependencies ++= withLibraries)
                 .dependsOn((Seq(testModule % "test->test") ++ withModules): _*)
     }
 
@@ -91,15 +90,15 @@ trait Projects
             Project(name, file(name))
                 .configs(UnitTest, FuncTest)
                 .settings(notifierSettings: _*)
-                .settings(libraryDependencies := withLibraries ++ Seq(scalaLib))
+                .settings(libraryDependencies ++= withLibraries)
                 .settings(normalizedName := "crashnote-" + name)
                 .dependsOn((Seq(testModule % "test->test") ++ withProjects): _*)
     }
 
     lazy val testModule =
         Project("module-test", file("modules/test"))
-            .settings(libraryDependencies ++= testKit ++ Seq(scalaLib))
             .settings(moduleSettings: _*)
+            .settings(libraryDependencies ++= testKit)
 }
 
 
@@ -130,6 +129,7 @@ trait Settings {
         Defaults.defaultSettings ++ buildSettings ++ testSettings ++ Licenses.licenseSettings ++ Seq(
             crossPaths := false,
             scalaVersion := scalaV,
+            libraryDependencies := Seq(Dependency.scalaLib), // must be added for IntelliJ :(
 
             resolvers += "Spray Repository" at "http://repo.spray.cc/",
             resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
@@ -149,6 +149,7 @@ trait Settings {
             //managedClasspath in Compile <<=
             //    (managedClasspath in Compile) map {(cp) => cp}
 
+            // add source and resource directories from dependencies to notifier
             unmanagedSourceDirectories in Compile <++= (thisProject in Compile, loadedBuild) {
                 (p, struct) => srcDirs(getAllDeps(p, struct))
             },
@@ -274,18 +275,18 @@ object Publish {
 
                     // remove Scala dependencies
                     case e@Elem(_, "dependency", _, _, child@_*) if (child.exists(_.text contains "scala")) =>
-                         NodeSeq.Empty
+                        NodeSeq.Empty
 
                     // add scope "provided" for dependencies
                     case e: Elem if e.label == "dependency" =>
                         e.copy(child = e.child ++ Seq(<scope>provided</scope>))
 
-                    // extract artifactId and convert to display name
+                    // a) extract artifactId and convert to display name
                     case e: Elem if e.label == "artifactId" && (e.text).contains("crashnote") =>
                         displayName = (e.text).split("-").map(_.capitalize).mkString(" ") + " Notifier"
                         e
 
-                    // apply display name
+                    // b) apply display name
                     case e: Elem if e.label == "name" && displayName.toLowerCase.contains(e.text) =>
                         e.copy(child = Text(displayName))
                 }
