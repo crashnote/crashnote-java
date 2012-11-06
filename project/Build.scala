@@ -85,7 +85,7 @@ trait Projects
     object NotifierProject {
         def apply(name: String, displayName: String,
                   withProjects: Seq[ClasspathRef], withLibraries: Seq[ModuleID] = Seq(), withSources: Seq[ClasspathRef] = Seq()) =
-            Project(displayName, file(name))
+            Project(name, file(name))
                 .configs(UnitTest, FuncTest)
                 .settings(notifierSettings: _*)
                 .settings(libraryDependencies := withLibraries)
@@ -108,7 +108,7 @@ trait Settings {
 
     lazy val buildSettings = Seq(
         organization := "com.crashnote",
-        version := "0.3.0",
+        version := "0.4.0",
 
         startYear := Some(2011),
         licenses +=("Apache 2", url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
@@ -132,8 +132,8 @@ trait Settings {
             resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
 
             javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
+            javacOptions in doc := Seq("-source", "1.5"),
             //javacOptions ++= Seq("-bootclasspath", (javaDir / "jre" / "lib" / "rt.jar").getAbsolutePath)
-
             javaHome := Some(javaDir)
         )
 
@@ -262,11 +262,24 @@ object Publish {
 
             pomPostProcess := {
                 import scala.xml._
+                var displayName: String = null
                 Rewrite.rewriter {
-                    case e@Elem(_, "dependency", _, _, child@_*) => // remove module dependencies
+                    // remove module dependencies
+                    case e@Elem(_, "dependency", _, _, child@_*) =>
                         if (child.seq.find(_.text contains "crashnote").isDefined) NodeSeq.Empty else e
-                    case Elem(_, "scope", _, _, _) => // set every scope to "provided"
+
+                    // set every scope to "provided"
+                    case e: Elem if e.label == "scope" =>
                         <scope>provided</scope>
+
+                    // extract artifactId and convert to display name
+                    case e: Elem if e.label == "artifactId" && (e.text).contains("crashnote") =>
+                        displayName = (e.text).split("-").map(_.capitalize).mkString(" ") + " Notifier"
+                        e
+
+                    // apply display name
+                    case e: Elem if e.label == "name" && displayName.toLowerCase.contains(e.text) =>
+                        e.copy(child = Text(displayName))
                 }
             },
 
