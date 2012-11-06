@@ -64,7 +64,7 @@ object Build
 // ### Project ------------------------------------------------------------------------------------
 
 trait Projects
-    extends Settings {
+    extends Settings with Global {
 
     self: Build =>
 
@@ -104,7 +104,7 @@ trait Projects
 
 trait Settings {
 
-    self: Build with Projects =>
+    self: Global with Build with Projects =>
 
     lazy val buildSettings = Seq(
         organization := "com.crashnote",
@@ -124,15 +124,15 @@ trait Settings {
     )
 
     lazy val baseSettings =
-        Defaults.defaultSettings ++ buildSettings ++ testSettings ++ org.sbtidea.SbtIdeaPlugin.ideaSettings ++ Licenses.licenseSettings ++ Seq(
+        Defaults.defaultSettings ++ buildSettings ++ testSettings ++ Licenses.licenseSettings ++ Seq(
             crossPaths := false,
-            scalaVersion := "2.9.1",
+            scalaVersion := scalaV,
 
-            resolvers += "spray repo" at "http://repo.spray.cc/",
+            resolvers += "Spray Repository" at "http://repo.spray.cc/",
             resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
 
             javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
-            javacOptions in doc := Seq("-source", "1.5"),
+            javacOptions in doc := Seq("-source", "1.6"),
             //javacOptions ++= Seq("-bootclasspath", (javaDir / "jre" / "lib" / "rt.jar").getAbsolutePath)
             javaHome := Some(javaDir)
         )
@@ -198,34 +198,31 @@ object Dependencies {
         Seq(slf4j, log4j, logback)
 
     lazy val testKit =
-        Seq(Test.junit, Test.specs2, Test.mockito, Test.commonsIO,
-            Test.jetty, Test.akka, Test.sprayClient, Test.sprayServer)
+        Seq(Test.junit, Test.specs2, Test.mockito,
+            Test.commonsIO, Test.jetty, Test.akka)
 }
 
-object Dependency {
+object Dependency extends Global {
 
     val slf4j = "org.slf4j" % "slf4j-api" % "1.7.0"
 
     val log4j = "log4j" % "log4j" % "1.2.16"
     val logback = "ch.qos.logback" % "logback-classic" % "1.0.0"
 
-    val play2 = "play" %% "play" % "2.0"
+    val play2 = "play" % "play" % "2.1"
     val servlet = "javax.servlet" % "servlet-api" % "2.5"
     val appengine = "com.google.appengine" % "appengine-api-1.0-sdk" % "1.5.0"
 
     object Test {
         val junit = "junit" % "junit" % "4.10" % "test"
-        val specs2 = "org.specs2" % "specs2_2.9.1" % "1.12.1" % "test"
+        val specs2 = "org.specs2" % ("specs2_" + scalaV) % "1.12.2" % "test"
         val mockito = "org.mockito" % "mockito-all" % "1.9.5" % "test"
         val commonsIO = "commons-io" % "commons-io" % "2.3" % "test"
 
+        val akka = "com.typesafe.akka" % "akka-actor" % "2.0.3"
         val jetty = "org.eclipse.jetty" % "jetty-webapp" % "7.5.1.v20110908" % "test"
-
-        val akka = "se.scalablesolutions.akka" % "akka-actor" % "1.3.1" % "test"
-        val sprayServer = "cc.spray" % "spray-server" % "0.9.0" % "test"
-        val sprayClient = "cc.spray" % "spray-client" % "0.9.0" % "test"
+        //val spray = "io.spray" % "spray-can" % "1.1-M4.2" % "test"
     }
-
 }
 
 
@@ -313,16 +310,22 @@ object Publish {
                         <url>https://github.com/crashnote/crashnote-java/issues</url>
                     </issueManagement>
         )
-}
 
-import xml.{NodeSeq, Node => XNode}
-import xml.transform.{RewriteRule, RuleTransformer}
+  object Rewrite {
 
-object Rewrite {
+    import xml.{NodeSeq, Node => XNode}
+    import xml.transform.{RewriteRule, RuleTransformer}
 
     def rewriter(f: PartialFunction[XNode, NodeSeq]): RuleTransformer = new RuleTransformer(rule(f))
 
     def rule(f: PartialFunction[XNode, NodeSeq]): RewriteRule = new RewriteRule {
-        override def transform(n: XNode) = if (f.isDefinedAt(n)) f(n) else n
+      override def transform(n: XNode) = if (f.isDefinedAt(n)) f(n) else n
     }
+  }
+}
+
+// ### GLOBAL ----------------------------------------------------------------------------------
+
+trait Global {
+    val scalaV = "2.9.2"
 }

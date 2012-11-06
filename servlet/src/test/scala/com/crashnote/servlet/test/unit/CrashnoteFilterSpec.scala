@@ -22,6 +22,7 @@ import com.crashnote.servlet.test.defs.MockSpec
 import com.crashnote.servlet.report.ServletReporter
 import com.crashnote.servlet.CrashnoteFilter
 import com.crashnote.servlet.test.defs.stubs.ConfigStub
+import http.{HttpServletResponse, HttpServletRequest}
 
 class CrashnoteFilterSpec
     extends MockSpec[CrashnoteFilter] {
@@ -30,8 +31,8 @@ class CrashnoteFilterSpec
     var m_reporter: ServletReporter[C] = _
     var m_connector: AutoLogConnector = _
 
-    var m_request: ServletRequest = _
-    var m_response: ServletResponse = _
+    var m_request: HttpServletRequest = _
+    var m_response: HttpServletResponse = _
     var m_chain: FilterChain = _
 
     "Filter" should {
@@ -61,7 +62,7 @@ class CrashnoteFilterSpec
                 target.doFilter(m_request, m_response, m_chain)
 
                 there was one(m_reporter).beforeRequest(m_request) then
-                    one(m_reporter).afterRequest(m_request, m_response)
+                    one(m_reporter).afterRequest(m_request)
             }
             "when an error occurs" >> new Mocked(ENABLED) {
                 val err = new ServletException("oops")
@@ -72,7 +73,7 @@ class CrashnoteFilterSpec
 
                 there was one(m_reporter).beforeRequest(m_request) then
                     one(m_reporter).uncaughtException(m_request, Thread.currentThread(), err) then
-                    one(m_reporter).afterRequest(m_request, m_response)
+                    one(m_reporter).afterRequest(m_request)
             }
             "just proceed with chain if disabled" >> new Mocked(DISABLED) {
                 target.init(null)
@@ -99,8 +100,8 @@ class CrashnoteFilterSpec
     def configure(config: C) = {
         m_reporter = mock[ServletReporter[C]]
         m_connector = mock[AutoLogConnector]
-        m_request = mock[ServletRequest]
-        m_response = mock[ServletResponse]
+        m_request = mock[HttpServletRequest]
+        m_response = mock[HttpServletResponse]
         m_chain = mock[FilterChain]
 
         m_conf = config

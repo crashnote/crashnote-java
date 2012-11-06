@@ -45,10 +45,11 @@ class BaseMockSpec[T](implicit t: Manifest[T])
 
     // ==== VERIFYING
 
-    def expect[T](t: => T) = there was t
+    def expect[S](s: => S) = there was s
 
-    protected def verifyUntouched[T <: AnyRef](mocks: T*) =
-        org.mockito.Mockito.verifyZeroInteractions(mocks: _*)
+    protected def verifyUntouched[S <: AnyRef](mocks: S*) {
+      org.mockito.Mockito.verifyZeroInteractions(mocks: _*)
+    }
 
 
     // ==== MOCKING
