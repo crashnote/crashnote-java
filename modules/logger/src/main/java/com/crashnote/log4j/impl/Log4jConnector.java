@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,13 @@
  */
 package com.crashnote.log4j.impl;
 
+import com.crashnote.log4j.CrashAppender;
 import com.crashnote.logger.config.LoggerConfig;
 import com.crashnote.logger.helper.LogConnector;
 import com.crashnote.logger.report.LoggerReporter;
-import com.crashnote.log4j.CrashAppender;
-import org.apache.log4j.*;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * Implementation of a {@link LogConnector} for the 'Log4j' library:

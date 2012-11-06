@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import com.crashnote.core.model.data.DataObject;
 import java.io.*;
 
 /**
- * This class represents the crash report that is sent to the server. Internally it uses a
- * {@link DataObject} that holds the actual data.
+ * This class represents the crash report that is sent to the server.
+ * Internally it uses a {@link DataObject} that holds the actual data.
  */
 public class LogReport {
 

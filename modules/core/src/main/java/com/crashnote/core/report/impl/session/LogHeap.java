@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class LogHeap {
         for (final LogEvt e : heap.excps) {
             // by deferring the local members, copies of the references they contain are created
             // - thus they can be processed in a separate thread
-            e.defer();
+            e.copy();
             excps.add(e);
         }
     }

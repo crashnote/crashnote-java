@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,36 +15,40 @@
  */
 package com.crashnote.core.model.log;
 
-import com.crashnote.core.model.types.LogLevel;
-
-import java.util.*;
+import java.util.Map;
 
 /**
- * Abstract class to describe a log event/statement including its Mapped Diagnostic Context (MDC).
- * By abstracting this, the library becomes independent of the underlying logging framework.
+ * Abstract class to describe a log event.
+ * Implements the {@link ILogEvt} interface and defines helper methods & variables.
+ *
+ * @param <E> type of the log event
  */
-public abstract class LogEvt<E> {
+public abstract class LogEvt<E>
+    implements ILogEvt {
 
     // VARS =======================================================================================
 
-    protected E event;
+    protected final E event;
+
     protected Map<String, Object> mdc;
 
 
     // SETUP ======================================================================================
 
     public LogEvt(final E event, final Map context) {
-        if (event == null) throw new IllegalArgumentException("argument must be non-null");
+        if (event == null)
+            throw new IllegalArgumentException("argument must be non-null");
 
-        this.mdc = context;
         this.event = event;
+        this.mdc = context;
     }
 
 
     // INTERFACE ==================================================================================
 
-    public void defer() {
-        if (mdc != null) this.mdc = new HashMap<String, Object>(mdc);
+    @Override
+    public ILogEvt copy() {
+        return new LogEvtVO(this);
     }
 
     public final boolean isExcp() {
@@ -54,21 +58,8 @@ public abstract class LogEvt<E> {
 
     // GET ========================================================================================
 
+    @Override
     public Map<String, Object> getMDC() {
         return mdc;
     }
-
-    public abstract String getThreadName();
-
-    public abstract String getLoggerName();
-
-    public abstract long getTimeStamp();
-
-    public abstract LogLevel getLevel();
-
-    public abstract String getMessage();
-
-    public abstract Throwable getThrowable();
-
-    public abstract Object[] getArgs();
 }

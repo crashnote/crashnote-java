@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,8 @@ package com.crashnote.core.collect;
 import com.crashnote.core.build.Builder;
 import com.crashnote.core.config.CrashConfig;
 import com.crashnote.core.log.LogLog;
-import com.crashnote.core.model.data.*;
+import com.crashnote.core.model.data.DataArray;
+import com.crashnote.core.model.data.DataObject;
 import com.crashnote.core.util.SystemUtil;
 
 import java.util.Collections;

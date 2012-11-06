@@ -13,17 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crashnote;
+package com.crashnote.core.model.log;
 
 import com.crashnote.core.model.types.LogLevel;
 
+import java.util.Map;
+
 /**
- * Interface every appender - independent of the library - must implement.
+ * Generic, library-independent interface for a log event
  */
-public interface ICrashAppender {
+public interface ILogEvt {
 
-    public boolean isStarted();
+    // INTERFACE ==================================================================================
 
-    public void setLogLevel(LogLevel lvl);
+    public ILogEvt copy();
 
+
+    // GET ========================================================================================
+
+    public String getThreadName();
+
+    public String getLoggerName();
+
+    public long getTimeStamp();
+
+    public LogLevel getLevel();
+
+    public String getMessage();
+
+    public Throwable getThrowable();
+
+    public Map<String, Object> getMDC();
+
+    public Object[] getArgs();
 }

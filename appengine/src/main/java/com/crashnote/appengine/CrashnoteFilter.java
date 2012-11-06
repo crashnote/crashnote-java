@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,8 @@
  */
 package com.crashnote.appengine;
 
-import com.crashnote.appengine.config.*;
+import com.crashnote.appengine.config.AppengineConfig;
+import com.crashnote.appengine.config.AppengineConfigFactory;
 
 import javax.servlet.FilterConfig;
 

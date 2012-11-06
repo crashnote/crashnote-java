@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package com.crashnote.core.model.data;
 import java.util.List;
 
 /**
- * Generic interface for a data array, based on {@link java.util.List} interface.
+ * Generic interface for a data array, based on the {@link List} interface.
  */
 public interface DataArray
         extends List<Object> {

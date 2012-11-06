@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,11 @@
  */
 package com.crashnote.appengine.collect;
 
-import com.crashnote.appengine.collect.impl.*;
+import com.crashnote.appengine.collect.impl.AppengineEnvCollector;
+import com.crashnote.appengine.collect.impl.AppengineLogCollector;
 import com.crashnote.core.collect.Collector;
-import com.crashnote.core.collect.impl.*;
+import com.crashnote.core.collect.impl.EnvCollector;
+import com.crashnote.core.collect.impl.LogCollector;
 import com.crashnote.core.config.CrashConfig;
 
 public class AppengineCollector<C extends CrashConfig>

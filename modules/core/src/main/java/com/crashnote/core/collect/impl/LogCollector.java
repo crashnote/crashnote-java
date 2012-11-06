@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,12 @@ package com.crashnote.core.collect.impl;
 
 import com.crashnote.core.collect.BaseCollector;
 import com.crashnote.core.config.CrashConfig;
-import com.crashnote.core.model.data.*;
+import com.crashnote.core.model.data.DataArray;
+import com.crashnote.core.model.data.DataObject;
 import com.crashnote.core.model.log.LogEvt;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Collector to transform one or multiple {@link LogEvt}(s) into a structured data format.

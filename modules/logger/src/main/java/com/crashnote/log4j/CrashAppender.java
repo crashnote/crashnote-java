@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,13 @@ package com.crashnote.log4j;
 import com.crashnote.ICrashAppender;
 import com.crashnote.core.model.types.LogLevel;
 import com.crashnote.log4j.impl.Log4jEvt;
-import com.crashnote.logger.config.*;
+import com.crashnote.logger.config.LoggerConfig;
+import com.crashnote.logger.config.LoggerConfigFactory;
 import com.crashnote.logger.report.LoggerReporter;
+
 import org.apache.log4j.*;
-import org.apache.log4j.spi.*;
+import org.apache.log4j.spi.Filter;
+import org.apache.log4j.spi.LoggingEvent;
 
 /**
  * Appender that writes logs from 'Log4J' to the cloud

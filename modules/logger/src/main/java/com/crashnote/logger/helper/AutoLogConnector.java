@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,8 @@ import com.crashnote.logback.impl.LogbackConnector;
 import com.crashnote.logger.config.LoggerConfig;
 import com.crashnote.logger.report.LoggerReporter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utility class to connect/attach log appenders to an according logging framework(s).

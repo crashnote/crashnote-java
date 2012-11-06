@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package com.crashnote.core;
 
 /**
- * Interface to define a basic lifecycle consisting of start and stop.
+ * Interface to define a basic lifecycle, consisting of 'start' and 'stop'.
  */
 public interface Lifecycle {
 

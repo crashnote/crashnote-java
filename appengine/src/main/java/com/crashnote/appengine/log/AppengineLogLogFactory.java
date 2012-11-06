@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,8 @@
 package com.crashnote.appengine.log;
 
 import com.crashnote.appengine.config.AppengineConfig;
-import com.crashnote.core.log.*;
+import com.crashnote.core.log.LogLog;
+import com.crashnote.core.log.LogLogFactory;
 
 public class AppengineLogLogFactory
     extends LogLogFactory<AppengineConfig> {

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,14 @@
  */
 package com.crashnote.jul.impl;
 
+import com.crashnote.jul.CrashHandler;
 import com.crashnote.logger.config.LoggerConfig;
 import com.crashnote.logger.helper.LogConnector;
 import com.crashnote.logger.report.LoggerReporter;
-import com.crashnote.jul.CrashHandler;
 
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 /**
  * Implementation of a {@link LogConnector} for the 'Java Logging API (JUL)':

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package com.crashnote.core.util;
 
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -159,7 +158,7 @@ public class SystemUtil {
     // ==== Operating System
 
     /**
-     * @return the name of the operating system,  null if not found
+     * @return the name of the operating system, null if not found
      */
     public String getOSName() {
         return getProperty("os.name");

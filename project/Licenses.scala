@@ -17,7 +17,7 @@ object Licenses extends Plugin {
     }
 
     def licenseSettings = Seq(
-        license := apache2("Copyright (C) 2011 - 101loops.com <dev@101loops.com>"),
+        license := apache2("Copyright (C) 2012 - 101loops.com <dev@101loops.com>"),
         removeExistingHeaderBlock := false,
         formatLicenseHeaders <<= formatLicenseHeadersTask,
         compileInputs in Compile <<= compileInputs in Compile dependsOn formatLicenseHeaders

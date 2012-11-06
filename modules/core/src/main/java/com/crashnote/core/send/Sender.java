@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,17 @@
  */
 package com.crashnote.core.send;
 
-import com.crashnote.core.config.*;
+import com.crashnote.core.config.CrashConfig;
+import com.crashnote.core.config.IConfigChangeListener;
 import com.crashnote.core.log.LogLog;
 import com.crashnote.core.model.log.LogReport;
 
 import java.io.*;
-import java.net.*;
+import java.net.URL;
 import javax.net.ssl.*;
-import java.util.zip.GZIPOutputStream;
+import java.net.HttpURLConnection;
 import java.security.cert.X509Certificate;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * The Dispatcher is responsible for transmitting the data from the client to the server by

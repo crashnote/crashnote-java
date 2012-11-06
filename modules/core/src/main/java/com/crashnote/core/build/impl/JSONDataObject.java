@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,13 @@
  */
 package com.crashnote.core.build.impl;
 
-import com.crashnote.core.model.data.*;
+import com.crashnote.core.model.data.DataArray;
+import com.crashnote.core.model.data.DataObject;
 import com.crashnote.external.json.JSONArray;
 import com.crashnote.external.json.JSONObject;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Implementation of a {@link DataObject}, unifies the interface with the functionality of a

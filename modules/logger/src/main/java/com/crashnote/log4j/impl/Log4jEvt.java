@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,12 @@ package com.crashnote.log4j.impl;
 
 import com.crashnote.core.model.log.LogEvt;
 import com.crashnote.core.model.types.LogLevel;
-import org.apache.log4j.*;
-import org.apache.log4j.spi.*;
 
-import java.util.*;
+import org.apache.log4j.Priority;
+import org.apache.log4j.spi.LoggingEvent;
+import org.apache.log4j.spi.ThrowableInformation;
+
+import java.util.Map;
 
 /**
  * Implementation of a {@link LogEvt} for the 'Log4J' library

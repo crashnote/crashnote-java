@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,12 @@ import java.util.List;
 public class FilterUtil {
 
     public static boolean doFilter(final String name, final List<String> filters) {
+
         for (final String filter : filters) {
             final String lcName = name.toLowerCase();
             if (lcName.equalsIgnoreCase(filter) || lcName.matches(filter)) return true;
         }
+
         return false;
     }
 }

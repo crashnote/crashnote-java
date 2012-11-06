@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,26 @@ package com.crashnote.appengine.log;
 
 import com.crashnote.core.log.LogLog;
 
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ * Specialized internal log, instead of using stdout/stderr it uses
+ * AppEngine's default logger: JUL.
+ */
 public class AppengineLogLog extends LogLog {
 
     // VARS =======================================================================================
 
-    final Logger log;
+    private final Logger log;
 
 
     // SETUP ======================================================================================
 
     public AppengineLogLog(final String name, final boolean debug) {
         super(name, debug);
+
+        // initialize logger instance
         log = Logger.getLogger(name);
     }
 

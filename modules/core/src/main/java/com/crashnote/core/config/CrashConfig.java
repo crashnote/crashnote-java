@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -107,12 +107,15 @@ public class CrashConfig<C extends CrashConfig<C>> {
         }
     }
 
-    public void validate(final Config cnf) {
+    /**
+     * Validate config instance against config schema
+     */
+    public void validate(final Config schema) {
         if (isEnabled()) {
             logger.info("Status: ON");
 
             // validate config ("fail fast")
-            conf.checkValid(cnf, "crashnote");
+            conf.checkValid(schema, "crashnote");
 
             // validate API key
             final String key = getKey();

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 package com.crashnote.core.model.types;
 
 /**
- * Enumeration to define the different log levels from TRACE to FATAL. Unifies the various
- * framework definitions to one schema and allows easy comparison operations.
+ * Enumeration to define the different log levels from TRACE to FATAL.
+ * Unifies the various framework definitions to one schema to allows easy comparison.
  */
 public enum LogLevel {
 
@@ -53,17 +53,10 @@ public enum LogLevel {
     }
 
     public static LogLevel getMinLevel(final LogLevel lvl1, final LogLevel lvl2) {
-        return (lvl1.getLvl() > lvl2.getLvl()) ? lvl1 : lvl2;
+        return (lvl1.lvl > lvl2.lvl) ? lvl1 : lvl2;
     }
 
     public static LogLevel getMaxLevel(final LogLevel lvl1, final LogLevel lvl2) {
-        return (lvl1.getLvl() > lvl2.getLvl()) ? lvl2 : lvl1;
-    }
-
-
-    // GET ========================================================================================
-
-    public int getLvl() {
-        return lvl;
+        return (lvl1.lvl > lvl2.lvl) ? lvl2 : lvl1;
     }
 }

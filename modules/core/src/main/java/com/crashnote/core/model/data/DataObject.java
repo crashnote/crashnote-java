@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,12 @@
  */
 package com.crashnote.core.model.data;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Map;
 
 /**
- * Generic interface for a data object (key/value schema), based on {@link java.util.Map}.
+ * Generic interface for a data object (key/value schema), based on {@link Map}.
  */
 public interface DataObject
         extends Map<String, Object> {

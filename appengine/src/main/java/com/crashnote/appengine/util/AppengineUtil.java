@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,8 @@ import com.crashnote.core.util.SystemUtil;
 import com.google.appengine.api.urlfetch.*;
 import com.google.appengine.api.utils.SystemProperty;
 
-import java.net.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Customized {@link SystemUtil} that adds methods to interact with the AppEngine API.

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,21 @@
 package com.crashnote.core.report;
 
 import com.crashnote.core.Lifecycle;
-import com.crashnote.core.config.*;
+import com.crashnote.core.config.CrashConfig;
+import com.crashnote.core.config.IConfigChangeListener;
 import com.crashnote.core.log.LogLog;
-import com.crashnote.core.model.log.*;
-import com.crashnote.core.model.types.ApplicationType;
+import com.crashnote.core.model.log.ILogSession;
+import com.crashnote.core.model.log.LogEvt;
 import com.crashnote.core.report.impl.ThrowableLogEvt;
 import com.crashnote.core.report.impl.processor.Processor;
-import com.crashnote.core.report.impl.processor.impl.*;
-import com.crashnote.core.report.impl.session.*;
+import com.crashnote.core.report.impl.processor.impl.AsyncProcessor;
+import com.crashnote.core.report.impl.processor.impl.SyncProcessor;
+import com.crashnote.core.report.impl.session.LocalLogSession;
 
 /**
- * This class is the Grand Central station of the library because every log event goes through
- * here. It's main job is to take these events and put them into the {@link ILogSession},
+ * This class is the Grand Central station of the library, every log event goes through here.
+ *
+ * It's main job is to take these events and put them into the {@link ILogSession},
  * the same goes for context data. It can automatically or manually flush the session
  * in order to send out a crash report by calling the internal {@link Processor}.
  */
