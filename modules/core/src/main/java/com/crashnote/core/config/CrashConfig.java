@@ -47,7 +47,7 @@ public class CrashConfig<C extends CrashConfig<C>> {
      */
     public static final String LIB_NAME = "crashnote";
     public static final String LIB_URL = "https://www.crashnote.com";
-    public static final String LIB_URL_BOARD = LIB_URL + "/dashboard";
+    public static final String LIB_URL_BOARD = LIB_URL + "/apps";
 
 
     // VARS =======================================================================================
@@ -107,25 +107,25 @@ public class CrashConfig<C extends CrashConfig<C>> {
         }
     }
 
-    public void validate(final Config schema) {
+    public void validate(final Config cnf) {
         if (isEnabled()) {
             logger.info("Status: ON");
 
-            // validate schema
-            conf.checkValid(schema, "crashnote");
+            // validate config ("fail fast")
+            conf.checkValid(cnf, "crashnote");
 
             // validate API key
             final String key = getKey();
             if (key == null || key.length() == 0) {
                 throw new IllegalArgumentException(
-                        "The API Key is missing, please login to the web app under [" + LIB_URL_BOARD + "], " +
-                                "browse to your app and consult the 'Docs'.");
+                        "The API Key is missing, please login to the web app under '" + LIB_URL_BOARD + "', " +
+                                "browse to your app and you'll find the key under 'Setup'.");
 
             } else if (key.length() != 36)
                 throw new IllegalArgumentException(
                         "The API Key appears to be invalid (it should be 32 characters long with 4 dashes), " +
-                                "please login to the web app under [" + LIB_URL_BOARD + "], " +
-                                "browse to your app and consult the 'Docs'.");
+                                "please login to the web app under '" + LIB_URL_BOARD + "', " +
+                                "browse to your app you'll find the key under 'Setup'.");
         } else {
             logger.info("Status: OFF");
         }

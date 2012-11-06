@@ -17,7 +17,8 @@ package com.crashnote.core.report.impl.session;
 
 import com.crashnote.core.model.log.LogEvt;
 
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * This class represents a collection of log events.

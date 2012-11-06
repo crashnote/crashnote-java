@@ -15,9 +15,7 @@
  */
 package com.crashnote.core.config;
 
-import com.crashnote.external.config.Config;
-import com.crashnote.external.config.ConfigFactory;
-import com.crashnote.external.config.ConfigParseOptions;
+import com.crashnote.external.config.*;
 
 import java.util.Properties;
 
@@ -42,7 +40,7 @@ public class CrashConfigFactory<C extends CrashConfig> {
             config = create();
 
             // 2) print it (in debug mode)
-            if(config.isDebug()) config.print();
+            if (config.isDebug()) config.print();
 
             // 3) validate it
             config.validate(getConfFile("crashnote.default"));
@@ -59,20 +57,20 @@ public class CrashConfigFactory<C extends CrashConfig> {
 
     protected Config readConf() {
         return getSysDefault()
-                .withFallback(getConfFile("crashnote.about")) // about props
-                .withFallback(getConfFile("crashnote")) // user-defined props
-                .withFallback(getConfFile("crashnote.default")); // default props
+            .withFallback(getConfFile("crashnote.about"))    // about props
+            .withFallback(getConfFile("crashnote"))          // user-defined props
+            .withFallback(getConfFile("crashnote.default")); // default props
 
     }
 
     protected Config getSysDefault() {
-        return ConfigFactory.systemProperties() // sys props
-                .withFallback(ConfigFactory.systemEnvironment()); // env props
+        return ConfigFactory.systemProperties()               // sys props
+            .withFallback(ConfigFactory.systemEnvironment()); // env props
     }
 
     protected Config getConfProps(final Properties props, final String descr) {
         return ConfigFactory.parseProperties(props,
-                ConfigParseOptions.defaults().setOriginDescription(descr));
+            ConfigParseOptions.defaults().setOriginDescription(descr));
     }
 
     protected Config getConfFile(final String name) {
