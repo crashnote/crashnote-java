@@ -27,7 +27,7 @@ import java.util.Enumeration;
  * Collector to transform a HTTP session into a structured data format.
  */
 public class ServletSessionCollector
-        extends SessionCollector<ServletConfig, HttpServletRequest> {
+        extends SessionCollector<HttpServletRequest> {
 
     // VARS =======================================================================================
 
@@ -36,14 +36,9 @@ public class ServletSessionCollector
 
     // SETUP ======================================================================================
 
-    public ServletSessionCollector(final ServletConfig config) {
+    public <C extends ServletConfig> ServletSessionCollector(final C config) {
         super(config);
-        updateConfig(config);
-    }
 
-    @Override
-    public void updateConfig(final ServletConfig config) {
-        config.addListener(this);
         this.skipSessionData = config.getSkipSessionData();
     }
 

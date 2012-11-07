@@ -20,18 +20,15 @@ import javax.servlet.http.HttpServletRequest
 import com.crashnote.core.report.impl.processor.Processor
 import com.crashnote.core.model.log.ILogSession
 import com.crashnote.core.report.impl.ThrowableLogEvt
-
 import com.crashnote.test.servlet.defs.TargetMockSpec
-import com.crashnote.test.servlet.defs.stubs.ConfigStub
-
 import com.crashnote.servlet.report.ServletReporter
 import com.crashnote.servlet.collect._
 
 class ServletReporterSpec
-    extends TargetMockSpec[ServletReporter[ConfigStub]] {
+    extends TargetMockSpec[ServletReporter] {
 
     var m_session: ILogSession = _
-    var m_processor: Processor[C] = _
+    var m_processor: Processor = _
     var m_reqColl: ServletRequestCollector = _
     var m_sesColl: ServletSessionCollector = _
 
@@ -70,12 +67,12 @@ class ServletReporterSpec
 
     def configure(config: C) = {
         config.isEnabled returns true
-        new ServletReporter[C](config)
+        new ServletReporter(config)
     }
 
     override def mock() {
         m_session = _mock[ILogSession]
-        m_processor = _mock[Processor[C]]
+        m_processor = _mock[Processor]
         m_reqColl = _mock[ServletRequestCollector]
         m_sesColl = _mock[ServletSessionCollector]
     }

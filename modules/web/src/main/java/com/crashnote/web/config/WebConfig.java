@@ -21,10 +21,10 @@ import com.crashnote.logger.config.LoggerConfig;
 import java.util.List;
 
 /**
- * Customized {@link com.crashnote.logger.config.LoggerConfig} for dealing with servlet environments.
+ * Customized {@link LoggerConfig} for dealing with servlet environments.
  */
-public class WebConfig<C extends WebConfig<C>>
-        extends LoggerConfig<C> {
+public class WebConfig
+        extends LoggerConfig {
 
     // SETUP ======================================================================================
 

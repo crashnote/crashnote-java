@@ -24,7 +24,7 @@ import com.crashnote.core.build.Builder
 import java.util.Date
 
 class AppengineEnvCollectorSpec
-    extends TargetMockSpec[AppengineEnvCollector[AppengineConfig]] {
+    extends TargetMockSpec[AppengineEnvCollector] {
 
     var startTime: Long = new Date().getTime
     var m_appengineUtil: AppengineUtil = _
@@ -70,7 +70,7 @@ class AppengineEnvCollectorSpec
     }
 
     def configure(config: C) =
-        new AppengineEnvCollector[C](config)
+        new AppengineEnvCollector(config)
 
     override def mockConfig() = {
         val m_conf = super.mockConfig()

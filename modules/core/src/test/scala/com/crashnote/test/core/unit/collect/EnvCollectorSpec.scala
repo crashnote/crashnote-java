@@ -20,11 +20,10 @@ import com.crashnote.core.build.Builder
 import com.crashnote.core.collect.impl._
 import com.crashnote.core.util.SystemUtil
 import com.crashnote.core.model.data.DataObject
-import com.crashnote.test.core.defs.stubs.ConfigStub
 import com.crashnote.test.core.defs.TargetMockSpec
 
 class EnvCollectorSpec
-    extends TargetMockSpec[EnvCollector[ConfigStub]] {
+    extends TargetMockSpec[EnvCollector] {
 
     var m_sysUtil: SystemUtil = _
 
@@ -76,7 +75,7 @@ class EnvCollectorSpec
         config.getEnvironmentFilters returns List("secret")
 
         config.getBuilder returns new Builder
-        new EnvCollector[C](config)
+        new EnvCollector(config)
     }
 
     override def mock() {

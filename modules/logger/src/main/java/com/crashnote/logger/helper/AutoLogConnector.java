@@ -41,7 +41,9 @@ public class AutoLogConnector
 
         connectors = new ArrayList<LogConnector>(3);
 
-        final Class<LogConnector>[] connectorsSrc = getConnectorSources();
+        final Class<LogConnector>[] connectorsSrc =
+            new Class[]{LogbackConnector.class, Log4jConnector.class, JulConnector.class};
+
         for (final Class<LogConnector> cls : connectorsSrc) {
             connect(cls, config, reporter);
         }
@@ -72,12 +74,6 @@ public class AutoLogConnector
         }
 
         return started;
-    }
-
-    // SHARED =====================================================================================
-
-    protected Class<LogConnector>[] getConnectorSources() {
-        return new Class[]{LogbackConnector.class, Log4jConnector.class, JulConnector.class};
     }
 
     // INTERNAL ===================================================================================

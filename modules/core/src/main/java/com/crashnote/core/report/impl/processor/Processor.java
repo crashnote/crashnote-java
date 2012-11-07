@@ -30,7 +30,7 @@ import com.crashnote.core.send.Sender;
  * The class is abstract in order to allow sub-classes to define the way they want to get the job
  * done themselves.
  */
-public abstract class Processor<C extends CrashConfig>
+public abstract class Processor
         implements Lifecycle {
 
     // VARS =======================================================================================
@@ -41,7 +41,7 @@ public abstract class Processor<C extends CrashConfig>
 
     // SETUP ======================================================================================
 
-    public Processor(final C config) {
+    public <C extends CrashConfig> Processor(final C config) {
         this.logger = config.getLogger(this.getClass());
     }
 

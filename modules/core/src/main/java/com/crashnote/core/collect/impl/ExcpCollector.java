@@ -23,12 +23,12 @@ import com.crashnote.core.model.data.DataObject;
 /**
  * Collector for serializing a {@link Throwable} into a structured form.
  */
-public class ExcpCollector<C extends CrashConfig>
-    extends BaseCollector<C> {
+public class ExcpCollector
+    extends BaseCollector {
 
     // SETUP ======================================================================================
 
-    public ExcpCollector(final C config) {
+    public <C extends CrashConfig> ExcpCollector(final C config) {
         super(config);
     }
 

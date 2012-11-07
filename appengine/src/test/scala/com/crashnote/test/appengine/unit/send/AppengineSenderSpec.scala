@@ -23,7 +23,7 @@ import com.crashnote.core.model.log.LogReport
 import com.google.appengine.api.urlfetch._
 
 class AppengineSenderSpec
-    extends TargetMockSpec[AppengineSender[AppengineConfig]] {
+    extends TargetMockSpec[AppengineSender] {
 
     var m_report: LogReport = _
     var m_request: HTTPRequest = _

@@ -22,13 +22,12 @@ import com.crashnote.servlet.report.ServletReporter
 import com.crashnote.servlet.CrashnoteFilter
 import http.{HttpServletResponse, HttpServletRequest}
 import com.crashnote.test.servlet.defs.TargetMockSpec
-import com.crashnote.test.servlet.defs.stubs._
 
 class CrashnoteFilterSpec
     extends TargetMockSpec[CrashnoteFilter] {
 
-    var m_conf: ConfigStub = _
-    var m_reporter: ServletReporter[C] = _
+    var m_conf: C = _
+    var m_reporter: ServletReporter = _
     var m_connector: AutoLogConnector = _
 
     var m_request: HttpServletRequest = _
@@ -98,7 +97,7 @@ class CrashnoteFilterSpec
     }
 
     def configure(config: C) = {
-        m_reporter = mock[ServletReporter[C]]
+        m_reporter = mock[ServletReporter]
         m_connector = mock[AutoLogConnector]
         m_request = mock[HttpServletRequest]
         m_response = mock[HttpServletResponse]
@@ -106,7 +105,7 @@ class CrashnoteFilterSpec
 
         m_conf = config
         m_conf.getReporter returns m_reporter
-        m_conf.getLogConnector(any[ServletReporter[C]]) returns m_connector
+        m_conf.getLogConnector(any[ServletReporter]) returns m_connector
 
         new CrashnoteFilter() {
             override protected def getConfig(fConf: FilterConfig) = m_conf

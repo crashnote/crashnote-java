@@ -18,10 +18,9 @@ package com.crashnote.test.logger.unit.report
 import com.crashnote.logger.report.LoggerReporter
 
 import com.crashnote.test.logger.defs.TargetMockSpec
-import com.crashnote.test.logger.defs.stubs._
 
 class LoggerReporterSpec
-    extends TargetMockSpec[LoggerReporter[ConfigStub]] {
+    extends TargetMockSpec[LoggerReporter] {
 
     "Logger Reporter" should {
 
@@ -39,5 +38,5 @@ class LoggerReporterSpec
     }
 
     def configure(config: C) =
-        new LoggerReporter[C](config)
+        new LoggerReporter(config)
 }

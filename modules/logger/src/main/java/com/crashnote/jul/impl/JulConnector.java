@@ -52,7 +52,7 @@ public class JulConnector
     // SHARED =====================================================================================
 
     @Override
-    protected void attach(final LoggerConfig config, final LoggerReporter<LoggerConfig> reporter) {
+    protected void attach(final LoggerConfig config, final LoggerReporter reporter) {
 
         // initialize
         final Logger rootLogger = Logger.getLogger(""); // LogManager.getLogManager() not allowed on GAE

@@ -31,20 +31,20 @@ import java.util.Map;
  * into a structured form that can be parsed by an external API. The structure is based on
  * abstract object and array containers.
  */
-public class Collector<C extends CrashConfig>
-    extends BaseCollector<C> implements Lifecycle {
+public class Collector
+    extends BaseCollector implements Lifecycle {
 
     // VARS =======================================================================================
 
     private boolean started;
 
-    private final EnvCollector<C> env_c;
-    private final LogCollector<C> log_c;
+    private final EnvCollector env_c;
+    private final LogCollector log_c;
 
 
     // SETUP ======================================================================================
 
-    public Collector(final C config) {
+    public <C extends CrashConfig> Collector(final C config) {
         super(config);
 
         this.env_c = createEnvColl(config);
@@ -104,22 +104,22 @@ public class Collector<C extends CrashConfig>
 
     // FACTORY ====================================================================================
 
-    protected EnvCollector<C> createEnvColl(final C config) {
-        return new EnvCollector<C>(config);
+    protected EnvCollector createEnvColl(final CrashConfig config) {
+        return new EnvCollector(config);
     }
 
-    protected LogCollector<C> createLogColl(final C config) {
-        return new LogCollector<C>(config);
+    protected LogCollector createLogColl(final CrashConfig config) {
+        return new LogCollector(config);
     }
 
 
     // GET ========================================================================================
 
-    public EnvCollector<C> getEnvCollector() {
+    public EnvCollector getEnvCollector() {
         return env_c;
     }
 
-    public LogCollector<C> getLogCollector() {
+    public LogCollector getLogCollector() {
         return log_c;
     }
 }

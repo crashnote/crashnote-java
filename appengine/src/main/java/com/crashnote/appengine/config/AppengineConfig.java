@@ -29,7 +29,7 @@ import com.crashnote.servlet.config.ServletConfig;
  * Customized {@link ServletConfig} that adapts to the restrictions on the AppEngine platform.
  */
 public class AppengineConfig
-    extends ServletConfig<AppengineConfig> {
+    extends ServletConfig {
 
     // SETUP ======================================================================================
 
@@ -44,13 +44,13 @@ public class AppengineConfig
      * use a specialized sender for the AppEngine
      */
     @Override
-    public Sender<AppengineConfig> getSender() {
-        return new AppengineSender<AppengineConfig>(this);
+    public Sender getSender() {
+        return new AppengineSender(this);
     }
 
     @Override
-    public Collector<AppengineConfig> getCollector() {
-        return new AppengineCollector<AppengineConfig>(this);
+    public Collector getCollector() {
+        return new AppengineCollector(this);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class AppengineConfig
     // SHARED ==================================================================================
 
     @Override
-    protected LogLogFactory<AppengineConfig> getLogFactory() {
+    protected LogLogFactory getLogFactory() {
         if (logFactory == null) logFactory = new AppengineLogLogFactory(this);
         return logFactory;
     }

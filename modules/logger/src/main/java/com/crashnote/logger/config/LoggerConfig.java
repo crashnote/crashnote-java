@@ -22,10 +22,10 @@ import com.crashnote.logger.helper.AutoLogConnector;
 import com.crashnote.logger.report.LoggerReporter;
 
 /**
- * Customized {@link com.crashnote.core.config.CrashConfig} for dealing with log frameworks.
+ * Customized {@link CrashConfig} for dealing with log frameworks.
  */
-public class LoggerConfig<C extends LoggerConfig<C>>
-    extends CrashConfig<C> {
+public class LoggerConfig
+    extends CrashConfig {
 
     // SETUP ======================================================================================
 
@@ -41,7 +41,7 @@ public class LoggerConfig<C extends LoggerConfig<C>>
     // FACTORY ====================================================================================
 
     @Override
-    public LoggerReporter<C> getReporter() {
+    public LoggerReporter getReporter() {
         return new LoggerReporter(this);
     }
 

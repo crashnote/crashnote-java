@@ -23,7 +23,7 @@ import com.crashnote.external.config.ConfigSyntax;
 
 class SimpleIncluder implements FullIncluder {
 
-    private ConfigIncluder fallback;
+    private final ConfigIncluder fallback;
 
     SimpleIncluder(final ConfigIncluder fallback) {
         this.fallback = fallback;

@@ -16,12 +16,11 @@
 package com.crashnote.web.collect;
 
 import com.crashnote.core.collect.BaseCollector;
-import com.crashnote.core.config.IConfigChangeListener;
 import com.crashnote.core.model.data.DataObject;
 import com.crashnote.web.config.WebConfig;
 
-public abstract class SessionCollector<C extends WebConfig, R>
-    extends BaseCollector<C> implements IConfigChangeListener<C> {
+public abstract class SessionCollector<R>
+    extends BaseCollector {
 
     // VARS =======================================================================================
 
@@ -30,14 +29,9 @@ public abstract class SessionCollector<C extends WebConfig, R>
 
     // SETUP ======================================================================================
 
-    public SessionCollector(final C config) {
+    public <C extends WebConfig> SessionCollector(final C config) {
         super(config);
-        updateConfig(config);
-    }
 
-    @Override
-    public void updateConfig(final C config) {
-        config.addListener(this);
         this.skipSessionData = config.getSkipSessionData();
     }
 

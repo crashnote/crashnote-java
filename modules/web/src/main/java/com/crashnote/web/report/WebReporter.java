@@ -27,8 +27,8 @@ import java.util.Set;
 /**
  * Customized implementation of the core {@link LoggerReporter}. Adds servlet-specific functionality.
  */
-public abstract class WebReporter<C extends WebConfig, R>
-        extends LoggerReporter<C> {
+public abstract class WebReporter<R>
+        extends LoggerReporter {
 
     // VARS =======================================================================================
 
@@ -41,8 +41,10 @@ public abstract class WebReporter<C extends WebConfig, R>
 
     // SETUP ======================================================================================
 
-    public WebReporter(final C config) {
+    public <C extends WebConfig> WebReporter(final C config) {
         super(config);
+
+        this.ignoreLocalhost = config.getIgnoreLocalRequests();
 
         // initialize list of local addresses (in order to distinguish remote calls from local ones)
         localAddresses = new HashSet<String>();
@@ -53,12 +55,6 @@ public abstract class WebReporter<C extends WebConfig, R>
             }
         } catch (Exception ignored) {
         }
-    }
-
-    @Override
-    public void updateConfig(final C config) {
-        super.updateConfig(config);
-        this.ignoreLocalhost = config.getIgnoreLocalRequests();
     }
 
 

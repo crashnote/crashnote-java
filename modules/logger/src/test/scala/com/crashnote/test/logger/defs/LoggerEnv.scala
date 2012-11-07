@@ -16,17 +16,17 @@
 package com.crashnote.test.logger.defs
 
 import com.crashnote.core.log.LogLog
-import stubs.ConfigStub
 import com.crashnote.test.core.defs.BaseMockSpec
+import com.crashnote.logger.config.LoggerConfig
 
 trait LoggerEnv {
 
     self: BaseMockSpec[_] =>
 
-    type C = ConfigStub
+    type C = LoggerConfig
 
     def mockConfig(): C = {
-        val m_conf = mock[ConfigStub]
+        val m_conf = mock[LoggerConfig]
         m_conf.getLogger(anyClass) returns new LogLog("")
         m_conf.getLogger(anyString) returns new LogLog("")
         m_conf

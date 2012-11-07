@@ -17,17 +17,18 @@ package com.crashnote.appengine.collect;
 
 import com.crashnote.appengine.collect.impl.AppengineEnvCollector;
 import com.crashnote.appengine.collect.impl.AppengineLogCollector;
+import com.crashnote.appengine.config.AppengineConfig;
 import com.crashnote.core.collect.Collector;
 import com.crashnote.core.collect.impl.EnvCollector;
 import com.crashnote.core.collect.impl.LogCollector;
 import com.crashnote.core.config.CrashConfig;
 
-public class AppengineCollector<C extends CrashConfig>
-    extends Collector<C> {
+public class AppengineCollector
+    extends Collector {
 
     // SETUP ======================================================================================
 
-    public AppengineCollector(final C config) {
+    public AppengineCollector(final AppengineConfig config) {
         super(config);
     }
 
@@ -35,12 +36,12 @@ public class AppengineCollector<C extends CrashConfig>
     // FACTORY ====================================================================================
 
     @Override
-    protected EnvCollector<C> createEnvColl(final C config) {
-        return new AppengineEnvCollector<C>(config);
+    protected EnvCollector createEnvColl(final CrashConfig config) {
+        return new AppengineEnvCollector(config);
     }
 
     @Override
-    protected LogCollector<C> createLogColl(final C config) {
-        return new AppengineLogCollector<C>(config);
+    protected LogCollector createLogColl(final CrashConfig config) {
+        return new AppengineLogCollector(config);
     }
 }

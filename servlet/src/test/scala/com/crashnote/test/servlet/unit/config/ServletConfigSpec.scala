@@ -16,26 +16,28 @@
 package com.crashnote.test.servlet.unit.config
 
 import org.specs2.specification.BeforeExample
-import com.crashnote.test.base.defs.UnitSpec
-
+import com.crashnote.test.base.defs.MockSpec
 import com.crashnote.servlet.report.ServletReporter
-import com.crashnote.test.servlet.defs.stubs._
+import com.crashnote.servlet.config.{ServletConfigFactory, ServletConfig}
+import javax.servlet.FilterConfig
 
 class ServletConfigSpec
-    extends UnitSpec with BeforeExample {
+    extends MockSpec with BeforeExample {
 
-    var c: ConfigStub = _
+    var c: ServletConfig = _
 
     "Servlet Config" should {
 
         "act as factory" >> {
             "for servlet reporter" >> {
-                c.getReporter must haveClass[ServletReporter[ConfigStub]]
+                c.getReporter must haveClass[ServletReporter]
+
             }
         }
     }
 
     def before {
-        c = new ConfigFactoryStub().get()
+        val fc = mock[FilterConfig]
+        c = (new ServletConfigFactory[ServletConfig](fc)).get()
     }
 }

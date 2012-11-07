@@ -23,12 +23,12 @@ import com.crashnote.core.model.log.LogEvt;
 /**
  * Customized {@link LogCollector} that post-processes the collected logging data.
  */
-public class AppengineLogCollector<C extends CrashConfig>
-    extends LogCollector<C> {
+public class AppengineLogCollector
+    extends LogCollector {
 
     // SETUP ======================================================================================
 
-    public AppengineLogCollector(final C config) {
+    public AppengineLogCollector(final CrashConfig config) {
         super(config);
     }
 

@@ -38,7 +38,7 @@ import java.util.List;
  * It assumes that each 'set' method receives a String and converts it to the actual data type by
  * manual parsing/converting, thus being independent of the way the concrete logger handles it.
  */
-public class CrashConfig<C extends CrashConfig> {
+public class CrashConfig {
 
     // CONST ======================================================================================
 
@@ -65,14 +65,9 @@ public class CrashConfig<C extends CrashConfig> {
     private Config conf;
 
     /**
-     * list of listeners that are notified on any change to the configuration
-     */
-    private volatile List<IConfigChangeListener> listeners = new ArrayList<IConfigChangeListener>();
-
-    /**
      * factory to create an instance of the internal log
      */
-    protected LogLogFactory<C> logFactory;
+    protected LogLogFactory logFactory;
 
 
     // SETUP ======================================================================================
@@ -85,27 +80,6 @@ public class CrashConfig<C extends CrashConfig> {
 
 
     // INTERFACE ==================================================================================
-
-    public void addListener(final IConfigChangeListener<C> listener) {
-        if (!listeners.contains(listener)) listeners.add(listener);
-    }
-
-    public void removeListener(final IConfigChangeListener<C> listener) {
-        listeners.remove(listener);
-    }
-
-    public void removeAllListeners() {
-        listeners.clear();
-    }
-
-    /**
-     * Notifies all listeners about changes to the config
-     */
-    public void updateComponentsConfig() {
-        for (final IConfigChangeListener l : listeners) {
-            if (l != null) l.updateConfig(this);
-        }
-    }
 
     /**
      * Validate config instance against config schema
@@ -140,21 +114,21 @@ public class CrashConfig<C extends CrashConfig> {
     /**
      * Create an instance of module 'Reporter'
      */
-    public Reporter<C> getReporter() {
+    public Reporter getReporter() {
         return new Reporter(this);
     }
 
     /**
      * Create an instance of module 'Sender'
      */
-    public Sender<C> getSender() {
+    public Sender getSender() {
         return new Sender(this);
     }
 
     /**
      * Create an instance of module 'Collector'
      */
-    public Collector<C> getCollector() {
+    public Collector getCollector() {
         return new Collector(this);
     }
 
@@ -192,7 +166,7 @@ public class CrashConfig<C extends CrashConfig> {
     /**
      * Create an instance of a log factory
      */
-    protected LogLogFactory<C> getLogFactory() {
+    protected LogLogFactory getLogFactory() {
         if (logFactory == null) logFactory = new LogLogFactory(this);
         return logFactory;
     }
@@ -270,10 +244,6 @@ public class CrashConfig<C extends CrashConfig> {
 
 
     // GET ========================================================================================
-
-    public List<IConfigChangeListener> getListeners() {
-        return listeners;
-    }
 
     public long getStartTime() {
         return startTime;

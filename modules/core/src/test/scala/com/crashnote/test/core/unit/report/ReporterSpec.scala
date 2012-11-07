@@ -21,14 +21,13 @@ import com.crashnote.core.model.log.ILogSession
 import com.crashnote.core.report.impl.session._
 import com.crashnote.core.report.impl.processor.impl.{AsyncProcessor, SyncProcessor}
 import com.crashnote.core.report.impl.ThrowableLogEvt
-import com.crashnote.test.core.defs.stubs.ConfigStub
 import com.crashnote.test.core.defs.TargetMockSpec
 
 class ReporterSpec
-    extends TargetMockSpec[Reporter[ConfigStub]] {
+    extends TargetMockSpec[Reporter] {
 
     var m_session: ILogSession = _
-    var m_processor: Processor[C] = _
+    var m_processor: Processor = _
     var m_excpHandler: Thread.UncaughtExceptionHandler = _
 
     "Reporter" should {
@@ -189,21 +188,21 @@ class ReporterSpec
             }
             "processor" >> {
                 "when in sync mode" >> new Configured(SYNC) {
-                    target.getProcessor must haveClass[SyncProcessor[C]]
+                    target.getProcessor must haveClass[SyncProcessor]
                 }
                 "when in async mode" >> new Configured(ASYNC) {
-                    target.getProcessor must haveClass[AsyncProcessor[C]]
+                    target.getProcessor must haveClass[AsyncProcessor]
                 }
             }
         }
     }
 
     def configure(config: C) =
-        new Reporter[C](config)
+        new Reporter(config)
 
     override def mock() {
         m_session = _mock[ILogSession]
-        m_processor = _mock[Processor[C]]
+        m_processor = _mock[Processor]
         m_excpHandler = _mock[Thread.UncaughtExceptionHandler]
     }
 

@@ -51,7 +51,7 @@ public class Log4jConnector
     // SHARED =====================================================================================
 
     @Override
-    protected void attach(final LoggerConfig config, final LoggerReporter<LoggerConfig> reporter) {
+    protected void attach(final LoggerConfig config, final LoggerReporter reporter) {
 
         // initialize
         final Logger rootLogger = LogManager.getLoggerRepository().getRootLogger();

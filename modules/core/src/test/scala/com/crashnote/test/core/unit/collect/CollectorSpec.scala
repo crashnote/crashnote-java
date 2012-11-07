@@ -19,15 +19,14 @@ import com.crashnote.core.collect.Collector
 import com.crashnote.core.collect.impl._
 import com.crashnote.core.report.impl.session.LocalLogSession
 import com.crashnote.core.build.Builder
-import com.crashnote.test.core.defs.stubs.ConfigStub
 import com.crashnote.test.core.defs.TargetMockSpec
 
 class CollectorSpec
-    extends TargetMockSpec[Collector[ConfigStub]] {
+    extends TargetMockSpec[Collector] {
 
     var m_builder: Builder = _
-    var m_envColl: EnvCollector[C] = _
-    var m_logColl: LogCollector[C] = _
+    var m_envColl: EnvCollector = _
+    var m_logColl: LogCollector = _
 
     "Collector" should {
 
@@ -73,11 +72,11 @@ class CollectorSpec
 
     def configure(config: C) = {
         config.getBuilder returns new Builder
-        new Collector[C](config)
+        new Collector(config)
     }
 
     override def mock() {
-        m_envColl = _mock[EnvCollector[C]]
-        m_logColl = _mock[LogCollector[C]]
+        m_envColl = _mock[EnvCollector]
+        m_logColl = _mock[LogCollector]
     }
 }

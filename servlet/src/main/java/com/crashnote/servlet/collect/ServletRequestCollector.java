@@ -28,7 +28,7 @@ import java.util.Arrays;
  * Collector to transform a HTTP request into a structured data format.
  */
 public class ServletRequestCollector
-    extends RequestCollector<ServletConfig, HttpServletRequest> {
+    extends RequestCollector<HttpServletRequest> {
 
     // SETUP ======================================================================================
 

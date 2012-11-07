@@ -20,6 +20,7 @@ import com.crashnote.servlet.config.ServletConfigFactory;
 import com.crashnote.servlet.report.ServletReporter;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public class CrashnoteFilter
@@ -72,23 +73,25 @@ public class CrashnoteFilter
             chain.doFilter(request, response);
 
         } else {
+            final HttpServletRequest httpReq = (HttpServletRequest) request;
+
             try {
                 // initialize reporting with current request
-                reporter.beforeRequest(request);
+                reporter.beforeRequest(httpReq);
 
                 // proceed with filter chain...
                 chain.doFilter(request, response);
 
             } catch (Throwable e) {
                 // an exception occurred! -> report it
-                reporter.uncaughtException(request, Thread.currentThread(), e);
+                reporter.uncaughtException(httpReq, Thread.currentThread(), e);
 
                 // handle the error somehow
                 dealWithException(e);
 
             } finally {
                 // cleanup after request
-                reporter.afterRequest(request);
+                reporter.afterRequest(httpReq);
             }
         }
     }

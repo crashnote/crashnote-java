@@ -40,7 +40,7 @@ public class CrashHandler
     private Level logLevel = Level.INFO;
 
     //private MDCAdapter mdc;
-    private LoggerReporter<LoggerConfig> reporter;
+    private LoggerReporter reporter;
 
     // config
     private LoggerConfig config;
@@ -146,8 +146,9 @@ public class CrashHandler
         return config;
     }
 
-    private LoggerReporter<LoggerConfig> getReporter() {
-        if (reporter == null) reporter = getConfig().getReporter();
+    private LoggerReporter getReporter() {
+        if (reporter == null)
+            reporter = getConfig().getReporter();
         return reporter;
     }
 

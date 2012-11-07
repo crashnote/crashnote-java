@@ -17,7 +17,6 @@ package com.crashnote.core.collect.impl;
 
 import com.crashnote.core.collect.BaseCollector;
 import com.crashnote.core.config.CrashConfig;
-import com.crashnote.core.config.IConfigChangeListener;
 import com.crashnote.core.model.data.DataObject;
 
 import java.util.List;
@@ -28,30 +27,25 @@ import static com.crashnote.core.util.FilterUtil.doFilter;
  * Collector to transform an application's environment data (e.g. version, system hardware etc.)
  * into a structured form.
  */
-public class EnvCollector<C extends CrashConfig>
-    extends BaseCollector<C> implements IConfigChangeListener<C> {
+public class EnvCollector
+    extends BaseCollector {
 
     // VARS =======================================================================================
 
     // configuration settings:
-    private Long startTime;
-    private String profile;
-    private String version;
-    private String build;
-    private String clientInfo;
-    private List<String> envFilters;
+    private final Long startTime;
+    private final String profile;
+    private final String version;
+    private final String build;
+    private final String clientInfo;
+    private final List<String> envFilters;
 
 
     // SETUP ======================================================================================
 
-    public EnvCollector(final C config) {
+    public <C extends CrashConfig> EnvCollector(final C config) {
         super(config);
-        updateConfig(config);
-    }
 
-    @Override
-    public void updateConfig(final C config) {
-        config.addListener(this);
         this.profile = config.getAppProfile();
         this.build = config.getBuild();
         this.version = config.getVersion();

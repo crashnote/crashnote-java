@@ -16,7 +16,6 @@
 package com.crashnote.core.send;
 
 import com.crashnote.core.config.CrashConfig;
-import com.crashnote.core.config.IConfigChangeListener;
 import com.crashnote.core.log.LogLog;
 import com.crashnote.core.model.log.LogReport;
 
@@ -31,8 +30,7 @@ import java.util.zip.GZIPOutputStream;
  * The Dispatcher is responsible for transmitting the data from the client to the server by
  * using Java's build-in capabilities around {@link HttpURLConnection}.
  */
-public class Sender<C extends CrashConfig>
-    implements IConfigChangeListener<C> {
+public class Sender {
 
     // VARS =======================================================================================
 
@@ -46,20 +44,15 @@ public class Sender<C extends CrashConfig>
 
     // SETUP ======================================================================================
 
-    public Sender(final C config) {
-        updateConfig(config);
+    public <C extends CrashConfig> Sender(final C config) {
+        this.url_post = config.getPostUrl();
+        this.clientInfo = config.getClientInfo();
+        this.connectionTimeout = config.getConnectionTimeout() * 1000;
+
         this.logger = config.getLogger(this.getClass());
 
         // create and install a trust manager that does not validate certificate chains
         installCustomTrustManager();
-    }
-
-    @Override
-    public void updateConfig(final C config) {
-        config.addListener(this);
-        this.url_post = config.getPostUrl();
-        this.clientInfo = config.getClientInfo();
-        this.connectionTimeout = config.getConnectionTimeout() * 1000;
     }
 
 

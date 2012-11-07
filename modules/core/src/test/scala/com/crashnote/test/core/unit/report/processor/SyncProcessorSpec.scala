@@ -20,14 +20,14 @@ import com.crashnote.core.send.Sender
 import com.crashnote.core.collect.Collector
 import com.crashnote.core.report.impl.session.SharedLogSession
 import com.crashnote.core.model.log.LogReport
-import com.crashnote.test.core.defs.stubs.ConfigStub
 import com.crashnote.test.core.defs.TargetMockSpec
+import com.crashnote.core.config.CrashConfig
 
 class SyncProcessorSpec
-    extends TargetMockSpec[SyncProcessor[ConfigStub]] {
+    extends TargetMockSpec[SyncProcessor] {
 
-    var m_sender: Sender[C] = _
-    var m_collector: Collector[C] = _
+    var m_sender: Sender = _
+    var m_collector: Collector = _
 
     "Sync Processor" should {
 
@@ -58,10 +58,10 @@ class SyncProcessorSpec
     }
 
     def configure(config: C) =
-        new SyncProcessor[C](config)
+        new SyncProcessor(config)
 
     override def mock() {
-        m_sender = _mock[Sender[C]]
-        m_collector = _mock[Collector[C]]
+        m_sender = _mock[Sender]
+        m_collector = _mock[Collector]
     }
 }

@@ -16,7 +16,6 @@
 package com.crashnote.web.collect;
 
 import com.crashnote.core.collect.BaseCollector;
-import com.crashnote.core.config.IConfigChangeListener;
 import com.crashnote.core.model.data.DataArray;
 import com.crashnote.core.model.data.DataObject;
 import com.crashnote.core.util.ChksumUtil;
@@ -26,8 +25,8 @@ import java.util.List;
 
 import static com.crashnote.core.util.FilterUtil.doFilter;
 
-public abstract class RequestCollector<C extends WebConfig, R>
-        extends BaseCollector<C> implements IConfigChangeListener<C> {
+public abstract class RequestCollector<R>
+        extends BaseCollector {
 
     // VARS =======================================================================================
 
@@ -38,16 +37,12 @@ public abstract class RequestCollector<C extends WebConfig, R>
 
     protected String[] filtereds = new String[]{filtered};
 
+
     // SETUP ======================================================================================
 
-    public RequestCollector(final C config) {
+    public <C extends WebConfig> RequestCollector(final C config) {
         super(config);
-        updateConfig(config);
-    }
 
-    @Override
-    public void updateConfig(final C config) {
-        config.addListener(this);
         this.hashRemoteIP = config.getHashRemoteIP();
         this.requestFilters = config.getRequestFilters();
         this.skipHeaderData = config.getSkipHeaderData();

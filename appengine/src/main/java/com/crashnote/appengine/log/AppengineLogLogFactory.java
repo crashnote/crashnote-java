@@ -20,7 +20,7 @@ import com.crashnote.core.log.LogLog;
 import com.crashnote.core.log.LogLogFactory;
 
 public class AppengineLogLogFactory
-    extends LogLogFactory<AppengineConfig> {
+    extends LogLogFactory {
 
     // SETUP ======================================================================================
 

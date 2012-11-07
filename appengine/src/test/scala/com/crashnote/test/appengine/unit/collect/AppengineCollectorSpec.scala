@@ -22,14 +22,14 @@ import com.crashnote.test.base.defs._
 import com.crashnote.test.core.defs.BaseMockSpec
 
 class AppengineCollectorSpec
-    extends BaseMockSpec[AppengineCollector[AppengineConfig]] {
+    extends BaseMockSpec[AppengineCollector] {
 
     "AppEngine Collector" should {
 
         "override default environment collector" >> {
             val m_conf = mock[AppengineConfig]
-            val r = new AppengineCollector[AppengineConfig](m_conf)
-            r.getEnvCollector must haveClass[AppengineEnvCollector[AppengineConfig]]
+            val r = new AppengineCollector(m_conf)
+            r.getEnvCollector must haveClass[AppengineEnvCollector]
         }
     }
 

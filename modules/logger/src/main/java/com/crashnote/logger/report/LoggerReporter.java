@@ -21,12 +21,12 @@ import com.crashnote.logger.config.LoggerConfig;
 /**
  * Customized implementation of the basic {@link Reporter}.
  */
-public class LoggerReporter<C extends LoggerConfig>
-        extends Reporter<C> {
+public class LoggerReporter
+        extends Reporter {
 
     // SETUP ======================================================================================
 
-    public LoggerReporter(final C config) {
+    public <C extends LoggerConfig> LoggerReporter(final C config) {
         super(config);
     }
 

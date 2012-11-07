@@ -16,13 +16,11 @@
 package com.crashnote.test.servlet.unit.config
 
 import javax.servlet.FilterConfig
-
-import com.crashnote.test.servlet.defs.stubs._
-import com.crashnote.servlet.config.ServletConfigFactory
+import com.crashnote.servlet.config.{ServletConfig, ServletConfigFactory}
 import com.crashnote.test.servlet.defs.TargetMockSpec
 
 class ServletConfigFactorySpec
-    extends TargetMockSpec[ServletConfigFactory[ConfigStub]] {
+    extends TargetMockSpec[ServletConfigFactory[ServletConfig]] {
 
     setSequential()
 
@@ -62,6 +60,6 @@ class ServletConfigFactorySpec
         m_filterConf.getInitParameterNames.asInstanceOf[javaEnum[Object]] returns filterProps.keys()
         m_filterConf.getInitParameter(anyString) answers (name => filterProps.getProperty(name.toString))
 
-        new ConfigFactoryStub(m_filterConf)
+        new ServletConfigFactory[ServletConfig](m_filterConf)
     }
 }

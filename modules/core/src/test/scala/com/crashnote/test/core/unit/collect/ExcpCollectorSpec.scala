@@ -20,11 +20,10 @@ import com.crashnote.core.config.CrashConfig
 import com.crashnote.core.build.Builder
 import com.crashnote.core.model.data._
 import java.lang.StackTraceElement
-import com.crashnote.test.core.defs.stubs.ConfigStub
 import com.crashnote.test.core.defs.TargetMockSpec
 
 class ExcpCollectorSpec
-    extends TargetMockSpec[ExcpCollector[ConfigStub]] {
+    extends TargetMockSpec[ExcpCollector] {
 
     "Excp Collector" should {
 
@@ -84,6 +83,6 @@ class ExcpCollectorSpec
 
     def configure(config: C) = {
         config.getBuilder returns new Builder
-        new ExcpCollector[C](config)
+        new ExcpCollector(config)
     }
 }

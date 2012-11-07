@@ -17,7 +17,6 @@ package com.crashnote.core.report;
 
 import com.crashnote.core.Lifecycle;
 import com.crashnote.core.config.CrashConfig;
-import com.crashnote.core.config.IConfigChangeListener;
 import com.crashnote.core.log.LogLog;
 import com.crashnote.core.model.log.ILogSession;
 import com.crashnote.core.model.log.LogEvt;
@@ -34,8 +33,8 @@ import com.crashnote.core.report.impl.session.LocalLogSession;
  * the same goes for context data. It can automatically or manually flush the session
  * in order to send out a crash report by calling the internal {@link Processor}.
  */
-public class Reporter<C extends CrashConfig>
-    implements Thread.UncaughtExceptionHandler, Lifecycle, IConfigChangeListener<C> {
+public class Reporter
+    implements Thread.UncaughtExceptionHandler, Lifecycle {
 
     // VARS =======================================================================================
 
@@ -45,25 +44,20 @@ public class Reporter<C extends CrashConfig>
     private Thread.UncaughtExceptionHandler defaultHandler;
 
     private final ILogSession session;
-    private final Processor<C> processor;
+    private final Processor processor;
 
     // configuration settings:
-    private boolean enabled;
+    private final boolean enabled;
 
 
     // SETUP ======================================================================================
 
-    public Reporter(final C config) {
-        updateConfig(config);
+    public <C extends CrashConfig> Reporter(final C config) {
+        this.enabled = config.isEnabled();
+
         this.logger = config.getLogger(this.getClass());
         this.session = createSessionStore(config);
         this.processor = createProcessor(config);
-    }
-
-    @Override
-    public void updateConfig(final C config) {
-        config.addListener(this);
-        this.enabled = config.isEnabled();
     }
 
     // LIFECYCLE ==================================================================================
@@ -120,17 +114,17 @@ public class Reporter<C extends CrashConfig>
 
     // ===== Log Context
 
-    public Reporter<C> put(final String key, final Object val) {
+    public Reporter put(final String key, final Object val) {
         if (isOperable()) session.putCtx(key, val);
         return this;
     }
 
-    public Reporter<C> remove(final String key) {
+    public Reporter remove(final String key) {
         if (isOperable()) session.removeCtx(key);
         return this;
     }
 
-    public Reporter<C> clear() {
+    public Reporter clear() {
         if (isOperable()) session.clearCtx();
         return this;
     }
@@ -190,22 +184,22 @@ public class Reporter<C extends CrashConfig>
 
     // FACTORY ====================================================================================
 
-    protected ILogSession createSessionStore(final C config) {
+    protected <C extends CrashConfig> ILogSession createSessionStore(final C config) {
         return new LocalLogSession(); // SharedLogSession
     }
 
-    protected Processor<C> createProcessor(final C config) {
-        final SyncProcessor<C> syncPrc = new SyncProcessor<C>(config);
+    protected <C extends CrashConfig> Processor createProcessor(final C config) {
+        final SyncProcessor syncPrc = new SyncProcessor(config);
         if (config.isSync())
             return syncPrc;
         else
-            return new AsyncProcessor<C>(config, syncPrc);
+            return new AsyncProcessor(config, syncPrc);
     }
 
 
     // GET ========================================================================================
 
-    public Processor<C> getProcessor() {
+    public Processor getProcessor() {
         return processor;
     }
 

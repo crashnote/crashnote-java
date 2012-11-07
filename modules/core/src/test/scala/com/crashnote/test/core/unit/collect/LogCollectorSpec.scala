@@ -23,14 +23,13 @@ import com.crashnote.core.build.Builder
 import com.crashnote.core.model.types.LogLevel
 import com.crashnote.core.build.impl.JSONDataArray
 import com.crashnote.core.model.data._
-import com.crashnote.test.core.defs.stubs.ConfigStub
 import com.crashnote.test.core.defs.TargetMockSpec
 
 class LogCollectorSpec
-    extends TargetMockSpec[LogCollector[ConfigStub]] {
+    extends TargetMockSpec[LogCollector] {
 
     var m_evt: LogEvt[_] = _
-    var m_excpColl: ExcpCollector[C] = _
+    var m_excpColl: ExcpCollector = _
 
     "Log Collector" should {
 
@@ -61,7 +60,7 @@ class LogCollectorSpec
 
     def configure(config: C) = {
         config.getBuilder returns new Builder
-        new LogCollector[C](config)
+        new LogCollector(config)
     }
 
     override def mock() {
@@ -75,7 +74,7 @@ class LogCollectorSpec
         m_evt.getMDC returns Map("key1" -> "val", "key2" -> new java.lang.Long(2))
         m_evt.getArgs returns Array("abc", "xyz")
 
-        m_excpColl = _mock[ExcpCollector[C]]
+        m_excpColl = _mock[ExcpCollector]
         m_excpColl.collect(anyThrowable) returns {
             val a = new JSONDataArray()
             a.add("test")

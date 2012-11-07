@@ -22,11 +22,10 @@ import com.crashnote.core.model.types.LogType
 import com.crashnote.core.model.log.LogReport
 import com.crashnote.core.build.impl.JSONDataObject
 import com.crashnote.core.send.Sender
-import com.crashnote.test.core.defs.stubs.ConfigStub
 import com.crashnote.test.core.defs.TargetMockSpec
 
 class SenderSpec
-    extends TargetMockSpec[Sender[ConfigStub]] {
+    extends TargetMockSpec[Sender] {
 
     var report: LogReport = _
     var m_conn: HttpURLConnection = _
@@ -120,7 +119,7 @@ class SenderSpec
         val m_conf = mockConfig()
         configure(m_conf)
 
-        target = new Sender[C](m_conf) {
+        target = new Sender(m_conf) {
             override protected def createConnection(url: String) = {
                 m_conn = null
                 m_stream = null

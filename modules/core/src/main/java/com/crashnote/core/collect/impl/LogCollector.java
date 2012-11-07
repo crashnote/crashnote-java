@@ -27,17 +27,17 @@ import java.util.Map;
 /**
  * Collector to transform one or multiple {@link LogEvt}(s) into a structured data format.
  */
-public class LogCollector<C extends CrashConfig>
-    extends BaseCollector<C> {
+public class LogCollector
+    extends BaseCollector {
 
     // VARS =======================================================================================
 
-    private final ExcpCollector<C> excpCollector;
+    private final ExcpCollector excpCollector;
 
 
     // SETUP ======================================================================================
 
-    public LogCollector(final C config) {
+    public <C extends CrashConfig> LogCollector(final C config) {
         super(config);
         this.excpCollector = createExcpCollector(config);
     }
@@ -56,8 +56,8 @@ public class LogCollector<C extends CrashConfig>
 
     // FACTORY ====================================================================================
 
-    protected ExcpCollector<C> createExcpCollector(final C config) {
-        return new ExcpCollector<C>(config);
+    protected <C extends CrashConfig> ExcpCollector createExcpCollector(final C config) {
+        return new ExcpCollector(config);
     }
 
     // SHARED =====================================================================================

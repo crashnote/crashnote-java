@@ -36,7 +36,7 @@ public class CrashAppender
 
     private boolean started;
 
-    private LoggerReporter<LoggerConfig> reporter;
+    private LoggerReporter reporter;
 
     // config
     private LoggerConfig config;
@@ -133,7 +133,7 @@ public class CrashAppender
         return config;
     }
 
-    private LoggerReporter<LoggerConfig> getReporter() {
+    private LoggerReporter getReporter() {
         if (reporter == null) reporter = getConfig().getReporter();
         return reporter;
     }

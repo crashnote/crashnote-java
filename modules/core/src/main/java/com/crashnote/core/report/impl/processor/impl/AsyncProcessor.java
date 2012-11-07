@@ -28,19 +28,20 @@ import java.util.concurrent.*;
  * <p/>
  * Because it uses {@link ScheduledExecutorService} the library requires at least JDK 1.5.
  */
-public class AsyncProcessor<C extends CrashConfig>
-    extends Processor<C> {
+public class AsyncProcessor
+    extends Processor {
 
     // VARS =======================================================================================
 
-    private final Processor<C> delegate;
+    private final Processor delegate;
     private final ScheduledExecutorService scheduler;
 
 
     // SETUP ======================================================================================
 
-    public AsyncProcessor(final C config, final Processor<C> delegate) {
+    public <C extends CrashConfig> AsyncProcessor(final C config, final Processor delegate) {
         super(config);
+
         this.delegate = delegate;
         this.scheduler = Executors.newSingleThreadScheduledExecutor();
     }

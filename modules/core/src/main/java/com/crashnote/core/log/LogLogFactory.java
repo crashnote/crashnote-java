@@ -20,7 +20,7 @@ import com.crashnote.core.config.CrashConfig;
 /**
  * Factory class that can instantiate an implementation of {@link LogLog}.
  */
-public class LogLogFactory<C extends CrashConfig<C>> {
+public class LogLogFactory {
 
     // VARS =======================================================================================
 
@@ -29,7 +29,7 @@ public class LogLogFactory<C extends CrashConfig<C>> {
 
     // SETUP ======================================================================================
 
-    public LogLogFactory(final C config) {
+    public <C extends CrashConfig> LogLogFactory(final C config) {
         this.debug = config.isDebug();
     }
 

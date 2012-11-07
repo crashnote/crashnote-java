@@ -30,8 +30,8 @@ import static com.google.appengine.api.urlfetch.FetchOptions.Builder.allowTrunca
  * because of the restrictions of the platform. The advantage is that this happens asynchronous
  * and doesn't slow down the application (since regular threads are not allowed).
  */
-public class AppengineSender<C extends AppengineConfig>
-    extends Sender<C> {
+public class AppengineSender
+    extends Sender {
 
     // VARS =======================================================================================
 
@@ -40,7 +40,7 @@ public class AppengineSender<C extends AppengineConfig>
 
     // SETUP ======================================================================================
 
-    public AppengineSender(final C config) {
+    public <C extends AppengineConfig> AppengineSender(final C config) {
         super(config);
         appengineUtil = new AppengineUtil();
     }

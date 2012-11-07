@@ -30,7 +30,7 @@ import java.util.List;
  * It provides utility methods to create these containers by using the {@link Builder} class which
  * hides the concrete implementation details.
  */
-public abstract class BaseCollector<C extends CrashConfig> {
+public abstract class BaseCollector {
 
     // VARS =======================================================================================
 
@@ -43,7 +43,7 @@ public abstract class BaseCollector<C extends CrashConfig> {
 
     // SETUP ======================================================================================
 
-    public BaseCollector(final C config) {
+    public <C extends CrashConfig> BaseCollector(final C config) {
         this.builder = config.getBuilder();
         this.logger = config.getLogger(this.getClass());
         this.sysUtil = config.getSystemUtil();

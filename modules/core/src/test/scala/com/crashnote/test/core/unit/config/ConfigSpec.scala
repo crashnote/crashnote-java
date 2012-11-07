@@ -17,16 +17,14 @@ package com.crashnote.test.core.unit.config
 
 import com.crashnote.test.base.defs.UnitSpec
 import org.specs2.specification.BeforeExample
-import com.crashnote.test.core.defs.stubs._
+import com.crashnote.core.config.{CrashConfigFactory, CrashConfig}
 
 class ConfigSpec
     extends UnitSpec with BeforeExample {
 
-    var c: ConfigStub = _
+    var c: CrashConfig = _
 
     "Config" should {
-
-        val l = new ConfigListenerStub
 
         "act as factory" >> {
             "for builder" >> {
@@ -35,9 +33,11 @@ class ConfigSpec
             "for sender" >> {
                 c.getSender !== null
             }
+            /*
             "for collector" >> {
                 c.getCollector !== null
             }
+            */
             "for system util" >> {
                 c.getSystemUtil !== null
             }
@@ -45,35 +45,9 @@ class ConfigSpec
                 c.getReporter !== null
             }
         }
-
-        "manage config change listeners" >> {
-            "add and remove listeners" >> {
-                c.addListener(l)
-                c.getListeners must have size (1)
-                c.removeAllListeners()
-                c.getListeners must have size (0)
-
-                c.addListener(l)
-                c.addListener(l)
-                c.getListeners must have size (1)
-
-                c.removeListener(l)
-                c.getListeners must have size (0)
-            }
-            "notify listeners on change" >> {
-                c.addListener(l)
-                l.updateCount === 0
-
-                c.updateComponentsConfig()
-                l.updateCount === 1
-
-                c.updateComponentsConfig()
-                l.updateCount === 2
-            }
-        }
     }
 
     def before {
-        c = (new ConfigFactoryStub).get
+        c = (new CrashConfigFactory[CrashConfig]).get
     }
 }

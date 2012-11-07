@@ -27,18 +27,18 @@ import com.crashnote.core.send.Sender;
  * it receives a {@link ILogSession} it creates a {@link LogReport} and sends it right away,
  * blocking the current thread.
  */
-public class SyncProcessor<C extends CrashConfig>
-        extends Processor<C> {
+public class SyncProcessor
+        extends Processor {
 
     // VARS =======================================================================================
 
-    private final Sender<C> sender;
-    private final Collector<C> collector;
+    private final Sender sender;
+    private final Collector collector;
 
 
     // SETUP ======================================================================================
 
-    public SyncProcessor(final C config) {
+    public <C extends CrashConfig> SyncProcessor(final C config) {
         super(config);
         this.sender = config.getSender();
         this.collector = config.getCollector();

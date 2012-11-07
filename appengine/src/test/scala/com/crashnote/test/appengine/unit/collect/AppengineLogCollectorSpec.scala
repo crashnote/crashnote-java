@@ -25,7 +25,7 @@ import com.crashnote.core.model.log.LogEvt
 import com.crashnote.core.model.types.LogLevel
 
 class AppengineLogCollectorSpec
-    extends TargetMockSpec[AppengineLogCollector[AppengineConfig]] {
+    extends TargetMockSpec[AppengineLogCollector] {
 
     "AppEngine Log Collector" should {
 
@@ -64,7 +64,7 @@ class AppengineLogCollectorSpec
 
     def configure(config: C) = {
         config.getBuilder returns new Builder()
-        new AppengineLogCollector[C](config)
+        new AppengineLogCollector(config)
     }
 
     private def evtWithSource(src: String) = {

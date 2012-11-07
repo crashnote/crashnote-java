@@ -19,13 +19,12 @@ import java.util.concurrent._
 import com.crashnote.core.report.impl.processor.impl.AsyncProcessor
 import com.crashnote.core.report.impl.processor.Processor
 import com.crashnote.core.report.impl.session.LocalLogSession
-import com.crashnote.test.core.defs.stubs.ConfigStub
 import com.crashnote.test.core.defs.TargetMockSpec
 
 class AsyncProcessorSpec
-    extends TargetMockSpec[AsyncProcessor[ConfigStub]] {
+    extends TargetMockSpec[AsyncProcessor] {
 
-    var m_processor: Processor[C] = _
+    var m_processor: Processor = _
     var m_scheduler: ScheduledExecutorService = _
 
     "Async Processor" should {
@@ -62,10 +61,10 @@ class AsyncProcessorSpec
     }
 
     def configure(config: C) =
-        new AsyncProcessor[C](config, m_processor)
+        new AsyncProcessor(config, m_processor)
 
     override def mock() {
-        m_processor = _mock[Processor[C]]
+        m_processor = _mock[Processor]
         m_scheduler = _mock[ScheduledExecutorService]
     }
 }

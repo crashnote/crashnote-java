@@ -56,7 +56,7 @@ final class Tokenizer {
 
         private static class WhitespaceSaver {
             // has to be saved inside value concatenations
-            private StringBuilder whitespace;
+            private final StringBuilder whitespace;
             // may need to value-concat with next value
             private boolean lastTokenWasSimpleValue;
 

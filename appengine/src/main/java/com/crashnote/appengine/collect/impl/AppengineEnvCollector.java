@@ -25,8 +25,8 @@ import com.google.appengine.api.utils.SystemProperty;
  * Customized {@link EnvCollector} that collects additional information from the AppEngine
  * platform (like application id).
  */
-public class AppengineEnvCollector<C extends CrashConfig>
-    extends EnvCollector<C> {
+public class AppengineEnvCollector
+    extends EnvCollector {
 
     // CONST ======================================================================================
 
@@ -39,7 +39,7 @@ public class AppengineEnvCollector<C extends CrashConfig>
 
     // SETUP ======================================================================================
 
-    public AppengineEnvCollector(final C config) {
+    public AppengineEnvCollector(final CrashConfig config) {
         super(config);
     }
 

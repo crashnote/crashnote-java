@@ -32,7 +32,7 @@ public abstract class LogConnector<C extends LoggerConfig, A extends ICrashAppen
 
     // LIFECYCLE ==================================================================================
 
-    public boolean start(final C config, final LoggerReporter<C> reporter) {
+    public boolean start(final C config, final LoggerReporter reporter) {
         try {
             attach(config, reporter);
             debug("running");
@@ -61,7 +61,7 @@ public abstract class LogConnector<C extends LoggerConfig, A extends ICrashAppen
 
     // SHARED =====================================================================================
 
-    protected abstract void attach(C config, LoggerReporter<C> reporter);
+    protected abstract void attach(C config, LoggerReporter reporter);
 
     protected abstract void detach();
 

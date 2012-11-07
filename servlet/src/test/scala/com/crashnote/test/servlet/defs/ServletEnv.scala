@@ -16,17 +16,17 @@
 package com.crashnote.test.servlet.defs
 
 import com.crashnote.core.log.LogLog
-import stubs.ConfigStub
 import com.crashnote.test.core.defs.BaseMockSpec
+import com.crashnote.servlet.config.ServletConfig
 
 trait ServletEnv {
 
     self: BaseMockSpec[_] =>
 
-    type C = ConfigStub
+    type C = ServletConfig
 
     def mockConfig(): C = {
-        val m_conf = mock[ConfigStub]
+        val m_conf = mock[ServletConfig]
         m_conf.getLogger(anyClass) returns new LogLog("")
         m_conf.getLogger(anyString) returns new LogLog("")
         m_conf

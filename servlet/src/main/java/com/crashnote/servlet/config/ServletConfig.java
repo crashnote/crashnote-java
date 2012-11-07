@@ -22,8 +22,8 @@ import com.crashnote.web.config.WebConfig;
 /**
  * Customized {@link WebConfig} for dealing with servlet environments.
  */
-public class ServletConfig<C extends ServletConfig<C>>
-        extends WebConfig<C> {
+public class ServletConfig
+        extends WebConfig {
 
     // SETUP ======================================================================================
 
@@ -35,7 +35,7 @@ public class ServletConfig<C extends ServletConfig<C>>
     // INTERFACE ==================================================================================
 
     @Override
-    public ServletReporter<C> getReporter() {
+    public ServletReporter getReporter() {
         return new ServletReporter(this);
     }
 

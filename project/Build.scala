@@ -134,7 +134,7 @@ trait Settings {
             resolvers += "Spray Repository" at "http://repo.spray.cc/",
             resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
 
-            javacOptions ++= Seq("-source", "1.6", "-target", "1.6", "-Xlint"),
+            javacOptions ++= Seq("-source", "1.6", "-target", "1.6" /*, "-Xlint"*/),
             javacOptions in doc := Seq("-source", "1.6"),
             //javacOptions ++= Seq("-bootclasspath", (javaDir / "jre" / "lib" / "rt.jar").getAbsolutePath)
             javaHome := Some(javaDir)
