@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crashnote.test.core.defs
+package com.crashnote.test.logger.defs
 
 import org.specs2.specification.Scope
 import com.crashnote.core.Lifecycle
-import com.crashnote.core.model.data.DataObject
-import com.crashnote.core.model.log.LogReport
-import com.crashnote.test.core.util.FactoryUtil
-import com.crashnote.test.base.defs.BaseMockSpec
+import com.crashnote.test.core.defs.BaseMockSpec
 
-abstract class MockSpec[T](implicit t: Manifest[T])
-    extends BaseMockSpec[T] with ConfigEnv with FactoryUtil {
+abstract class TargetMockSpec[T](implicit t: Manifest[T])
+    extends BaseMockSpec[T] with LoggerEnv {
 
     setSequential()
 
@@ -65,17 +62,8 @@ abstract class MockSpec[T](implicit t: Manifest[T])
         start()
     }
 
-    // ==== MATCHERS
-
-    def anyReport = any[LogReport]
-    def anyDataObj = any[DataObject]
-
-
     // ==== CONFIGS
 
     lazy val DISABLED = (config: C) => config.isEnabled returns false
     lazy val ENABLED = (config: C) => config.isEnabled returns true
-
-    lazy val SYNC = (config: C) => config.isSync returns true
-    lazy val ASYNC = (config: C) => config.isSync returns false
 }

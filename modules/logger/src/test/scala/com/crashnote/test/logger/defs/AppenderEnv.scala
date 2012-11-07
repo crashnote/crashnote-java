@@ -21,7 +21,7 @@ import stubs._
 
 trait AppenderEnv[A, E] {
 
-    self: MockSpec[A] =>
+    self: TargetMockSpec[A] =>
 
     var m_conf: C = _
     var m_evt: E = _

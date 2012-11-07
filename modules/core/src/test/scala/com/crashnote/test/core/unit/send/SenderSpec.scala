@@ -18,15 +18,15 @@ package com.crashnote.test.core.unit.send
 import java.io._
 import java.net.HttpURLConnection
 
-import com.crashnote.test.core.defs.MockSpec
 import com.crashnote.core.model.types.LogType
 import com.crashnote.core.model.log.LogReport
 import com.crashnote.core.build.impl.JSONDataObject
 import com.crashnote.core.send.Sender
 import com.crashnote.test.core.defs.stubs.ConfigStub
+import com.crashnote.test.core.defs.TargetMockSpec
 
 class SenderSpec
-    extends MockSpec[Sender[ConfigStub]] {
+    extends TargetMockSpec[Sender[ConfigStub]] {
 
     var report: LogReport = _
     var m_conn: HttpURLConnection = _

@@ -21,7 +21,7 @@ import com.crashnote.jul.impl.JulEvt
 import com.crashnote.test.logger.defs._
 
 class CrashHandlerSpec
-    extends MockSpec[CrashHandler] with AppenderEnv[CrashHandler, LogRecord] {
+    extends TargetMockSpec[CrashHandler] with AppenderEnv[CrashHandler, LogRecord] {
 
     "instantiate and publish and close handler" >> {
         def example(descr: String, factory: () => CrashHandler) =

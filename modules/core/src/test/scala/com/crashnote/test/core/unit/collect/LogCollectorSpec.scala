@@ -16,7 +16,6 @@
 package com.crashnote.test.core.unit.collect
 
 import scala.collection.JavaConversions._
-import com.crashnote.test.core.defs.MockSpec
 import com.crashnote.core.collect.impl._
 import com.crashnote.core.collect.impl.ExcpCollector
 import com.crashnote.core.model.log.LogEvt
@@ -25,9 +24,10 @@ import com.crashnote.core.model.types.LogLevel
 import com.crashnote.core.build.impl.JSONDataArray
 import com.crashnote.core.model.data._
 import com.crashnote.test.core.defs.stubs.ConfigStub
+import com.crashnote.test.core.defs.TargetMockSpec
 
 class LogCollectorSpec
-    extends MockSpec[LogCollector[ConfigStub]] {
+    extends TargetMockSpec[LogCollector[ConfigStub]] {
 
     var m_evt: LogEvt[_] = _
     var m_excpColl: ExcpCollector[C] = _

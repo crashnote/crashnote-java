@@ -16,7 +16,7 @@
 package com.crashnote.test.appengine.unit.collect
 
 import scala.collection.JavaConversions._
-import com.crashnote.test.appengine.defs.MockSpec
+import com.crashnote.test.appengine.defs.TargetMockSpec
 import com.crashnote.appengine.config.AppengineConfig
 import com.crashnote.core.build.Builder
 import com.crashnote.appengine.collect.impl._
@@ -25,7 +25,7 @@ import com.crashnote.core.model.log.LogEvt
 import com.crashnote.core.model.types.LogLevel
 
 class AppengineLogCollectorSpec
-    extends MockSpec[AppengineLogCollector[AppengineConfig]] {
+    extends TargetMockSpec[AppengineLogCollector[AppengineConfig]] {
 
     "AppEngine Log Collector" should {
 

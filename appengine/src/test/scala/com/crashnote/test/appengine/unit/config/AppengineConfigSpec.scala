@@ -17,10 +17,10 @@
 //
 //import com.crashnote.appengine.util.AppengineUtil
 //import com.crashnote.appengine.config.AppengineConfig
-//import com.crashnote.test.defs.MockSpec
+//import com.crashnote.test.defs.TargetMockSpec
 //
 //class AppengineConfigSpec
-//    extends MockSpec[AppengineConfig] {
+//    extends TargetMockSpec[AppengineConfig] {
 //
 //    var m_appengineUtil: AppengineUtil = _
 //

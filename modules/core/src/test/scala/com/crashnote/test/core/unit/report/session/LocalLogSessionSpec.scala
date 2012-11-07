@@ -17,11 +17,11 @@ package com.crashnote.test.core.unit.report.session
 
 import com.crashnote.core.report.impl.session.LocalLogSession
 import com.crashnote.core.model.log.ILogSession
-import com.crashnote.test.core.defs.MockSpec
 import com.crashnote.test.core.util.FactoryUtil
+import com.crashnote.test.core.defs.TargetMockSpec
 
 class LocalLogSessionSpec
-    extends MockSpec[LocalLogSession] with FactoryUtil {
+    extends TargetMockSpec[LocalLogSession] with FactoryUtil {
 
     var m_session: ILogSession = _
 

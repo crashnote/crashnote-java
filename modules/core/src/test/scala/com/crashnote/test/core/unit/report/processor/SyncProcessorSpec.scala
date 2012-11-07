@@ -21,10 +21,10 @@ import com.crashnote.core.collect.Collector
 import com.crashnote.core.report.impl.session.SharedLogSession
 import com.crashnote.core.model.log.LogReport
 import com.crashnote.test.core.defs.stubs.ConfigStub
-import com.crashnote.test.core.defs.MockSpec
+import com.crashnote.test.core.defs.TargetMockSpec
 
 class SyncProcessorSpec
-    extends MockSpec[SyncProcessor[ConfigStub]] {
+    extends TargetMockSpec[SyncProcessor[ConfigStub]] {
 
     var m_sender: Sender[C] = _
     var m_collector: Collector[C] = _

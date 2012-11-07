@@ -15,10 +15,10 @@
  */
 package com.crashnote.test.appengine.defs
 
-import com.crashnote.test.base.defs.BaseMockSpec
 import org.specs2.specification.Scope
+import com.crashnote.test.core.defs.BaseMockSpec
 
-abstract class MockSpec[T](implicit t: Manifest[T])
+abstract class TargetMockSpec[T](implicit t: Manifest[T])
     extends BaseMockSpec[T] with AppengineEnv {
 
     setSequential()

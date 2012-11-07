@@ -20,10 +20,10 @@ import javax.servlet.http.HttpServletRequest
 import com.crashnote.core.build.Builder
 import com.crashnote.servlet.collect.ServletRequestCollector
 import com.crashnote.core.model.data._
-import com.crashnote.test.servlet.defs.MockSpec
+import com.crashnote.test.servlet.defs.TargetMockSpec
 
 class RequestCollectorSpec
-    extends MockSpec[ServletRequestCollector] {
+    extends TargetMockSpec[ServletRequestCollector] {
 
     "Request Collector" should {
 

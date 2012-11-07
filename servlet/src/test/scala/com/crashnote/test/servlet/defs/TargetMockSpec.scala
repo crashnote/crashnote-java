@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crashnote.test.logger.defs
+package com.crashnote.test.servlet.defs
 
 import org.specs2.specification.Scope
-import com.crashnote.test.base.defs.BaseMockSpec
 import com.crashnote.core.Lifecycle
+import com.crashnote.test.core.defs.BaseMockSpec
 
-abstract class MockSpec[T](implicit t: Manifest[T])
-    extends BaseMockSpec[T] with LoggerEnv {
+abstract class TargetMockSpec[T](implicit t: Manifest[T])
+    extends BaseMockSpec[T] with ServletEnv {
 
     setSequential()
 
@@ -55,7 +55,7 @@ abstract class MockSpec[T](implicit t: Manifest[T])
         afterStarted()
     }
 
-    def afterStarted() = {}
+    def afterStarted() {}
 
     class Started(fns: (C) => _*) extends Mock(fns: _*) {
 

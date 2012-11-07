@@ -13,46 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crashnote.test.base.defs
+package com.crashnote.test.core.defs
 
-import org.specs2.mock.Mockito
 import java.lang.reflect.{Modifier, Field}
-import java.io.File
 import annotation.tailrec
+import com.crashnote.test.base.defs.MockSpec
+import com.crashnote.test.core.util.FactoryUtil
 
-class BaseMockSpec[T](implicit t: Manifest[T])
-    extends UnitSpec with Mockito {
+abstract class BaseMockSpec[T](implicit t: Manifest[T])
+    extends MockSpec with FactoryUtil {
 
     var target: T = _
 
-    // ==== STUBBING
 
-    def anyFile = any[File]
-
-    def anyClass = any[Class[_]]
-
-    def anyThrowable = any[Throwable]
-
-    protected def doReturn(toBeReturned: Any) =
-        org.mockito.Mockito.doReturn(toBeReturned)
-
-    protected def doThrow(toBeThrown: Throwable) =
-        org.mockito.Mockito.doThrow(toBeThrown)
-
-    protected def doThrow(toBeThrown: Class[_ <: Throwable]) =
-        org.mockito.Mockito.doThrow(toBeThrown)
-
-
-    // ==== VERIFYING
-
-    def expect[S](s: => S) = there was s
-
-    protected def verifyUntouched[S <: AnyRef](mocks: S*) {
-      org.mockito.Mockito.verifyZeroInteractions(mocks: _*)
-    }
-
-
-    // ==== MOCKING
+    // MOCKING ====================================================================================
 
     protected def _mock[F](implicit m: Manifest[F]): F =
         _set(mock(m))
@@ -63,11 +37,12 @@ class BaseMockSpec[T](implicit t: Manifest[T])
     protected def _mock[F](field: Field)(implicit m: Manifest[F]): F =
         _set(field, mock(m))
 
-    protected def reset[T](mocks: T*) =
+    protected def reset[M](mocks: M*) {
         org.mockito.Mockito.reset(mocks: _*)
+    }
 
 
-    // ==== REFLECTION
+    // REFLECTION =================================================================================
 
     protected def _set[F](value: F)(implicit m: Manifest[F]): F = {
         val clazz = t.erasure

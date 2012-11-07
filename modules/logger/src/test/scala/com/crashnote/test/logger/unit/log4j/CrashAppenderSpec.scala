@@ -22,7 +22,7 @@ import org.apache.log4j.Level
 import org.apache.log4j.spi._
 
 class CrashAppenderSpec
-    extends MockSpec[CrashAppender] with AppenderEnv[CrashAppender, LoggingEvent] {
+    extends TargetMockSpec[CrashAppender] with AppenderEnv[CrashAppender, LoggingEvent] {
 
     "instantiate and append and close appender" >> {
         def example(descr: String, factory: () => CrashAppender) =

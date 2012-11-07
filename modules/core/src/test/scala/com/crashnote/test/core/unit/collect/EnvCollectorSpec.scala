@@ -16,15 +16,15 @@
 package com.crashnote.test.core.unit.collect
 
 import scala.collection.JavaConversions._
-import com.crashnote.test.core.defs.MockSpec
 import com.crashnote.core.build.Builder
 import com.crashnote.core.collect.impl._
 import com.crashnote.core.util.SystemUtil
 import com.crashnote.core.model.data.DataObject
 import com.crashnote.test.core.defs.stubs.ConfigStub
+import com.crashnote.test.core.defs.TargetMockSpec
 
 class EnvCollectorSpec
-    extends MockSpec[EnvCollector[ConfigStub]] {
+    extends TargetMockSpec[EnvCollector[ConfigStub]] {
 
     var m_sysUtil: SystemUtil = _
 

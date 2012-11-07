@@ -21,11 +21,11 @@ import com.crashnote.logger.helper.AutoLogConnector
 import com.crashnote.servlet.report.ServletReporter
 import com.crashnote.servlet.CrashnoteFilter
 import http.{HttpServletResponse, HttpServletRequest}
-import com.crashnote.test.servlet.defs.MockSpec
+import com.crashnote.test.servlet.defs.TargetMockSpec
 import com.crashnote.test.servlet.defs.stubs._
 
 class CrashnoteFilterSpec
-    extends MockSpec[CrashnoteFilter] {
+    extends TargetMockSpec[CrashnoteFilter] {
 
     var m_conf: ConfigStub = _
     var m_reporter: ServletReporter[C] = _

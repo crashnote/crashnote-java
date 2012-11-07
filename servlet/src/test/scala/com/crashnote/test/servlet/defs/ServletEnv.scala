@@ -16,8 +16,8 @@
 package com.crashnote.test.servlet.defs
 
 import com.crashnote.core.log.LogLog
-import com.crashnote.test.base.defs.BaseMockSpec
 import stubs.ConfigStub
+import com.crashnote.test.core.defs.BaseMockSpec
 
 trait ServletEnv {
 

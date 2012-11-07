@@ -19,6 +19,7 @@ import com.crashnote.appengine.collect.AppengineCollector
 import com.crashnote.appengine.collect.impl.AppengineEnvCollector
 import com.crashnote.appengine.config.AppengineConfig
 import com.crashnote.test.base.defs._
+import com.crashnote.test.core.defs.BaseMockSpec
 
 class AppengineCollectorSpec
     extends BaseMockSpec[AppengineCollector[AppengineConfig]] {

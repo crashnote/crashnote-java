@@ -17,11 +17,11 @@ package com.crashnote.test.logger.unit.report
 
 import com.crashnote.logger.report.LoggerReporter
 
-import com.crashnote.test.logger.defs.MockSpec
+import com.crashnote.test.logger.defs.TargetMockSpec
 import com.crashnote.test.logger.defs.stubs._
 
 class LoggerReporterSpec
-    extends MockSpec[LoggerReporter[ConfigStub]] {
+    extends TargetMockSpec[LoggerReporter[ConfigStub]] {
 
     "Logger Reporter" should {
 

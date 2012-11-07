@@ -22,7 +22,7 @@ import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.spi._
 
 class CrashAppenderSpec
-    extends MockSpec[CrashAppender] with AppenderEnv[CrashAppender, ILoggingEvent] {
+    extends TargetMockSpec[CrashAppender] with AppenderEnv[CrashAppender, ILoggingEvent] {
 
     "instantiate and append and close appender" >> {
         def example(descr: String, factory: () => CrashAppender) =

@@ -16,15 +16,15 @@
 package com.crashnote.test.core.unit.collect
 
 import com.crashnote.core.collect.impl.ExcpCollector
-import com.crashnote.test.core.defs.MockSpec
 import com.crashnote.core.config.CrashConfig
 import com.crashnote.core.build.Builder
 import com.crashnote.core.model.data._
 import java.lang.StackTraceElement
 import com.crashnote.test.core.defs.stubs.ConfigStub
+import com.crashnote.test.core.defs.TargetMockSpec
 
 class ExcpCollectorSpec
-    extends MockSpec[ExcpCollector[ConfigStub]] {
+    extends TargetMockSpec[ExcpCollector[ConfigStub]] {
 
     "Excp Collector" should {
 

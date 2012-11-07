@@ -16,14 +16,14 @@
 package com.crashnote.test.appengine.unit.send
 
 import com.crashnote.appengine.config.AppengineConfig
-import com.crashnote.test.appengine.defs.MockSpec
+import com.crashnote.test.appengine.defs.TargetMockSpec
 import com.crashnote.appengine.util.AppengineUtil
 import com.crashnote.appengine.send.AppengineSender
 import com.crashnote.core.model.log.LogReport
 import com.google.appengine.api.urlfetch._
 
 class AppengineSenderSpec
-    extends MockSpec[AppengineSender[AppengineConfig]] {
+    extends TargetMockSpec[AppengineSender[AppengineConfig]] {
 
     var m_report: LogReport = _
     var m_request: HTTPRequest = _

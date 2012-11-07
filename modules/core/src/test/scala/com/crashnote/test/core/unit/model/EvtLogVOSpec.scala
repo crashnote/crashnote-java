@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crashnote.test.logger.unit.jul
+package com.crashnote.test.core.unit.model
 
+import com.crashnote.core.model.log.{ILogEvt, LogEvtVO}
 import com.crashnote.core.model.types.LogLevel
-import com.crashnote.jul.impl.JulEvt
-import java.util.logging._
-import com.crashnote.test.core.defs.BaseMockSpec
+import com.crashnote.test.base.defs.MockSpec
 
-class JulEvtSpec
-    extends BaseMockSpec[LogRecord] {
+class EvtLogVOSpec
+    extends MockSpec {
 
-    "JUL Event" should {
+    "Event Log VO" should {
 
         "instantiate" >> {
-            val args = Array(new java.lang.Long(1), "test")
+
             val err = new RuntimeException("oops")
 
-            val m_evt = mock[LogRecord]
-            m_evt.getLevel returns Level.SEVERE
-            m_evt.getThreadID returns 1
-            m_evt.getMessage returns "oops"
-            m_evt.getThrown returns err
+            // mock
+            val m_evt = mock[ILogEvt]
             m_evt.getLoggerName returns "com.example"
-            m_evt.getMillis returns 123456789L
+            m_evt.getLevel returns LogLevel.ERROR
+            m_evt.getThreadName returns "1"
+            m_evt.getThrowable returns err
+            m_evt.getMessage returns "oops"
+            m_evt.getTimeStamp returns 123456789L
 
-            val r = new JulEvt(m_evt, null)
+            // expect
+            val r = new LogEvtVO(m_evt)
             r.getLoggerName === "com.example"
             r.getLevel === LogLevel.ERROR
             r.getThreadName === "1"

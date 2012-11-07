@@ -22,10 +22,10 @@ import com.crashnote.core.report.impl.session._
 import com.crashnote.core.report.impl.processor.impl.{AsyncProcessor, SyncProcessor}
 import com.crashnote.core.report.impl.ThrowableLogEvt
 import com.crashnote.test.core.defs.stubs.ConfigStub
-import com.crashnote.test.core.defs.MockSpec
+import com.crashnote.test.core.defs.TargetMockSpec
 
 class ReporterSpec
-    extends MockSpec[Reporter[ConfigStub]] {
+    extends TargetMockSpec[Reporter[ConfigStub]] {
 
     var m_session: ILogSession = _
     var m_processor: Processor[C] = _

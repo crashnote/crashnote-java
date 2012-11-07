@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crashnote.test.appengine.defs
+package com.crashnote.test.core.unit.model
 
-import com.crashnote.core.log.LogLog
-import com.crashnote.appengine.config.AppengineConfig
-import com.crashnote.test.core.defs.BaseMockSpec
+import com.crashnote.test.base.defs._
 
-trait AppengineEnv {
+class IEvtLogSpec
+    extends UnitSpec {
 
-    self: BaseMockSpec[_] =>
+    "Event Log VO" should {
 
-    type C = AppengineConfig
 
-    def mockConfig(): C = {
-        val m_conf = mock[C]
-        m_conf.getLogger(anyClass) returns new LogLog("")
-        m_conf.getLogger(anyString) returns new LogLog("")
-        m_conf
     }
 }

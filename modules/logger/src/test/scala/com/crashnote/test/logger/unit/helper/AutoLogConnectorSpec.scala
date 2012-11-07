@@ -15,13 +15,13 @@
  */
 //package com.crashnote.test.logger.unit.helper
 //
-//import com.crashnote.test.logger.defs.MockSpec
+//import com.crashnote.test.logger.defs.TargetMockSpec
 //import com.crashnote.logger.report.LoggerReporter
 //import com.crashnote.logger.helper._
 //import com.crashnote.ICrashAppender
 //
 //class AutoLogConnectorSpec
-//    extends MockSpec[AutoLogConnector] {
+//    extends TargetMockSpec[AutoLogConnector] {
 //
 //    var m_conf: C = _
 //    var m_reporter: LoggerReporter[C] = _

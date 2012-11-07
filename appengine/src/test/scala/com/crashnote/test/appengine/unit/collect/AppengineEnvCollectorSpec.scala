@@ -17,14 +17,14 @@ package com.crashnote.test.appengine.unit.collect
 
 import com.crashnote.appengine.util.AppengineUtil
 import com.crashnote.appengine.collect.impl.AppengineEnvCollector
-import com.crashnote.test.appengine.defs.MockSpec
+import com.crashnote.test.appengine.defs.TargetMockSpec
 import com.crashnote.appengine.config.AppengineConfig
 import com.crashnote.core.model.data.DataObject
 import com.crashnote.core.build.Builder
 import java.util.Date
 
 class AppengineEnvCollectorSpec
-    extends MockSpec[AppengineEnvCollector[AppengineConfig]] {
+    extends TargetMockSpec[AppengineEnvCollector[AppengineConfig]] {
 
     var startTime: Long = new Date().getTime
     var m_appengineUtil: AppengineUtil = _

@@ -16,14 +16,14 @@
 package com.crashnote.test.core.unit.collect
 
 import com.crashnote.core.collect.Collector
-import com.crashnote.test.core.defs.MockSpec
 import com.crashnote.core.collect.impl._
 import com.crashnote.core.report.impl.session.LocalLogSession
 import com.crashnote.core.build.Builder
 import com.crashnote.test.core.defs.stubs.ConfigStub
+import com.crashnote.test.core.defs.TargetMockSpec
 
 class CollectorSpec
-    extends MockSpec[Collector[ConfigStub]] {
+    extends TargetMockSpec[Collector[ConfigStub]] {
 
     var m_builder: Builder = _
     var m_envColl: EnvCollector[C] = _

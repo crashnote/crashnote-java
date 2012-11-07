@@ -19,10 +19,10 @@ import javax.servlet.FilterConfig
 
 import com.crashnote.test.servlet.defs.stubs._
 import com.crashnote.servlet.config.ServletConfigFactory
-import com.crashnote.test.servlet.defs.MockSpec
+import com.crashnote.test.servlet.defs.TargetMockSpec
 
 class ServletConfigFactorySpec
-    extends MockSpec[ServletConfigFactory[ConfigStub]] {
+    extends TargetMockSpec[ServletConfigFactory[ConfigStub]] {
 
     setSequential()
 

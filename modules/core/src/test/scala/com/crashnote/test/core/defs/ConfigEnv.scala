@@ -16,8 +16,8 @@
 package com.crashnote.test.core.defs
 
 import com.crashnote.core.log.LogLog
-import com.crashnote.test.base.defs.BaseMockSpec
 import com.crashnote.test.core.defs.stubs.ConfigStub
+import com.crashnote.test.core.defs.BaseMockSpec
 
 trait ConfigEnv {
 
@@ -31,4 +31,16 @@ trait ConfigEnv {
         m_conf.getLogger(anyString) returns new LogLog("")
         m_conf
     }
+
+    /*
+    def mockConfigSetup(m_conf: C): C = {
+        m_conf.getLogger(anyClass) returns new LogLog("")
+        m_conf.getLogger(anyString) returns new LogLog("")
+        m_conf
+    }
+
+    def mockConfig(): C = {
+        mock[CrashConfig]
+    }
+    */
 }

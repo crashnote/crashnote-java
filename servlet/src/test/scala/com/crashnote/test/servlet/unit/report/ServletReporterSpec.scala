@@ -21,14 +21,14 @@ import com.crashnote.core.report.impl.processor.Processor
 import com.crashnote.core.model.log.ILogSession
 import com.crashnote.core.report.impl.ThrowableLogEvt
 
-import com.crashnote.test.servlet.defs.MockSpec
+import com.crashnote.test.servlet.defs.TargetMockSpec
 import com.crashnote.test.servlet.defs.stubs.ConfigStub
 
 import com.crashnote.servlet.report.ServletReporter
 import com.crashnote.servlet.collect._
 
 class ServletReporterSpec
-    extends MockSpec[ServletReporter[ConfigStub]] {
+    extends TargetMockSpec[ServletReporter[ConfigStub]] {
 
     var m_session: ILogSession = _
     var m_processor: Processor[C] = _

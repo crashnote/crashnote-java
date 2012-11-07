@@ -20,10 +20,10 @@ import com.crashnote.core.report.impl.processor.impl.AsyncProcessor
 import com.crashnote.core.report.impl.processor.Processor
 import com.crashnote.core.report.impl.session.LocalLogSession
 import com.crashnote.test.core.defs.stubs.ConfigStub
-import com.crashnote.test.core.defs.MockSpec
+import com.crashnote.test.core.defs.TargetMockSpec
 
 class AsyncProcessorSpec
-    extends MockSpec[AsyncProcessor[ConfigStub]] {
+    extends TargetMockSpec[AsyncProcessor[ConfigStub]] {
 
     var m_processor: Processor[C] = _
     var m_scheduler: ScheduledExecutorService = _

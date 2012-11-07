@@ -17,12 +17,12 @@ package com.crashnote.test.servlet.unit.collect
 
 import javax.servlet.http._
 import com.crashnote.core.build.Builder
-import com.crashnote.test.servlet.defs.MockSpec
+import com.crashnote.test.servlet.defs.TargetMockSpec
 import com.crashnote.core.model.data.DataObject
 import com.crashnote.servlet.collect._
 
 class SessionCollectorSpec
-    extends MockSpec[ServletSessionCollector] {
+    extends TargetMockSpec[ServletSessionCollector] {
 
     "Session Collector" should {
 
