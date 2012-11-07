@@ -16,13 +16,13 @@ The Java notifier is designed to work in all **Java Servlet applications** (even
 A detailed guide can be found in the [Official Documentation](https://www.crashnote.com/docs).
 
 
-## General Features
+## Features
 
-- pure Java
-- runs asynchronously
-- single JAR, no dependencies
-- uses JSON format and GZIP compression
-- supports all major logging APIs: JUL, Log4j and Logback
+- **fast**: pure Java
+- **scalable**: runs asynchronously
+- **simple**: single JAR, no dependencies
+- **modern**: uses JSON format and GZIP compression
+- **flexible**: supports all major logging APIs: JUL, Log4j and Logback
 
 
 ## License
