@@ -38,7 +38,7 @@ import java.util.List;
  * It assumes that each 'set' method receives a String and converts it to the actual data type by
  * manual parsing/converting, thus being independent of the way the concrete logger handles it.
  */
-public class CrashConfig<C extends CrashConfig<C>> {
+public class CrashConfig<C extends CrashConfig> {
 
     // CONST ======================================================================================
 

@@ -44,7 +44,7 @@ package com.crashnote.core.util;
 
 import java.io.Serializable;
 
-public final class ChksumUtil implements Serializable {
+public final class ChksumUtil {
 
     // INTERFACE ==================================================================================
 

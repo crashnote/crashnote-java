@@ -25,6 +25,8 @@ import com.crashnote.external.json.JSONArray;
 public class JSONDataArray
         extends JSONArray implements DataArray {
 
+    private static final long serialVersionUID = 1L;
+
     // SETUP ======================================================================================
 
     public JSONDataArray() {

@@ -21,6 +21,8 @@ package com.crashnote.core.model.excp;
 public class CrashnoteException
         extends RuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     public CrashnoteException() {
         super();
     }

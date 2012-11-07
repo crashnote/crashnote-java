@@ -23,7 +23,7 @@ import com.crashnote.external.config.ConfigValue;
 
 final class SimpleConfigObject extends AbstractConfigObject implements Serializable {
 
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 1L;
 
     // this map should never be modified - assume immutable
     final private Map<String, AbstractConfigValue> value;

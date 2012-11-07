@@ -20,7 +20,7 @@ import com.crashnote.external.config.ConfigValueType;
 
 final class SimpleConfigList extends AbstractConfigValue implements ConfigList, Serializable {
 
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 1L;
 
     final private List<AbstractConfigValue> value;
     final private boolean resolved;

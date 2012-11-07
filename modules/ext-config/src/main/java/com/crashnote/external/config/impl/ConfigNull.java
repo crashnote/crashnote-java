@@ -20,7 +20,7 @@ import com.crashnote.external.config.ConfigValueType;
  */
 final class ConfigNull extends AbstractConfigValue implements Serializable {
 
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 1L;
 
     ConfigNull(final ConfigOrigin origin) {
         super(origin);

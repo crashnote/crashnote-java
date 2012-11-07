@@ -37,6 +37,7 @@ public class Collector<C extends CrashConfig>
     // VARS =======================================================================================
 
     private boolean started;
+
     private final EnvCollector<C> env_c;
     private final LogCollector<C> log_c;
 

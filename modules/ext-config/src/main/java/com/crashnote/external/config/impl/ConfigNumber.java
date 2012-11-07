@@ -11,7 +11,7 @@ import com.crashnote.external.config.ConfigOrigin;
 
 abstract class ConfigNumber extends AbstractConfigValue implements Serializable {
 
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 1L;
 
     // This is so when we concatenate a number into a string (say it appears in
     // a sentence) we always have it exactly as the person typed it into the

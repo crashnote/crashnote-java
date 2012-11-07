@@ -30,6 +30,8 @@ import java.io.Writer;
 public class JSONDataObject
     extends JSONObject implements DataObject {
 
+    private static final long serialVersionUID = 1L;
+
     // SETUP ======================================================================================
 
     public JSONDataObject() {
