@@ -20,6 +20,8 @@ A detailed guide can be found in the [Official Documentation](https://www.crashn
 
 - **fast**: pure Java
 - **scalable**: runs asynchronously
+- **stable:** test coverage of >90%
+- **secure:** HTTPS for data transfer
 - **simple**: single JAR, no dependencies
 - **modern**: uses JSON format and GZIP compression
 - **flexible**: supports all major logging APIs: JUL, Log4j and Logback
