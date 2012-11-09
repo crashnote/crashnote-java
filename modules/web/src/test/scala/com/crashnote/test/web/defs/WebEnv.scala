@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crashnote.test.web.collect
+package com.crashnote.test.web.defs
 
-import com.crashnote.core.collect.Collector
-import com.crashnote.test.core.defs.TargetMockSpec
+import com.crashnote.core.log.LogLogFactory
+import com.crashnote.core.config.CrashConfig
+import com.crashnote.test.base.defs.BaseMockSpec
+import com.crashnote.web.config.WebConfig
 
-class SessionCollectorSpec
-    extends TargetMockSpec[Collector] {
+trait WebEnv {
 
-    "Session Collector" should {
+    self: BaseMockSpec[_] =>
 
-        "" >> {
-            1 === 1 // TODO
-        }
-    }
+    type C = WebConfig
 
-    // SETUP ======================================================================================
-
-    def configure(config: C) = {
-        null
+    def mockConfig(): C = {
+        val m_conf = mock[WebConfig]
+        val lfact = new LogLogFactory(m_conf)
+        m_conf.getLogger(anyClass) returns lfact.getLogger("")
+        m_conf.getLogger(anyString) returns lfact.getLogger("")
+        m_conf
     }
 }

@@ -16,7 +16,7 @@
 package com.crashnote.test.appengine.defs
 
 import org.specs2.specification.Scope
-import com.crashnote.test.core.defs.BaseMockSpec
+import com.crashnote.test.base.defs.BaseMockSpec
 
 abstract class TargetMockSpec[T](implicit t: Manifest[T])
     extends BaseMockSpec[T] with AppengineEnv {

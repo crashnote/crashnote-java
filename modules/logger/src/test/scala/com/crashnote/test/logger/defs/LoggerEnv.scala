@@ -16,8 +16,8 @@
 package com.crashnote.test.logger.defs
 
 import com.crashnote.core.log.{LogLogFactory, LogLog}
-import com.crashnote.test.core.defs.BaseMockSpec
 import com.crashnote.logger.config.LoggerConfig
+import com.crashnote.test.base.defs.BaseMockSpec
 
 trait LoggerEnv {
 

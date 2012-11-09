@@ -35,8 +35,13 @@ class ServletConfigFactorySpec
             }
 
             "and override by system" >> new Mock() {
+                // prepare
+                System.setProperty("crashnote.request.max-parameter-size", "69")
+
+                // execute
                 val c = target.get()
 
+                // verify
                 c.getMaxRequestParameterSize === 69
             }
         }
@@ -47,15 +52,13 @@ class ServletConfigFactorySpec
     var m_filterConf: FilterConfig = _
 
     val filterProps =
-        toProps(Map(
+        toProps(List(
             "request.skipHeaders" -> "false",
             "request.skip-session" -> "true",
             "request.ignore-localhost" -> "false"
         ))
 
     def configure(config: C) = {
-        System.setProperty("crashnote.request.max-parameter-size", "69")
-
         m_filterConf = mock[FilterConfig]
         m_filterConf.getInitParameterNames.asInstanceOf[javaEnum[Object]] returns filterProps.keys()
         m_filterConf.getInitParameter(anyString) answers (name => filterProps.getProperty(name.toString))

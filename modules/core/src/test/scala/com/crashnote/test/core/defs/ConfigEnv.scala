@@ -17,6 +17,7 @@ package com.crashnote.test.core.defs
 
 import com.crashnote.core.log.{LogLogFactory, LogLog}
 import com.crashnote.core.config.CrashConfig
+import com.crashnote.test.base.defs.BaseMockSpec
 
 trait ConfigEnv {
 
@@ -24,8 +25,10 @@ trait ConfigEnv {
 
     type C = CrashConfig
 
+    var m_conf: CrashConfig = _
+
     def mockConfig(): C = {
-        val m_conf = mock[CrashConfig]
+        m_conf = mock[CrashConfig]
         val lfact = new LogLogFactory(m_conf)
         m_conf.getLogger(anyClass) returns lfact.getLogger("")
         m_conf.getLogger(anyString) returns lfact.getLogger("")

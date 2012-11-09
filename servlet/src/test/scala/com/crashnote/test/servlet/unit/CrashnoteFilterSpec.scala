@@ -26,13 +26,6 @@ import com.crashnote.test.servlet.defs.TargetMockSpec
 class CrashnoteFilterSpec
     extends TargetMockSpec[CrashnoteFilter] {
 
-    var m_reporter: ServletReporter = _
-    var m_connector: AutoLogConnector = _
-
-    var m_request: HttpServletRequest = _
-    var m_response: HttpServletResponse = _
-    var m_chain: FilterChain = _
-
     "Filter" should {
 
         "init" >> {
@@ -104,6 +97,13 @@ class CrashnoteFilterSpec
     }
 
     // SETUP ======================================================================================
+
+    var m_reporter: ServletReporter = _
+    var m_connector: AutoLogConnector = _
+
+    var m_request: HttpServletRequest = _
+    var m_response: HttpServletResponse = _
+    var m_chain: FilterChain = _
 
     var m_fconf: FilterConfig = _
     

@@ -25,7 +25,7 @@ trait PrintCapture {
     private var sysErr: PrintStream = _
     private var byteErr: OutputStream = _
 
-    def capture(fn: => Unit): (String, String) = {
+    def capture(fn: => Any): (String, String) = {
 
         // capture streams
         sysOut = System.out

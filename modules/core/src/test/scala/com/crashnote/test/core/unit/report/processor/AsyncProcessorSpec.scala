@@ -24,9 +24,6 @@ import com.crashnote.test.core.defs.TargetMockSpec
 class AsyncProcessorSpec
     extends TargetMockSpec[AsyncProcessor] {
 
-    var m_processor: Processor = _
-    var m_scheduler: ScheduledExecutorService = _
-
     "Async Processor" should {
 
         "have lifecycle" >> {
@@ -59,6 +56,11 @@ class AsyncProcessorSpec
             there was one(m_scheduler).submit(any[Callable[Void]])
         }
     }
+
+    // SETUP ======================================================================================
+
+    var m_processor: Processor = _
+    var m_scheduler: ScheduledExecutorService = _
 
     def configure(config: C) =
         new AsyncProcessor(config, m_processor)

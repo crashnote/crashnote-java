@@ -23,8 +23,6 @@ import com.crashnote.test.core.defs.TargetMockSpec
 class LocalLogSessionSpec
     extends TargetMockSpec[LocalLogSession] with FactoryUtil {
 
-    var m_session: ILogSession = _
-
     "Local Log Session" should {
 
         "copy" >> {
@@ -84,6 +82,10 @@ class LocalLogSessionSpec
             }
         }
     }
+
+    // SETUP ======================================================================================
+
+    var m_session: ILogSession = _
 
     def configure(config: C) =
         new LocalLogSession() {

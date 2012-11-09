@@ -24,7 +24,7 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 public class ServletConfigFactory<C extends ServletConfig>
-        extends LoggerConfigFactory<C> {
+    extends LoggerConfigFactory<C> {
 
     // VARS =======================================================================================
 
@@ -50,20 +50,17 @@ public class ServletConfigFactory<C extends ServletConfig>
         return (C) new ServletConfig(readConf());
     }
 
+    /**
+     * add additional configuration to initialization chain
+     */
     @Override
-    protected Config readConf() {
-        return super.readConf()
-                    .withFallback(loader.fromFile("crashnote.servlet"));
-    }
+    protected Config readCustomFileConf() {
 
-    @Override
-    protected Config getSysDefault() {
-
-        // extract properties from servlet ..
+        // extract properties of servlet configuration (from web.xml)
         final Properties props = new Properties();
         if (filterConfig != null) {
             final Enumeration params = filterConfig.getInitParameterNames();
-            if(params != null) {
+            if (params != null) {
                 while (params.hasMoreElements()) {
                     final String name = (String) params.nextElement();
                     final String value = filterConfig.getInitParameter(name);
@@ -72,8 +69,15 @@ public class ServletConfigFactory<C extends ServletConfig>
             }
         }
 
-        // .. and add them to the system defaults
-        return super.getSysDefault()
-                .withFallback(loader.fromProps(props, "servlet filter"));
+        return
+            loader.fromProps(props, "servlet filter")       // #1 filter props
+                .withFallback(super.readCustomFileConf());  // #2 other custom props
+    }
+
+    @Override
+    protected Config readDefaultFileConf() {
+        return
+            loader.fromFile("crashnote.servlet")                // #1 servlet default props
+                .withFallback(super.readDefaultFileConf());     // #2 other default props
     }
 }

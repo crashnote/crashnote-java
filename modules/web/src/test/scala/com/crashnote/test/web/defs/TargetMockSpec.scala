@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crashnote.test.logger.defs
+package com.crashnote.test.web.defs
 
 import org.specs2.specification.Scope
 import com.crashnote.core.Lifecycle
+import com.crashnote.core.model.log.LogReport
+import com.crashnote.core.model.data.DataObject
 import com.crashnote.test.base.defs.BaseMockSpec
+import com.crashnote.test.base.util.FactoryUtil
 
-abstract class TargetMockSpec[T](implicit t: Manifest[T])
-    extends BaseMockSpec[T] with LoggerEnv {
+abstract class TargetMockSpec[T : Manifest]
+    extends BaseMockSpec[T] with WebEnv with FactoryUtil {
 
     // ==== CONTEXTS
 
@@ -53,15 +56,26 @@ abstract class TargetMockSpec[T](implicit t: Manifest[T])
         afterStarted()
     }
 
-    def afterStarted() = {}
+    def afterStarted() {}
 
     class Started(fns: (C) => _*) extends Mock(fns: _*) {
 
         start()
     }
 
+    // ==== MATCHERS
+
+    def anyReport = any[LogReport]
+    def anyDataObj = any[DataObject]
+
+
     // ==== CONFIGS
 
     lazy val DISABLED = (config: C) => config.isEnabled returns false
     lazy val ENABLED = (config: C) => config.isEnabled returns true
+
+    lazy val SYNC = (config: C) => config.isSync returns true
+    lazy val ASYNC = (config: C) => config.isSync returns false
+
+    lazy val DEBUG = (config: C) => config.isDebug returns true
 }

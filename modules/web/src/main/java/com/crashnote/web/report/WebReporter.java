@@ -75,11 +75,15 @@ public abstract class WebReporter<R>
      * @param request the HTTP request
      */
     public void afterRequest(final R request) {
-        if (!isSessionEmpty()) { // log session empty? just skip this then..
+
+        if (!isSessionEmpty()) {
+
             if (!ignoreRequest(request)) {
+
                 // enrich log context with detailed request information
                 put("request", reqCollector.collect(request));
                 put("session", sesCollector.collect(request));
+
                 endSession();
             }
         }

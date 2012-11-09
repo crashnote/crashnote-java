@@ -47,8 +47,8 @@ public class EnvCollector
         super(config);
 
         this.profile = config.getAppProfile();
-        this.build = config.getBuild();
-        this.version = config.getVersion();
+        this.build = config.getAppBuild();
+        this.version = config.getAppVersion();
         this.startTime = config.getStartTime();
         this.clientInfo = config.getClientInfo();
         this.envFilters = config.getEnvironmentFilters();

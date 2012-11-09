@@ -17,7 +17,7 @@ package com.crashnote.test.logger.unit.jul
 
 import org.apache.log4j._
 import spi._
-import com.crashnote.test.core.defs.BaseMockSpec
+import com.crashnote.test.base.defs.BaseMockSpec
 
 class JulConnectorSpec
     extends BaseMockSpec[LoggingEvent] {

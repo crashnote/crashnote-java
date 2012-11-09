@@ -22,7 +22,6 @@ import com.crashnote.web.collect.RequestCollector;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.Arrays;
 
 /**
  * Collector to transform a HTTP request into a structured data format.
@@ -71,7 +70,14 @@ public class ServletRequestCollector
             final Enumeration names = req.getParameterNames();
             while (names.hasMoreElements()) {
                 final String name = names.nextElement().toString();
-                addParam(data, name, req.getParameter(name));
+                final String[] values = req.getParameterValues(name);
+                if (values != null) {
+                    if (values.length == 1) {
+                        addParam(data, name, values[0]);
+                    } else {
+                        addParam(data, name, values);
+                    }
+                }
             }
         }
         return data;

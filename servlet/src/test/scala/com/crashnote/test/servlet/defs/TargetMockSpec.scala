@@ -17,7 +17,7 @@ package com.crashnote.test.servlet.defs
 
 import org.specs2.specification.Scope
 import com.crashnote.core.Lifecycle
-import com.crashnote.test.core.defs.BaseMockSpec
+import com.crashnote.test.base.defs.BaseMockSpec
 
 abstract class TargetMockSpec[T](implicit t: Manifest[T])
     extends BaseMockSpec[T] with ServletEnv {

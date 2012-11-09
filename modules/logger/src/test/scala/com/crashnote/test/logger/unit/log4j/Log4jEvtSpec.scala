@@ -20,7 +20,7 @@ import com.crashnote.log4j.impl.Log4jEvt
 import com.crashnote.core.model.types.LogLevel
 import org.apache.log4j._
 import spi._
-import com.crashnote.test.core.defs.BaseMockSpec
+import com.crashnote.test.base.defs.BaseMockSpec
 
 class Log4jEvtSpec
     extends BaseMockSpec[LoggingEvent] {

@@ -46,9 +46,9 @@ public class ServletReporter
         if (ignoreLocalhost && isLocalRequest(req.getRemoteAddr())) {
             getLogger().debug("error for '{} {}' is ignored (local requests are disabled in config)",
                     req.getMethod(), req.getRequestURL().toString());
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
 }

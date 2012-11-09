@@ -25,15 +25,15 @@ trait FactoryUtil {
     def toEnum[T](seq: Seq[T]): java.util.Enumeration[T] =
         seq.iterator
 
-    def toProps(map: Map[String, String], fn: ((String, String)) => (String, String)): Properties = {
+    def toProps(l: List[(String, String)], fn: ((String, String)) => (String, String)): Properties = {
         val p = new Properties()
-        map.map(fn(_)).foreach(kv => p.setProperty(kv._1, kv._2))
+        l.map(fn(_)).foreach(kv => p.setProperty(kv._1, kv._2))
         p
     }
 
-    def toProps(map: Map[String, String]): Properties =
-        toProps(map, tp => tp)
+    def toProps(l: List[(String, String)]): Properties =
+        toProps(l, tp => tp)
 
-    def toConfProps(map: Map[String, String]): Properties =
-        toProps(map, tp => ("crashnote." + tp._1, tp._2))
+    def toConfProps(l: List[(String, String)]): Properties =
+        toProps(l, tp => ("crashnote." + tp._1, tp._2))
 }

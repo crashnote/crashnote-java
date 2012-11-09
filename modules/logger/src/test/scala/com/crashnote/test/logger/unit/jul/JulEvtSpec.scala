@@ -18,7 +18,7 @@ package com.crashnote.test.logger.unit.jul
 import com.crashnote.core.model.types.LogLevel
 import com.crashnote.jul.impl.JulEvt
 import java.util.logging._
-import com.crashnote.test.core.defs.BaseMockSpec
+import com.crashnote.test.base.defs.BaseMockSpec
 
 class JulEvtSpec
     extends BaseMockSpec[LogRecord] {

@@ -16,10 +16,9 @@
 package com.crashnote.test.appengine.unit.collect
 
 import com.crashnote.appengine.collect.AppengineCollector
-import com.crashnote.appengine.collect.impl.AppengineEnvCollector
+import com.crashnote.appengine.collect.impl.{AppengineLogCollector, AppengineEnvCollector}
 import com.crashnote.appengine.config.AppengineConfig
 import com.crashnote.test.base.defs._
-import com.crashnote.test.core.defs.BaseMockSpec
 
 class AppengineCollectorSpec
     extends BaseMockSpec[AppengineCollector] {
@@ -37,7 +36,7 @@ class AppengineCollectorSpec
         "override default log collector" >> {
             val r = new AppengineCollector(m_conf)
 
-            r.getLogCollector must haveClass[AppengineLogCollectorSpec]
+            r.getLogCollector must haveClass[AppengineLogCollector]
         }
     }
 

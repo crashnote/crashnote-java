@@ -26,9 +26,6 @@ import com.crashnote.core.config.CrashConfig
 class SyncProcessorSpec
     extends TargetMockSpec[SyncProcessor] {
 
-    var m_sender: Sender = _
-    var m_collector: Collector = _
-
     "Sync Processor" should {
 
         "have lifecycle" >> {
@@ -56,6 +53,11 @@ class SyncProcessorSpec
             }
         }
     }
+
+    // SETUP ======================================================================================
+
+    var m_sender: Sender = _
+    var m_collector: Collector = _
 
     def configure(config: C) =
         new SyncProcessor(config)

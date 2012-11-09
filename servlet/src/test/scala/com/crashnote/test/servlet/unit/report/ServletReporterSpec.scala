@@ -27,11 +27,6 @@ import com.crashnote.servlet.collect._
 class ServletReporterSpec
     extends TargetMockSpec[ServletReporter] {
 
-    var m_session: ILogSession = _
-    var m_processor: Processor = _
-    var m_reqColl: ServletRequestCollector = _
-    var m_sesColl: ServletSessionCollector = _
-
     "Reporter" should {
 
         "start session before request" >> new Started() {
@@ -65,8 +60,16 @@ class ServletReporterSpec
         }
     }
 
+    // SETUP ======================================================================================
+
+    var m_session: ILogSession = _
+    var m_processor: Processor = _
+    var m_reqColl: ServletRequestCollector = _
+    var m_sesColl: ServletSessionCollector = _
+
     def configure(config: C) = {
         config.isEnabled returns true
+        config.getIgnoreLocalRequests returns false
         new ServletReporter(config)
     }
 

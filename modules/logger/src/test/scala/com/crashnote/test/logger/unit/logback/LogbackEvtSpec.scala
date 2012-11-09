@@ -20,7 +20,7 @@ import com.crashnote.core.model.types.LogLevel
 import com.crashnote.logback.impl.LogbackEvt
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.spi._
-import com.crashnote.test.core.defs.BaseMockSpec
+import com.crashnote.test.base.defs.BaseMockSpec
 
 class LogbackEvtSpec
     extends BaseMockSpec[ILoggingEvent] {

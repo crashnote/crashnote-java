@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,33 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crashnote.test.servlet.unit.config
+package com.crashnote.test.logger.unit.config
 
-import org.specs2.specification.BeforeExample
 import com.crashnote.test.base.defs.MockSpec
-import com.crashnote.servlet.report.ServletReporter
-import com.crashnote.servlet.config.{ServletConfigFactory, ServletConfig}
-import javax.servlet.FilterConfig
+import org.specs2.specification.BeforeExample
+import com.crashnote.logger.config.{LoggerConfig, LoggerConfigFactory}
+import com.crashnote.logger.report.LoggerReporter
+import com.crashnote.logger.helper.AutoLogConnector
 
-class ServletConfigSpec
+class LoggerConfigSpec
     extends MockSpec with BeforeExample {
 
-    "Servlet Config" should {
-
+    "Logger Config" should {
         "act as factory" >> {
-
-            "for servlet reporter" >> {
-                c.getReporter must haveClass[ServletReporter]
+            "for reporter" >> {
+                c.getReporter must haveClass[LoggerReporter]
+            }
+            "for log connector" >> {
+                c.getLogConnector(c.getReporter) must haveClass[AutoLogConnector]
             }
         }
     }
 
     // SETUP =====================================================================================
 
-    var c: ServletConfig = _
+    var c: LoggerConfig = _
 
     def before {
-        val fc = mock[FilterConfig]
-        c = (new ServletConfigFactory[ServletConfig](fc)).get()
+        c = (new LoggerConfigFactory[LoggerConfig]).get
     }
 }

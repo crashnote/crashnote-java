@@ -27,14 +27,14 @@ class ConfigSpec
 
         "return" >> {
             "POST URL" >> {
-                val bm = Map("key" -> "42", "network.host" -> "mycompany.com")
+                val bm = List("key" -> "42", "network.host" -> "mycompany.com")
 
                 "with SSL" >> {
-                    c = getConfig(bm ++ Map("network.port-ssl" -> "666", "network.ssl" -> "true"))
+                    c = getConfig(bm ::: List("network.port-ssl" -> "666", "network.ssl" -> "true"))
                     c.getPostUrl === "https://mycompany.com:666/api/errors?key=42"
                 }
                 "without SSL" >> {
-                    c = getConfig(bm ++ Map("network.port" -> "8080", "network.ssl" -> "false"))
+                    c = getConfig(bm ::: List("network.port" -> "8080", "network.ssl" -> "false"))
                     c.getPostUrl === "http://mycompany.com:8080/api/errors?key=42"
                 }
             }
@@ -83,7 +83,7 @@ class ConfigSpec
         c = getConfig()
     }
 
-    def getConfig(m: Map[String, String] = Map()) = {
+    def getConfig(m: List[(String, String)] = List()) = {
         val cf = new ConfigLoader
         val _cf = spy(cf)
         _cf.fromSystemProps() returns cf.fromProps(toConfProps(m), "spec")

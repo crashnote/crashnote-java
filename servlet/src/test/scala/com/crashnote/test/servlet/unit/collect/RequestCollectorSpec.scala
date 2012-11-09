@@ -16,6 +16,7 @@
 package com.crashnote.test.servlet.unit.collect
 
 import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import javax.servlet.http.HttpServletRequest
 import com.crashnote.core.build.Builder
 import com.crashnote.servlet.collect.ServletRequestCollector
@@ -30,7 +31,10 @@ class RequestCollectorSpec
         "collect" >> {
 
             "by default" >> new Mock() {
+                // == execute
                 val res = target.collect(mockReq())
+
+                // == verify
                 res.get("method") === "PUT"
                 res.get("url") === "http://test.com"
                 res.get("ip_hash") === 6279231751978338320L
@@ -39,7 +43,7 @@ class RequestCollectorSpec
                 params.size() === 3
                 params.get("userName") === "stephen"
                 params.get("userPassword") === "#"
-                params.get("userBio") === "I was born"
+                params.get("userBio").asInstanceOf[java.util.List[String]].asScala must contain("I was born", "1986").only
 
                 val headers = res.get("headers").asInstanceOf[DataObject]
                 headers.size() === 2
@@ -51,15 +55,19 @@ class RequestCollectorSpec
 
             "IP address" >> new Mock(WITH_IP) {
                 val res = target.collect(mockReq())
+
                 res.get("ip") === "127.0.0.1"
             }
 
             "no header data" >> new Mock(WITHOUT_HEADER) {
                 val res = target.collect(mockReq())
+
                 res.get("headers") === null
             }
         }
     }
+
+    // SETUP ======================================================================================
 
     override def mockConfig(): C = {
         val config = super.mockConfig()
@@ -86,9 +94,9 @@ class RequestCollectorSpec
         res.getHeaders("User-Agent").asInstanceOf[javaEnum[String]] returns toEnum(List("Googlebot"))
 
         res.getParameterNames.asInstanceOf[javaEnum[String]] returns toEnum(List("userName", "userPassword", "userBio"))
-        res.getParameter("userName") returns "stephen"
-        res.getParameter("userPassword") returns "secret"
-        res.getParameter("userBio") returns "I was born in Berlin, Germany and grew up..."
+        res.getParameterValues("userName") returns Array("stephen")
+        res.getParameterValues("userPassword") returns Array("secret")
+        res.getParameterValues("userBio") returns Array("I was born in Berlin, Germany", "1986")
 
         res
     }

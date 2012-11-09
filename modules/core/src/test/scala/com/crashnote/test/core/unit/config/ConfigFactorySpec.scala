@@ -17,41 +17,93 @@ package com.crashnote.test.core.unit.config
 
 import com.crashnote.core.config.{ConfigLoader, CrashConfigFactory, CrashConfig}
 import com.crashnote.test.core.defs.TargetMockSpec
-import com.crashnote.test.base.defs.MockSpec
 
 class ConfigFactorySpec
-    extends MockSpec {
+    extends TargetMockSpec[CrashConfigFactory[CrashConfig]] {
 
     "Config Factory" should {
 
         "create configuration instance" >> {
 
-            val m_loader = spy(new ConfigLoader)
-            val factory = new CrashConfigFactory[CrashConfig](m_loader)
+            "with correct override order" >> {
+                "#1 system props" >> new Mock {
+                    val c = target.get()
+                    c.getKey === "11"
+                }
+                "#2 env props" >> new Mock {
+                    val c = target.get()
+                    c.getAppBuild === "22"
+                }
+                "#3 user props" >> new Mock {
+                    val c = target.get()
+                    c.getAppProfile === "33"
+                }
+                "#4 about props" >> new Mock {
+                    val c = target.get()
+                    c.getAppVersion === "44"
+                }
+                "#5 default props" >> new Mock {
+                    val c = target.get()
+                    c.getConnectionTimeout === 55
+                }
+            }
 
-            // enable debug mode
-            System.setProperty("crashnote.debug", "true")
+            "use cached version for further calls" >> new Mock {
+                // #1
+                target.get()
 
-            // == first call
-            var c: CrashConfig = null
-            var (out, _) = capture { c = factory.get() }
+                reset(m_loader)
 
-            c.isDebug === true
-            out must contain(""""crashnote""")
+                // #2
+                target.get()
 
-            there was one(m_loader).fromSystemProps() then
-                one(m_loader).fromEnvProps() then
-                one(m_loader).fromFile("crashnote.about") then
-                one(m_loader).fromFile("crashnote") then
-                atLeastOne(m_loader).fromFile("crashnote.default")
+                verifyUntouched(m_loader)
+            }
 
-            println(out)
+            "print config in debug mode" >> new Mock(DEBUG) {
+                // execute
+                var (out, _) = capture { target.get() }
 
-            // == second call (should be cached)
-            out = capture { c = factory.get() }._1
-
-            out must beEmpty
-            noMoreCallsTo(m_loader)
+                // verify
+                println(out)
+                out must contain( """"crashnote""")
+            }
         }
     }
+
+    // SETUP =====================================================================================
+
+    var m_loader: ConfigLoader = _
+
+    override def mock() {
+        m_loader.fromSystemProps() returns
+            getConf(genProps(10) ::: List("debug" -> m_conf.isDebug.toString), "sys props")
+        m_loader.fromEnvProps() returns
+            getConf(genProps(20), "env props")
+        m_loader.fromFile("crashnote") returns
+            getConf(genProps(30), "user props")
+        m_loader.fromFile("crashnote.about") returns
+            getConf(genProps(40), "about props")
+        m_loader.fromFile("crashnote.default") returns
+            getConf(genProps(50), "default props")
+    }
+
+    def configure(config: C) = {
+        m_loader = spy(new ConfigLoader)
+        new CrashConfigFactory[CrashConfig](m_loader)
+    }
+
+    // HELPER =====================================================================================
+
+    private def getConf(l: List[(String, String)], descr: String) =
+        (new ConfigLoader).fromProps(toConfProps(l), descr)
+
+    private def genProps(base: Int) =
+        List(
+            "key" -> (base + 1).toString,
+            "app.build" -> (base + 2).toString,
+            "app.profile" -> (base + 3).toString,
+            "app.version" -> (base + 4).toString,
+            "network.timeout" -> (base + 5).toString
+        ).take(base / 10)
 }

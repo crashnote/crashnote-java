@@ -17,7 +17,7 @@ package com.crashnote.test.logger.unit.logback
 
 import org.apache.log4j._
 import spi._
-import com.crashnote.test.core.defs.BaseMockSpec
+import com.crashnote.test.base.defs.BaseMockSpec
 
 class LogbackConnectorSpec
     extends BaseMockSpec[LoggingEvent] {

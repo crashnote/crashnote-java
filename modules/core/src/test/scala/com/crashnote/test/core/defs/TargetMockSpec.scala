@@ -16,12 +16,16 @@
 package com.crashnote.test.core.defs
 
 import org.specs2.specification.Scope
+
 import com.crashnote.core.Lifecycle
 import com.crashnote.core.model.log.LogReport
 import com.crashnote.core.model.data.DataObject
 
+import com.crashnote.test.base.defs.BaseMockSpec
+import com.crashnote.test.core.util.FactoryUtil
+
 abstract class TargetMockSpec[T : Manifest]
-    extends BaseMockSpec[T] with ConfigEnv {
+    extends BaseMockSpec[T] with ConfigEnv with FactoryUtil {
 
     // ==== CONTEXTS
 

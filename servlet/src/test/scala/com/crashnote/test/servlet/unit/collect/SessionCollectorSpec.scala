@@ -45,6 +45,8 @@ class SessionCollectorSpec
         }
     }
 
+    // SETUP ======================================================================================
+
     override def mockConfig(): C = {
         val config = super.mockConfig()
         config.getSkipSessionData returns true

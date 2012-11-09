@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crashnote.test.appengine.defs
+package com.crashnote.test.web.unit.collect
 
-import com.crashnote.core.log.{LogLogFactory, LogLog}
-import com.crashnote.appengine.config.AppengineConfig
-import com.crashnote.test.base.defs.BaseMockSpec
+import com.crashnote.core.collect.Collector
+import com.crashnote.test.web.defs.TargetMockSpec
 
-trait AppengineEnv {
+class RequestCollectorSpec
+    extends TargetMockSpec[Collector] {
 
-    self: BaseMockSpec[_] =>
+    "Request Collector" should {
 
-    type C = AppengineConfig
+        "" >> {
+            1 === 1 // TODO
+        }
+    }
 
-    def mockConfig(): C = {
-        val m_conf = mock[C]
-        val lfact = new LogLogFactory(m_conf)
-        m_conf.getLogger(anyClass) returns lfact.getLogger("")
-        m_conf.getLogger(anyString) returns lfact.getLogger("")
-        m_conf
+    // SETUP ======================================================================================
+
+    def configure(config: C) = {
+        null
     }
 }

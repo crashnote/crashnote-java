@@ -17,16 +17,17 @@ package com.crashnote.core.config;
 
 import com.crashnote.core.build.Builder;
 import com.crashnote.core.collect.Collector;
-import com.crashnote.external.config.Config;
-import com.crashnote.external.config.ConfigRenderOptions;
 import com.crashnote.core.log.LogLog;
 import com.crashnote.core.log.LogLogFactory;
+import com.crashnote.core.model.excp.CrashnoteException;
 import com.crashnote.core.model.types.LogLevel;
 import com.crashnote.core.report.Reporter;
 import com.crashnote.core.send.Sender;
 import com.crashnote.core.util.SystemUtil;
+import com.crashnote.external.config.Config;
+import com.crashnote.external.config.ConfigException;
+import com.crashnote.external.config.ConfigRenderOptions;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -100,14 +101,14 @@ public class CrashConfig {
             final String key = getKey();
             if (key == null || key.length() == 0) {
                 throw new IllegalArgumentException(
-                        "The API Key is missing, please login to the web app under '" + LIB_URL_BOARD + "', " +
-                                "browse to your app and you'll find the key under 'Setup'.");
+                    "The API Key is missing; please login to '" + LIB_URL_BOARD + "', " +
+                        "browse to your app and you'll find the key under 'Setup'.");
 
             } else if (key.length() != 36)
                 throw new IllegalArgumentException(
-                        "The API Key appears to be invalid (it should be 32 characters long with 4 dashes), " +
-                                "please login to the web app under '" + LIB_URL_BOARD + "', " +
-                                "browse to your app you'll find the key under 'Setup'.");
+                    "The API Key appears to be invalid (it should be 32 characters long with 4 dashes); " +
+                        "please login to '" + LIB_URL_BOARD + "', " +
+                        "browse to your app you'll find the key under 'Setup'.");
         } else {
             logger.info("Status: OFF");
         }
@@ -184,19 +185,51 @@ public class CrashConfig {
     }
 
     protected boolean getBool(final String name) {
-        return conf.getBoolean("crashnote." + name);
+        try {
+            return conf.getBoolean(getConfName(name));
+        } catch (ConfigException.Missing e) {
+            throw new CrashnoteException("can not find config key '" + name + "'", e);
+        } catch (ConfigException.WrongType e) {
+            throw new CrashnoteException("type of config key '" + name + "' is not 'bool'", e);
+        }
+    }
+
+    protected boolean getBool(final String name, final boolean def) {
+        try {
+            return conf.getBoolean(getConfName(name));
+        } catch (Exception ignored) {
+            return def;
+        }
     }
 
     protected int getInt(final String name) {
-        return conf.getInt("crashnote." + name);
+        try {
+            return conf.getInt(getConfName(name));
+        } catch (ConfigException.Missing e) {
+            throw new CrashnoteException("can not find config key '" + name + "'", e);
+        } catch (ConfigException.WrongType e) {
+            throw new CrashnoteException("type of config key '" + name + "' is not 'intl'", e);
+        }
     }
 
     protected Long getMillis(final String name) {
-        return conf.getMilliseconds("crashnote." + name);
+        try {
+            return conf.getMilliseconds(getConfName(name));
+        } catch (ConfigException.Missing e) {
+            throw new CrashnoteException("can not find config key '" + name + "'", e);
+        } catch (ConfigException.WrongType e) {
+            throw new CrashnoteException("type of config key '" + name + "' is not 'millis'", e);
+        }
     }
 
     protected String getString(final String name) {
-        return conf.getString("crashnote." + name);
+        try {
+            return conf.getString(getConfName(name));
+        } catch (ConfigException.Missing e) {
+            throw new CrashnoteException("can not find config key '" + name + "'", e);
+        } catch (ConfigException.WrongType e) {
+            throw new CrashnoteException("type of config key '" + name + "' is not 'string'", e);
+        }
     }
 
     protected String getString(final String name, final String def) {
@@ -206,14 +239,18 @@ public class CrashConfig {
 
     protected String getOptString(final String name) {
         try {
-            return conf.getString("crashnote." + name);
-        } catch (Exception e) {
+            return conf.getString(getConfName(name));
+        } catch (Exception ignored) {
             return null;
         }
     }
 
     protected List<String> getStrings(final String name) {
-        return conf.getStringList("crashnote." + name);
+        return conf.getStringList(getConfName(name));
+    }
+
+    protected String getConfName(final String name) {
+        return LIB_NAME + "." + name;
     }
 
 
@@ -267,7 +304,7 @@ public class CrashConfig {
     }
 
     public boolean isEnabled() {
-        return getBool("enabled");
+        return getBool("enabled", false);
     }
 
     public List<String> getEnvironmentFilters() {
@@ -278,11 +315,11 @@ public class CrashConfig {
         return getOptString("app.profile");
     }
 
-    public String getVersion() {
+    public String getAppVersion() {
         return getOptString("app.version");
     }
 
-    public String getBuild() {
+    public String getAppBuild() {
         return getOptString("app.build");
     }
 
@@ -291,6 +328,6 @@ public class CrashConfig {
     }
 
     public boolean isDebug() {
-        return getBool("debug");
+        return getBool("debug", false);
     }
 }

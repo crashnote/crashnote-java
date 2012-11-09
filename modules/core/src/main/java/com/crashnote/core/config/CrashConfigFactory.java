@@ -51,7 +51,7 @@ public class CrashConfigFactory<C extends CrashConfig> {
     // INTERFACE ==================================================================================
 
     /**
-     * Return an instance of {@link CrashConfig}
+     * return an instance of {@link CrashConfig}
      */
     public C get() {
 
@@ -75,34 +75,43 @@ public class CrashConfigFactory<C extends CrashConfig> {
     // SHARED ===================================================================================
 
     /**
-     * Create a new configuration by reading properties and files (see below)
+     * create a new configuration by reading properties and files (see below)
      */
     protected C create() {
         return (C) new CrashConfig(readConf());
     }
 
     /**
-     * Create a configuration based on
-     * 1) system properties
-     * 2) environment properties
-     * 3) file 'crashnote.about.conf'
-     * 4) file 'crashnote.conf'
-     * 5) file 'crashnote.default.conf'
+     * create a configuration based on system and files
      */
-    protected Config readConf() {
-        return getSysDefault()
-            .withFallback(loader.fromFile("crashnote.about"))    // about props
-            .withFallback(loader.fromFile("crashnote"))          // user-defined props
-            .withFallback(loader.fromFile("crashnote.default")); // default props
+    protected final Config readConf() {
+        return readSysConf()                        // #1 system props
+            .withFallback(readCustomFileConf())     // #2 custom props
+            .withFallback(readDefaultFileConf());   // #3 default props
     }
 
     /**
-     * Create a configuration based on
-     * 1) system properties
-     * 2) environment properties
+     * create a configuration based on user's config
      */
-    protected Config getSysDefault() {
-        return loader.fromSystemProps()             // sys props
-            .withFallback(loader.fromEnvProps());   // env props
+    protected Config readCustomFileConf() {
+        return loader.fromFile("crashnote");
+    }
+
+    /**
+     * create a configuration from library's default conf files
+     */
+    protected Config readDefaultFileConf() {
+        return
+            loader.fromFile("crashnote.about")                          // #1 about props
+                .withFallback(loader.fromFile("crashnote.default"));    // #2 default props
+    }
+
+    /**
+     * create a configuration based on system configs
+     */
+    protected Config readSysConf() {
+        return
+            loader.fromSystemProps()                    // #1 sys props
+                .withFallback(loader.fromEnvProps());   // #2 env props
     }
 }

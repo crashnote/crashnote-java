@@ -20,6 +20,7 @@ import com.crashnote.core.collect.impl._
 import com.crashnote.core.report.impl.session.LocalLogSession
 import com.crashnote.core.build.Builder
 import com.crashnote.test.core.defs.TargetMockSpec
+import com.crashnote.test.core.util.FactoryUtil
 
 class CollectorSpec
     extends TargetMockSpec[Collector] {

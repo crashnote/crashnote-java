@@ -93,6 +93,6 @@ class AppengineEnvCollectorSpec
         m_appengineUtil.getProperty("com.google.appengine.runtime.environment") returns "Production"
     }
 
-    lazy val WITH_BUILD = (config: C) => config.getBuild returns "b42"
-    lazy val WITH_VERSION = (config: C) => config.getVersion returns "1.4.2"
+    lazy val WITH_BUILD = (config: C) => config.getAppBuild returns "b42"
+    lazy val WITH_VERSION = (config: C) => config.getAppVersion returns "1.4.2"
 }

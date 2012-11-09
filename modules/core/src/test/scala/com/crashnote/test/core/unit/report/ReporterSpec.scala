@@ -26,10 +26,6 @@ import com.crashnote.test.core.defs.TargetMockSpec
 class ReporterSpec
     extends TargetMockSpec[Reporter] {
 
-    var m_session: ILogSession = _
-    var m_processor: Processor = _
-    var m_excpHandler: Thread.UncaughtExceptionHandler = _
-
     "Reporter" should {
 
         "have lifecycle" >> {
@@ -196,6 +192,12 @@ class ReporterSpec
             }
         }
     }
+
+    // SETUP ======================================================================================
+
+    var m_session: ILogSession = _
+    var m_processor: Processor = _
+    var m_excpHandler: Thread.UncaughtExceptionHandler = _
 
     def configure(config: C) =
         new Reporter(config)

@@ -35,7 +35,7 @@ public abstract class RequestCollector<R>
     protected boolean hashRemoteIP;
     protected int maxRequestParamSize;
 
-    protected String[] filtereds = new String[]{filtered};
+    protected String[] filtereds = new String[]{ filtered };
 
 
     // SETUP ======================================================================================
@@ -55,7 +55,10 @@ public abstract class RequestCollector<R>
     public DataObject collect(final R req) {
         final DataObject data = collectReqBase(req);
         {
+            // collect HTTP parameters
             data.putObj("parameters", collectReqParams(req));
+
+            // collect HTTP headers
             if (!skipHeaderData) data.putObj("headers", collectReqHeader(req));
         }
         return data;
@@ -94,12 +97,15 @@ public abstract class RequestCollector<R>
         }
     }
 
+    /**
+     * collect parameter with multiple values
+     */
     protected void addParam(final DataObject data, final String name, final String[] values) {
         if (values.length > 0) {
-            final String[] filteredValues = doFilter(name, requestFilters) ? filtereds : values;
-            if (filteredValues.length == 1) {
-                addParam(data, name, filteredValues[0]);
+            if (values.length == 1) {
+                addParam(data, name, values[0]);
             } else {
+                final String[] filteredValues = doFilter(name, requestFilters) ? filtereds : values;
                 final DataArray arr = createDataArr();
                 for (final String value : filteredValues)
                     arr.add(limitParam(value));
@@ -108,9 +114,14 @@ public abstract class RequestCollector<R>
         }
     }
 
+    /**
+     * collect parameter with single value
+     */
     protected void addParam(final DataObject data, final String name, final String value) {
-        data.put(name, limitParam(value));
+        final String filteredValue = doFilter(name, requestFilters) ? filtered : value;
+        data.put(name, limitParam(filteredValue));
     }
+
 
     // INTERNALS ==================================================================================
 

@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crashnote.test.core.defs
+package com.crashnote.test.base.defs
 
 import java.lang.reflect.{Modifier, Field}
-import annotation.tailrec
-import com.crashnote.test.base.defs.MockSpec
-import com.crashnote.test.core.util.FactoryUtil
+import com.crashnote.test.base.util.FactoryUtil
 
 abstract class BaseMockSpec[T](implicit t: Manifest[T])
     extends MockSpec with FactoryUtil {
@@ -69,7 +67,7 @@ abstract class BaseMockSpec[T](implicit t: Manifest[T])
         value
     }
 
-    @tailrec
+    @annotation.tailrec
     private def findFields(clazz: Class[_], acc: List[Field] = List()): List[Field] = {
         val fields = clazz.getDeclaredFields.toList ::: acc
         clazz.getSuperclass match {

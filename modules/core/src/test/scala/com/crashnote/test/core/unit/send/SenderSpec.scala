@@ -103,6 +103,8 @@ class SenderSpec
             }
         }
 
+    // SETUP ======================================================================================
+
     val key = "0000000000000000000000000000000"
     val url = "https://api.crashnote.com:443/api/errors"
     val client = "spec-1.0"

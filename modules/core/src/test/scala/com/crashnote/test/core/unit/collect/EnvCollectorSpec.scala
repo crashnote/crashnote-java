@@ -72,7 +72,7 @@ class EnvCollectorSpec
     def configure(config: C) = {
         config.getAppProfile returns "dev"
         config.getStartTime returns 123456789L
-        config.getVersion returns "1.0"
+        config.getAppVersion returns "1.0"
         config.getClientInfo returns "cn:1.0"
         config.getEnvironmentFilters returns List("secret")
 
