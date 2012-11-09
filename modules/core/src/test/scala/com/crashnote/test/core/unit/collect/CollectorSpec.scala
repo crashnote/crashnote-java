@@ -70,6 +70,8 @@ class CollectorSpec
         }
     }
 
+    // SETUP ======================================================================================
+
     def configure(config: C) = {
         config.getBuilder returns new Builder
         new Collector(config)

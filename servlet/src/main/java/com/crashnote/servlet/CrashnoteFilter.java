@@ -43,7 +43,7 @@ public class CrashnoteFilter
         // at first, parse filter configuration
         final com.crashnote.servlet.config.ServletConfig config = getConfig(filterConfig);
 
-        // if the configuration enables the filter...
+        // if the configuration enables the filter ...
         if (config.isEnabled()) {
 
             // ... based on config, create the central reporter service
@@ -136,9 +136,9 @@ public class CrashnoteFilter
     protected void checkForAppengine() {
         if(System.getProperty("com.google.appengine.runtime.environment") != null) {
             throw new RuntimeException("Unsupported Platform! It seems you are developing for / running on " +
-                    "Google's AppEngine. This library (crashnote-servlet) is not compatible with it - you " +
-                    "need the specialized crashnote-appengine. Please consult your app's online documentation " +
-                    "for further details.");
+                    "Google's AppEngine. This library (crashnote-servlet) is not compatible with it - " +
+                    "you need the specialized crashnote-appengine. " +
+                    "Please consult the online docs of Crashnote for further details.");
         }
     }
 }

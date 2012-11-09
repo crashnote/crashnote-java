@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
+ * Copyright (C) 2011 - 101loops.com <dev@101loops.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crashnote.core.model.types;
+package com.crashnote.test.logger.unit.logback
 
-/**
- * Enumeration to distinguish an application by its usage/runtime characteristics:
- * <ul>
- * <li>Clients usually run for a short time, on limited hardware and serve only one client.</li>
- * <li>Servers usually run for a long time, on big hardware and serve multiple clients.</li>
- * </ul>
- */
-public enum ApplicationType {
+import org.apache.log4j._
+import spi._
+import com.crashnote.test.core.defs.BaseMockSpec
 
-    CLIENT,
-    SERVER
+class LogbackConnectorSpec
+    extends BaseMockSpec[LoggingEvent] {
+
+    "Logback Connector" should {
+
+        "" >> {
+            1 === 1 // TODO
+        }
+    }
 }

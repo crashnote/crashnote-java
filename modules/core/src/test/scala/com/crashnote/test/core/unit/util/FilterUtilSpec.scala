@@ -20,11 +20,16 @@ import com.crashnote.core.util.FilterUtil
 
 import scala.collection.JavaConversions._
 
-class FilterUtilSpec extends UnitSpec {
+class FilterUtilSpec
+    extends UnitSpec {
 
     "Filter Util" should {
 
         import FilterUtil._
+
+        "instantiate" >> {
+            new FilterUtil !== null
+        }
 
         "filter" >> {
             doFilter("test", List("test")) === true

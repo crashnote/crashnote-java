@@ -27,15 +27,29 @@ class AppengineUtilSpec
 
         val util = new AppengineUtil
 
-        "know if app is running on app engine" >> {
+        def newReq() =
+            util.createRequest("http://google.com", HTTPMethod.GET, null)
+
+        "test if app is running on AppEngine" >> {
             util.isRunningOnAppengine === false
         }
 
         "create a HTTP request" >> {
-            val r = util.createRequest("http://test.com", HTTPMethod.PUT, null)
-            r.getMethod === HTTPMethod.PUT
-            r.getURL === new URL("http://test.com")
+            val r = newReq()
+
+            r.getMethod === HTTPMethod.GET
+            r.getURL === new URL("http://google.com")
+        }
+
+        "execute a HTTP request" >> {
+            "asynchonously" >> {
+                util.execRequest(newReq(), true)
+            }
+            "synchronously" >> {
+                util.execRequest(newReq(), false)
+            }
         }
     }
+
 
 }

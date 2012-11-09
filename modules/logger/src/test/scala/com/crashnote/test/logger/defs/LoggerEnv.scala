@@ -15,7 +15,7 @@
  */
 package com.crashnote.test.logger.defs
 
-import com.crashnote.core.log.LogLog
+import com.crashnote.core.log.{LogLogFactory, LogLog}
 import com.crashnote.test.core.defs.BaseMockSpec
 import com.crashnote.logger.config.LoggerConfig
 
@@ -27,8 +27,9 @@ trait LoggerEnv {
 
     def mockConfig(): C = {
         val m_conf = mock[LoggerConfig]
-        m_conf.getLogger(anyClass) returns new LogLog("")
-        m_conf.getLogger(anyString) returns new LogLog("")
+        val lfact = new LogLogFactory(m_conf)
+        m_conf.getLogger(anyClass) returns lfact.getLogger("")
+        m_conf.getLogger(anyString) returns lfact.getLogger("")
         m_conf
     }
 }

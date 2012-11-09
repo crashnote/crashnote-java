@@ -15,7 +15,7 @@
  */
 package com.crashnote.test.appengine.defs
 
-import com.crashnote.core.log.LogLog
+import com.crashnote.core.log.{LogLogFactory, LogLog}
 import com.crashnote.appengine.config.AppengineConfig
 import com.crashnote.test.core.defs.BaseMockSpec
 
@@ -27,8 +27,9 @@ trait AppengineEnv {
 
     def mockConfig(): C = {
         val m_conf = mock[C]
-        m_conf.getLogger(anyClass) returns new LogLog("")
-        m_conf.getLogger(anyString) returns new LogLog("")
+        val lfact = new LogLogFactory(m_conf)
+        m_conf.getLogger(anyClass) returns lfact.getLogger("")
+        m_conf.getLogger(anyString) returns lfact.getLogger("")
         m_conf
     }
 }

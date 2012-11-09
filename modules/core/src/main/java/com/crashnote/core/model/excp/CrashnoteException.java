@@ -31,11 +31,11 @@ public class CrashnoteException
         super(message);
     }
 
-    public CrashnoteException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
-
     public CrashnoteException(final Throwable cause) {
         super(cause);
+    }
+
+    public CrashnoteException(final String message, final Throwable cause) {
+        super(message, cause);
     }
 }

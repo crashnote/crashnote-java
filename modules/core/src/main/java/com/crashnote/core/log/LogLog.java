@@ -26,51 +26,44 @@ public class LogLog {
 
     // VARS =======================================================================================
 
-    private final String name;
-
     private final boolean debug;
 
 
     // SETUP ======================================================================================
 
-    public LogLog(final String name, final boolean debug) {
-        this.name = CrashConfig.LIB_NAME;
+    protected LogLog(final String name, final boolean debug) {
         this.debug = debug;
-    }
-
-    public LogLog(final String name) {
-        this(name, false);
     }
 
 
     // INTERFACE ==================================================================================
 
     public void debug(final String msg, final Object... args) {
-        if (debug) System.out.println(name + " [DEBUG] - " + buildMsg(msg, args));
+        if (debug) System.out.println(getName() + " - DEBUG - " + buildMsg(msg, args));
     }
 
     public void info(final String msg, final Object... args) {
-        System.out.println(name + " - " + buildMsg(msg, args));
+        System.out.println(getName() + " - INFO - " + buildMsg(msg, args));
     }
 
     public void warn(final String msg, final Object... args) {
-        System.err.println(name + " WARN - " + buildMsg(msg, args));
+        System.err.println(getName() + " - WARN - " + buildMsg(msg, args));
     }
 
     public void warn(final String msg, final Throwable th) {
-        System.err.println(name + " WARN - " + msg + ": " + th.getMessage());
+        System.err.println(getName() + " - WARN - " + msg + ": " + th.getMessage());
     }
 
     public void warn(final String msg, final Throwable th, final Object... args) {
-        System.err.println(name + " WARN - " + buildMsg(msg, args) + ": " + th.getMessage());
+        System.err.println(getName() + " - WARN - " + buildMsg(msg, args) + ": " + th.getMessage());
     }
 
     public void error(final String msg, final Object... args) {
-        System.err.println(name + " ERROR - " + buildMsg(msg, args));
+        System.err.println(getName() + " - ERROR - " + buildMsg(msg, args));
     }
 
     public void error(final String msg, final Throwable th, final Object... args) {
-        System.err.println(name + " ERROR - " + buildMsg(msg, args) + ": " + th.getMessage());
+        System.err.println(getName() + " - ERROR - " + buildMsg(msg, args) + ": " + th.getMessage());
     }
 
 
@@ -83,7 +76,6 @@ public class LogLog {
         return res;
     }
 
-
     // GET ========================================================================================
 
     public boolean isDebug() {
@@ -91,6 +83,6 @@ public class LogLog {
     }
 
     public String getName() {
-        return name;
+        return CrashConfig.LIB_NAME.toUpperCase();
     }
 }

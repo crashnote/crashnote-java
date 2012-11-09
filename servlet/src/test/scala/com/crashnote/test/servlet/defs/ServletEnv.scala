@@ -15,7 +15,7 @@
  */
 package com.crashnote.test.servlet.defs
 
-import com.crashnote.core.log.LogLog
+import com.crashnote.core.log.{LogLogFactory, LogLog}
 import com.crashnote.test.core.defs.BaseMockSpec
 import com.crashnote.servlet.config.ServletConfig
 
@@ -25,10 +25,13 @@ trait ServletEnv {
 
     type C = ServletConfig
 
+    var m_conf: C = _
+
     def mockConfig(): C = {
-        val m_conf = mock[ServletConfig]
-        m_conf.getLogger(anyClass) returns new LogLog("")
-        m_conf.getLogger(anyString) returns new LogLog("")
+        m_conf = mock[ServletConfig]
+        val lfact = new LogLogFactory(m_conf)
+        m_conf.getLogger(anyClass) returns lfact.getLogger("")
+        m_conf.getLogger(anyString) returns lfact.getLogger("")
         m_conf
     }
 }

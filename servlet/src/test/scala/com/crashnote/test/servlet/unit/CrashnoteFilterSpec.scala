@@ -26,7 +26,6 @@ import com.crashnote.test.servlet.defs.TargetMockSpec
 class CrashnoteFilterSpec
     extends TargetMockSpec[CrashnoteFilter] {
 
-    var m_conf: C = _
     var m_reporter: ServletReporter = _
     var m_connector: AutoLogConnector = _
 
@@ -37,27 +36,35 @@ class CrashnoteFilterSpec
     "Filter" should {
 
         "init" >> {
-            "when enabled" >> new Mock(ENABLED) {
-                target.init(null)
+            "outside of AppEngine" >> {
+                "when enabled" >> new Mock(ENABLED) {
+                    target.init(m_fconf)
 
-                expect {
-                    one(m_reporter).start()
-                    one(m_connector).start()
+                    expect {
+                        one(m_reporter).start()
+                        one(m_connector).start()
+                    }
+                }
+                "but skipped when disabled" >> new Mock(DISABLED) {
+                    target.init(m_fconf)
+
+                    expect {
+                        no(m_reporter).start()
+                        no(m_connector).start()
+                    }
                 }
             }
-            "but skipped when disabled" >> new Mock(DISABLED) {
-                target.init(null)
 
-                expect {
-                    no(m_reporter).start()
-                    no(m_connector).start()
+            "but not inside of AppEngine" >> new Mock {
+                withSysProp("com.google.appengine.runtime.environment", "dev") {
+                    target.init(m_fconf) must throwA[RuntimeException]
                 }
             }
         }
 
         "filter" >> {
             "when NO error occurs" >> new Mock(ENABLED) {
-                target.init(null)
+                target.init(m_fconf)
                 target.doFilter(m_request, m_response, m_chain)
 
                 there was one(m_reporter).beforeRequest(m_request) then
@@ -67,7 +74,7 @@ class CrashnoteFilterSpec
                 val err = new ServletException("oops")
                 m_chain.doFilter(m_request, m_response) throws err
 
-                target.init(null)
+                target.init(m_fconf)
                 target.doFilter(m_request, m_response, m_chain) must throwA[ServletException]
 
                 there was one(m_reporter).beforeRequest(m_request) then
@@ -75,7 +82,7 @@ class CrashnoteFilterSpec
                     one(m_reporter).afterRequest(m_request)
             }
             "just proceed with chain if disabled" >> new Mock(DISABLED) {
-                target.init(null)
+                target.init(m_fconf)
                 target.doFilter(m_request, m_response, m_chain)
 
                 expect {
@@ -86,7 +93,7 @@ class CrashnoteFilterSpec
         }
 
         "destroy" >> new Mock(ENABLED) {
-            target.init(null)
+            target.init(m_fconf)
             target.destroy()
 
             expect {
@@ -96,6 +103,10 @@ class CrashnoteFilterSpec
         }
     }
 
+    // SETUP ======================================================================================
+
+    var m_fconf: FilterConfig = _
+    
     def configure(config: C) = {
         m_reporter = mock[ServletReporter]
         m_connector = mock[AutoLogConnector]
@@ -103,12 +114,11 @@ class CrashnoteFilterSpec
         m_response = mock[HttpServletResponse]
         m_chain = mock[FilterChain]
 
-        m_conf = config
         m_conf.getReporter returns m_reporter
         m_conf.getLogConnector(any[ServletReporter]) returns m_connector
 
         new CrashnoteFilter() {
-            override protected def getConfig(fConf: FilterConfig) = m_conf
+            override protected def getConfig(fc: FilterConfig) = m_conf
         }
     }
 }

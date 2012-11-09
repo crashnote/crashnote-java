@@ -46,7 +46,12 @@ public class CrashConfig {
      * default prefix for the libraries properties (e.g. in command line)
      */
     public static final String LIB_NAME = "crashnote";
+
+    /**
+     * URL to service's website
+     */
     public static final String LIB_URL = "https://www.crashnote.com";
+
     public static final String LIB_URL_BOARD = LIB_URL + "/apps";
 
 
@@ -73,7 +78,7 @@ public class CrashConfig {
     // SETUP ======================================================================================
 
     public CrashConfig(final Config c) {
-        conf = c.withOnlyPath("crashnote");
+        conf = c.withOnlyPath(LIB_NAME);
         logger = getLogger(this.getClass());
         startTime = new Date().getTime();
     }

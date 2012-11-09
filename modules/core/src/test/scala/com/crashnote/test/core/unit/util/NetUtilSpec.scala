@@ -18,11 +18,16 @@ package com.crashnote.test.core.unit.util
 import com.crashnote.core.util.NetUtil
 import com.crashnote.test.base.defs.UnitSpec
 
-class NetUtilSpec extends UnitSpec {
+class NetUtilSpec
+    extends UnitSpec {
 
     "INet Util" should {
 
         import NetUtil._
+
+        "instantiate" >> {
+            new NetUtil !== null
+        }
 
         "find computer's host IP" >> {
             getHostAddress !== null

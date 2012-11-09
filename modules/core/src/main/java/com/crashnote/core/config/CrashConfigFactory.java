@@ -16,10 +16,6 @@
 package com.crashnote.core.config;
 
 import com.crashnote.external.config.Config;
-import com.crashnote.external.config.ConfigFactory;
-import com.crashnote.external.config.ConfigParseOptions;
-
-import java.util.Properties;
 
 /**
  * Factory to create instance(s) of {@link CrashConfig}.
@@ -35,15 +31,24 @@ public class CrashConfigFactory<C extends CrashConfig> {
      */
     private C config;
 
+    /**
+     * instance to load config settings
+     */
+    protected final ConfigLoader loader;
 
-    // SETUP =====================================================================================
+
+    // SETUP ======================================================================================
 
     public CrashConfigFactory() {
-        // nothing to do
+        this(new ConfigLoader());
+    }
+
+    public CrashConfigFactory(final ConfigLoader loader) {
+        this.loader = loader;
     }
 
 
-    // INTERFACE ================================================================================
+    // INTERFACE ==================================================================================
 
     /**
      * Return an instance of {@link CrashConfig}
@@ -60,7 +65,7 @@ public class CrashConfigFactory<C extends CrashConfig> {
             if (config.isDebug()) config.print();
 
             // 3) validate it (against config schema)
-            config.validate(getConfFile("crashnote.default"));
+            config.validate(loader.fromFile("crashnote.default"));
         }
 
         return config;
@@ -86,10 +91,9 @@ public class CrashConfigFactory<C extends CrashConfig> {
      */
     protected Config readConf() {
         return getSysDefault()
-            .withFallback(getConfFile("crashnote.about"))    // about props
-            .withFallback(getConfFile("crashnote"))          // user-defined props
-            .withFallback(getConfFile("crashnote.default")); // default props
-
+            .withFallback(loader.fromFile("crashnote.about"))    // about props
+            .withFallback(loader.fromFile("crashnote"))          // user-defined props
+            .withFallback(loader.fromFile("crashnote.default")); // default props
     }
 
     /**
@@ -98,30 +102,7 @@ public class CrashConfigFactory<C extends CrashConfig> {
      * 2) environment properties
      */
     protected Config getSysDefault() {
-        return ConfigFactory
-            .systemProperties()                               // sys props
-            .withFallback(ConfigFactory.systemEnvironment()); // env props
-    }
-
-    /**
-     * Create a configuration by parsing properties
-     */
-    protected final Config getConfProps(final Properties props, final String descr) {
-        final ConfigParseOptions opts =  ConfigParseOptions.defaults().setOriginDescription(descr);
-        return ConfigFactory.parseProperties(props, opts);
-    }
-
-    /**
-     * Create a configuration by loading file
-     */
-    protected final Config getConfFile(final String name) {
-        return ConfigFactory.load(name + ".conf");
-    }
-
-    /**
-     * Create a configuration by parsing a string
-     */
-    protected final Config getConfStr(final String str) {
-        return ConfigFactory.parseString(str);
+        return loader.fromSystemProps()             // sys props
+            .withFallback(loader.fromEnvProps());   // env props
     }
 }

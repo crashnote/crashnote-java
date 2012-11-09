@@ -22,8 +22,6 @@ import com.crashnote.test.core.defs.BaseMockSpec
 abstract class TargetMockSpec[T](implicit t: Manifest[T])
     extends BaseMockSpec[T] with LoggerEnv {
 
-    setSequential()
-
     // ==== CONTEXTS
 
     // stage #1: config the target

@@ -42,9 +42,7 @@
  */
 package com.crashnote.core.util;
 
-import java.io.Serializable;
-
-public final class ChksumUtil {
+public class ChksumUtil {
 
     // INTERFACE ==================================================================================
 

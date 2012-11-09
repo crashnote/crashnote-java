@@ -22,8 +22,6 @@ import com.crashnote.test.core.defs.BaseMockSpec
 abstract class TargetMockSpec[T](implicit t: Manifest[T])
     extends BaseMockSpec[T] with ServletEnv {
 
-    setSequential()
-
     // ==== CONTEXTS
 
     // stage #1: config the target
@@ -34,7 +32,7 @@ abstract class TargetMockSpec[T](implicit t: Manifest[T])
         doSetup()
 
         def doSetup() {
-            val m_conf = mockConfig()
+            mockConfig()
             fns.foreach(fn => fn.apply(m_conf))
             target = configure(m_conf)
         }

@@ -24,17 +24,19 @@ import javax.servlet.FilterConfig
 class ServletConfigSpec
     extends MockSpec with BeforeExample {
 
-    var c: ServletConfig = _
-
     "Servlet Config" should {
 
         "act as factory" >> {
             "for servlet reporter" >> {
                 c.getReporter must haveClass[ServletReporter]
-
             }
         }
     }
+
+    // SETUP =====================================================================================
+
+    var c: ServletConfig = _
+
 
     def before {
         val fc = mock[FilterConfig]

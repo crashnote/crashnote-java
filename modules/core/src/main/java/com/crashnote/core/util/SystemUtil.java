@@ -56,10 +56,6 @@ public class SystemUtil {
         return System.getProperties().keySet();
     }
 
-    public Properties getProperties() {
-        return System.getProperties();
-    }
-
     // ==== Environment
 
     public Set<String> getEnvKeys() {
@@ -81,20 +77,7 @@ public class SystemUtil {
         return val == null ? def : val;
     }
 
-    public Properties getEnvProperties() {
-        final Set<String> envKeys = getEnvKeys();
-        final Properties props = new Properties();
-        for (final String key : envKeys) {
-            props.setProperty(key, getEnv(key));
-        }
-        return props;
-    }
-
     // ==== Network
-
-    public boolean isOffline() {
-        return false; // just assume NO by default
-    }
 
     public String getHostAddress() {
         return NetUtil.getHostAddress();

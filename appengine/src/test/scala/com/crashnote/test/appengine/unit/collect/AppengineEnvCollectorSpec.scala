@@ -69,6 +69,8 @@ class AppengineEnvCollectorSpec
         }
     }
 
+    // SETUP ======================================================================================
+
     def configure(config: C) =
         new AppengineEnvCollector(config)
 

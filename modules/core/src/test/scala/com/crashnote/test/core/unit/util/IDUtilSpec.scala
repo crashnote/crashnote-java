@@ -18,11 +18,16 @@ package com.crashnote.test.core.unit.util
 import com.crashnote.test.base.defs.UnitSpec
 import com.crashnote.core.util.IDUtil
 
-class IDUtilSpec extends UnitSpec {
+class IDUtilSpec
+    extends UnitSpec {
 
     "ID Util" should {
 
         import IDUtil._
+
+        "instantiate" >> {
+            new IDUtil !== null
+        }
 
         "generate a numeric ID" >> {
             val id1 = createUID()

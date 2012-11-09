@@ -25,23 +25,39 @@ import java.net.URL;
 /**
  * Customized {@link SystemUtil} that adds methods to interact with the AppEngine API.
  */
-public class AppengineUtil extends SystemUtil {
+public class AppengineUtil
+    extends SystemUtil {
 
     // INTERFACE ==================================================================================
 
+    /**
+     * test whether the app runs on the AppEngine cloud (or locally)
+     */
     public boolean isRunningOnAppengine() {
         return SystemProperty.environment.value() == SystemProperty.Environment.Value.Production;
     }
 
-    public HTTPRequest createRequest(final String url, final HTTPMethod method,
+    /**
+     * prepare a HTTP request
+     */
+    public HTTPRequest createRequest(final String url,
+                                     final HTTPMethod method,
                                      final FetchOptions fetchOptions) throws MalformedURLException {
         return new HTTPRequest(new URL(url), method, fetchOptions);
     }
 
-    public void fetchAsync(final HTTPRequest req) {
+    /**
+     * execute a HTTP request (synchronously or asynchronously)
+     */
+    public void execRequest(final HTTPRequest req, final boolean async) {
         try {
-            (URLFetchServiceFactory.getURLFetchService()).fetch(req);
+            final URLFetchService srv = URLFetchServiceFactory.getURLFetchService();
+            if(async)
+                srv.fetchAsync(req);
+            else
+                srv.fetch(req);
         } catch (Exception ignored) {
+            // ignore exceptions
         }
     }
 }

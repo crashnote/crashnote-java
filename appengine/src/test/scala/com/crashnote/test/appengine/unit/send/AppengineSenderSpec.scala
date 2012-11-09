@@ -35,13 +35,15 @@ class AppengineSenderSpec
             target.send(m_report)
 
             there was one(m_request).setPayload("DATA".getBytes("UTF-8")) then
-                one(m_appengineUtil).fetchAsync(m_request)
+                one(m_appengineUtil).execRequest(m_request, true)
         }
     }
 
+    // SETUP ======================================================================================
+
     def configure(config: C) = {
         config.getPostUrl returns "http://api.com"
-        config.getConnectionTimeout returns 10
+        config.getConnectionTimeout returns 10000
         config.getClientInfo returns "CN"
         new AppengineSender(config)
     }

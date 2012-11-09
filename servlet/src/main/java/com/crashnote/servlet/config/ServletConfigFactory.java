@@ -15,6 +15,7 @@
  */
 package com.crashnote.servlet.config;
 
+import com.crashnote.core.config.ConfigLoader;
 import com.crashnote.external.config.Config;
 import com.crashnote.logger.config.LoggerConfigFactory;
 
@@ -33,6 +34,11 @@ public class ServletConfigFactory<C extends ServletConfig>
     // SETUP ======================================================================================
 
     public ServletConfigFactory(final FilterConfig filterConfig) {
+        this(filterConfig, new ConfigLoader());
+    }
+
+    public ServletConfigFactory(final FilterConfig filterConfig, final ConfigLoader loader) {
+        super(loader);
         this.filterConfig = filterConfig;
     }
 
@@ -47,7 +53,7 @@ public class ServletConfigFactory<C extends ServletConfig>
     @Override
     protected Config readConf() {
         return super.readConf()
-                    .withFallback(getConfFile("crashnote.servlet"));
+                    .withFallback(loader.fromFile("crashnote.servlet"));
     }
 
     @Override
@@ -57,15 +63,17 @@ public class ServletConfigFactory<C extends ServletConfig>
         final Properties props = new Properties();
         if (filterConfig != null) {
             final Enumeration params = filterConfig.getInitParameterNames();
-            while (params.hasMoreElements()) {
-                final String name = (String) params.nextElement();
-                final String value = filterConfig.getInitParameter(name);
-                props.setProperty("crashnote." + name, value);
+            if(params != null) {
+                while (params.hasMoreElements()) {
+                    final String name = (String) params.nextElement();
+                    final String value = filterConfig.getInitParameter(name);
+                    props.setProperty("crashnote." + name, value);
+                }
             }
         }
 
         // .. and add them to the system defaults
         return super.getSysDefault()
-                .withFallback(getConfProps(props, "servlet filter"));
+                .withFallback(loader.fromProps(props, "servlet filter"));
     }
 }

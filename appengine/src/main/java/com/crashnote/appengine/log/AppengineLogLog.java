@@ -28,15 +28,17 @@ public class AppengineLogLog extends LogLog {
 
     // VARS =======================================================================================
 
+    private final String name;
+
     private final Logger log;
 
 
     // SETUP ======================================================================================
 
-    public AppengineLogLog(final String name, final boolean debug) {
+    protected AppengineLogLog(final String name, final boolean debug) {
         super(name, debug);
 
-        // initialize logger instance
+        this.name = name;
         log = Logger.getLogger(name);
     }
 
@@ -78,4 +80,10 @@ public class AppengineLogLog extends LogLog {
         log.log(Level.SEVERE, buildMsg(msg, args), th);
     }
 
+    // GET ========================================================================================
+
+    @Override
+    public String getName() {
+        return name;
+    }
 }

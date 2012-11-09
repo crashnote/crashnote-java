@@ -18,13 +18,18 @@ package com.crashnote.test.core.unit.util
 import com.crashnote.test.base.defs.UnitSpec
 import com.crashnote.core.util.ChksumUtil
 
-class ChksumUtilSpec extends UnitSpec {
+class ChksumUtilSpec
+    extends UnitSpec {
 
     import ChksumUtil._
 
     "Checksum Util" should {
 
         val data = "{:}ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890?!§$%&/()=?"
+
+        "instantiate" >> {
+            new ChksumUtil !== null
+        }
 
         "produce same hash for same inputs" >> {
             var h1 = hash(data)

@@ -26,10 +26,18 @@ class AppengineCollectorSpec
 
     "AppEngine Collector" should {
 
+        val m_conf = mock[AppengineConfig]
+
         "override default environment collector" >> {
-            val m_conf = mock[AppengineConfig]
             val r = new AppengineCollector(m_conf)
+
             r.getEnvCollector must haveClass[AppengineEnvCollector]
+        }
+
+        "override default log collector" >> {
+            val r = new AppengineCollector(m_conf)
+
+            r.getLogCollector must haveClass[AppengineLogCollectorSpec]
         }
     }
 

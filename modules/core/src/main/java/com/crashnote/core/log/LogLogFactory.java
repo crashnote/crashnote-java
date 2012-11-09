@@ -36,12 +36,12 @@ public class LogLogFactory {
 
     // INTERFACE ==================================================================================
 
-    public LogLog getLogger(final Class clazz) {
-        return getLogger(clazz.getName());
-    }
-
     public LogLog getLogger(final String name) {
         return new LogLog(name, debug);
+    }
+
+    public LogLog getLogger(final Class clazz) {
+        return getLogger(clazz.getName());
     }
 
     public LogLog getLogger() {

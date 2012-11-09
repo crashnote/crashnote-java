@@ -64,7 +64,7 @@ public class AppengineSender
             req.setPayload(data);
         }
 
-        appengineUtil.fetchAsync(req);
+        appengineUtil.execRequest(req, true);
     }
 
     @Override

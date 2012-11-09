@@ -22,8 +22,6 @@ import com.crashnote.test.base.defs._
 class BoundedListSpec
     extends UnitSpec {
 
-    setSequential()
-
     "Bounded List" should {
 
         val list = new BoundedList[Int](2)

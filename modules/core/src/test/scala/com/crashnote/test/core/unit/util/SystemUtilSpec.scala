@@ -18,7 +18,8 @@ package com.crashnote.test.core.unit.util
 import com.crashnote.core.util._
 import com.crashnote.test.base.defs.UnitSpec
 
-class SystemUtilSpec extends UnitSpec {
+class SystemUtilSpec
+    extends UnitSpec {
 
     "System Util" should {
 

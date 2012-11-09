@@ -15,6 +15,7 @@
  */
 package com.crashnote.web.config;
 
+import com.crashnote.core.config.ConfigLoader;
 import com.crashnote.logger.config.LoggerConfigFactory;
 
 public class WebConfigFactory<C extends WebConfig>
@@ -23,6 +24,11 @@ public class WebConfigFactory<C extends WebConfig>
     // SETUP ======================================================================================
 
     public WebConfigFactory() {
+        super();
+    }
+
+    public WebConfigFactory(final ConfigLoader loader) {
+        super(loader);
     }
 
     // SHARED =====================================================================================

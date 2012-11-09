@@ -79,6 +79,8 @@ class SenderSpec
         }
     }
 
+    // SETUP ======================================================================================
+
     def checkConnection(url: String, typeOf: String = "GET") =
         if (m_conn != null) {
             m_conn.getURL.toURI.toString === url
@@ -110,7 +112,7 @@ class SenderSpec
         mc.getKey returns key
         mc.getPostUrl returns url
         mc.getClientInfo returns client
-        mc.getConnectionTimeout returns 10
+        mc.getConnectionTimeout returns 10000
         mc
     }
 

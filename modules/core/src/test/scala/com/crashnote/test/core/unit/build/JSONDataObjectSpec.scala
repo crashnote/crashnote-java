@@ -21,8 +21,6 @@ import com.crashnote.core.build.impl.{JSONDataArray, JSONDataObject}
 class JSONDataObjectSpec
     extends UnitSpec {
 
-    setSequential()
-
     "JSON Data Object" should {
 
         /*

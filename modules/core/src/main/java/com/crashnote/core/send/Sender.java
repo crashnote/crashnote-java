@@ -47,7 +47,7 @@ public class Sender {
     public <C extends CrashConfig> Sender(final C config) {
         this.url_post = config.getPostUrl();
         this.clientInfo = config.getClientInfo();
-        this.connectionTimeout = config.getConnectionTimeout() * 1000;
+        this.connectionTimeout = config.getConnectionTimeout();
 
         this.logger = config.getLogger(this.getClass());
 
@@ -64,7 +64,7 @@ public class Sender {
             POST(url_post, report);
             return true;
         } catch (Exception e) {
-            logger.error("POST failed", e, url_post);
+            logger.error("POST to '{}' failed", e, url_post);
         }
         return false;
     }
@@ -111,7 +111,7 @@ public class Sender {
             conn.setReadTimeout(connectionTimeout);
             conn.setConnectTimeout(connectionTimeout);
 
-            if (getClientInfo() != null)
+            if (clientInfo != null)
                 conn.setRequestProperty("User-Agent", getClientInfo());
         }
         return conn;

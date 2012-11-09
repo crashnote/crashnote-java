@@ -22,8 +22,6 @@ import com.crashnote.test.servlet.defs.TargetMockSpec
 class ServletConfigFactorySpec
     extends TargetMockSpec[ServletConfigFactory[ServletConfig]] {
 
-    setSequential()
-
     "Servlet Config Factory" should {
 
         "create configuration instance" >> {
@@ -43,6 +41,8 @@ class ServletConfigFactorySpec
             }
         }
     }
+
+    // SETUP ======================================================================================
 
     var m_filterConf: FilterConfig = _
 

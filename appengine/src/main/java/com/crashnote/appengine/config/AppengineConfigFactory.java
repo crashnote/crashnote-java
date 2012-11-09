@@ -16,6 +16,7 @@
 package com.crashnote.appengine.config;
 
 import com.crashnote.appengine.util.AppengineUtil;
+import com.crashnote.core.config.ConfigLoader;
 import com.crashnote.external.config.Config;
 import com.crashnote.servlet.config.ServletConfigFactory;
 
@@ -28,6 +29,10 @@ public class AppengineConfigFactory
 
     public AppengineConfigFactory(final FilterConfig filterConfig) {
         super(filterConfig);
+    }
+
+    public AppengineConfigFactory(final FilterConfig filterConfig, final ConfigLoader loader) {
+        super(filterConfig, loader);
     }
 
 
@@ -43,7 +48,8 @@ public class AppengineConfigFactory
 
         // create dynamic config file .. (ONLY enable client if running on AppEngine, local requests can just be passed through then)
         final String enabled = new AppengineUtil().isRunningOnAppengine() ? "true" : "false";
-        final Config appengineConf = getConfStr("crashnote { enabled = " + enabled + ", request { ignore-localhost = false } }");
+        final Config appengineConf = loader.fromString(
+            "crashnote { enabled = " + enabled + ", request { ignore-localhost = false } }");
 
         // .. and add it to the application conf
         return super.readConf()

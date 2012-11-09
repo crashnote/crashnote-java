@@ -23,8 +23,6 @@ import com.crashnote.core.model.data.DataObject
 abstract class TargetMockSpec[T : Manifest]
     extends BaseMockSpec[T] with ConfigEnv {
 
-    setSequential()
-
     // ==== CONTEXTS
 
     // stage #1: config the target
@@ -56,7 +54,7 @@ abstract class TargetMockSpec[T : Manifest]
         afterStarted()
     }
 
-    def afterStarted() = {}
+    def afterStarted() {}
 
     class Started(fns: (C) => _*) extends Mock(fns: _*) {
 
@@ -76,4 +74,6 @@ abstract class TargetMockSpec[T : Manifest]
 
     lazy val SYNC = (config: C) => config.isSync returns true
     lazy val ASYNC = (config: C) => config.isSync returns false
+
+    lazy val DEBUG = (config: C) => config.isDebug returns true
 }

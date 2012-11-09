@@ -67,6 +67,8 @@ class EnvCollectorSpec
         }
     }
 
+    // SETUP ======================================================================================
+
     def configure(config: C) = {
         config.getAppProfile returns "dev"
         config.getStartTime returns 123456789L

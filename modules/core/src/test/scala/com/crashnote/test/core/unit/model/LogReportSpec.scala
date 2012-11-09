@@ -22,8 +22,6 @@ import com.crashnote.test.base.defs.UnitSpec
 class LogReportSpec
     extends UnitSpec {
 
-    setSequential()
-
     "Log Report" should {
 
         var report: LogReport = null

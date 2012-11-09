@@ -19,6 +19,8 @@ import java.util.List;
 
 public class FilterUtil {
 
+    // INTERFACE ==================================================================================
+
     public static boolean doFilter(final String name, final List<String> filters) {
 
         for (final String filter : filters) {

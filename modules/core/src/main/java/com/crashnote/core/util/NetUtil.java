@@ -24,13 +24,6 @@ import java.net.UnknownHostException;
  */
 public class NetUtil {
 
-    // SETUP ======================================================================================
-
-    private NetUtil() {
-        // singleton
-    }
-
-
     // INTERFACE ==================================================================================
 
     public static String getHostAddress() {

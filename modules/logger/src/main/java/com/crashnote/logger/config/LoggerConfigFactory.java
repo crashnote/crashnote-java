@@ -15,6 +15,7 @@
  */
 package com.crashnote.logger.config;
 
+import com.crashnote.core.config.ConfigLoader;
 import com.crashnote.core.config.CrashConfigFactory;
 
 public class LoggerConfigFactory<C extends LoggerConfig>
@@ -23,6 +24,11 @@ public class LoggerConfigFactory<C extends LoggerConfig>
     // SETUP ======================================================================================
 
     public LoggerConfigFactory() {
+        super();
+    }
+
+    public LoggerConfigFactory(final ConfigLoader loader) {
+        super(loader);
     }
 
     // SHARED ===================================================================================
