@@ -39,6 +39,7 @@ public class Reporter
     // VARS =======================================================================================
 
     private boolean started;
+    private boolean initialized;
 
     private final LogLog logger;
     private Thread.UncaughtExceptionHandler defaultHandler;
@@ -53,6 +54,7 @@ public class Reporter
     // SETUP ======================================================================================
 
     public <C extends CrashConfig> Reporter(final C config) {
+        this.initialized = false;
         this.enabled = config.isEnabled();
 
         this.logger = config.getLogger(this.getClass());
@@ -92,19 +94,18 @@ public class Reporter
 
     public void startSession() {
         if (isOperable())
-            session.clear();
+            initSession();
     }
 
     public void flushSession() {
-        if (isOperable() && !isSessionEmpty()) {
+        if (isOperable() && !isSessionEmpty())
             processor.process(session);
-        }
     }
 
     public void endSession() {
         if (isOperable()) {
             flushSession();
-            session.clear();
+            clearSession();
         }
     }
 
@@ -115,17 +116,20 @@ public class Reporter
     // ===== Log Context
 
     public Reporter put(final String key, final Object val) {
-        if (isOperable()) session.putCtx(key, val);
+        if (isOperable())
+            session.putCtx(key, val);
         return this;
     }
 
     public Reporter remove(final String key) {
-        if (isOperable()) session.removeCtx(key);
+        if (isOperable())
+            session.removeCtx(key);
         return this;
     }
 
     public Reporter clear() {
-        if (isOperable()) session.clearCtx();
+        if (isOperable())
+            clearSession();
         return this;
     }
 
@@ -146,7 +150,8 @@ public class Reporter
     @Override
     public void uncaughtException(final Thread t, final Throwable th) {
         // first call custom handler ...
-        if (isOperable()) reportLog(new ThrowableLogEvt(t, th));
+        if (isOperable() && isInitialized())
+            reportLog(new ThrowableLogEvt(t, th));
 
         // ... then call default handler
         callUncaughtExceptionToDefaultHandler(t, th);
@@ -181,6 +186,10 @@ public class Reporter
         return isEnabled() && isStarted();
     }
 
+    protected final boolean isInitialized() {
+        return initialized;
+    }
+
 
     // FACTORY ====================================================================================
 
@@ -194,6 +203,19 @@ public class Reporter
             return syncPrc;
         else
             return new AsyncProcessor(config, syncPrc);
+    }
+
+
+    // INTERNAL ===================================================================================
+
+    private void initSession() {
+        clearSession();
+        initialized = true;
+    }
+
+    private void clearSession() {
+        session.clear();
+        initialized = false;
     }
 
 

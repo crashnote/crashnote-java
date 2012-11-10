@@ -98,7 +98,7 @@ class CrashnoteFilterSpec
 
     // SETUP ======================================================================================
 
-    var m_reporter: ServletReporter = _
+    var m_reporter: ServletReporter[C] = _
     var m_connector: AutoLogConnector = _
 
     var m_request: HttpServletRequest = _
@@ -108,14 +108,14 @@ class CrashnoteFilterSpec
     var m_fconf: FilterConfig = _
     
     def configure(config: C) = {
-        m_reporter = mock[ServletReporter]
+        m_reporter = mock[ServletReporter[C]]
         m_connector = mock[AutoLogConnector]
         m_request = mock[HttpServletRequest]
         m_response = mock[HttpServletResponse]
         m_chain = mock[FilterChain]
 
         m_conf.getReporter returns m_reporter
-        m_conf.getLogConnector(any[ServletReporter]) returns m_connector
+        m_conf.getLogConnector(any[ServletReporter[C]]) returns m_connector
 
         new CrashnoteFilter() {
             override protected def getConfig(fc: FilterConfig) = m_conf

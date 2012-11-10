@@ -15,11 +15,11 @@
  */
 package com.crashnote.test.web.unit.collect
 
-import com.crashnote.core.collect.Collector
 import com.crashnote.test.web.defs.TargetMockSpec
+import com.crashnote.web.collect.SessionCollector
 
 class SessionCollectorSpec
-    extends TargetMockSpec[Collector] {
+    extends TargetMockSpec[SessionCollector[_]] {
 
     "Session Collector" should {
 

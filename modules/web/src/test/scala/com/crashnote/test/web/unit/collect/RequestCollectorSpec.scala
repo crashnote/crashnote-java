@@ -15,11 +15,11 @@
  */
 package com.crashnote.test.web.unit.collect
 
-import com.crashnote.core.collect.Collector
 import com.crashnote.test.web.defs.TargetMockSpec
+import com.crashnote.web.collect.RequestCollector
 
 class RequestCollectorSpec
-    extends TargetMockSpec[Collector] {
+    extends TargetMockSpec[RequestCollector[_]] {
 
     "Request Collector" should {
 

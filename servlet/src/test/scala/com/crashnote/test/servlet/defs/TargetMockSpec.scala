@@ -65,4 +65,7 @@ abstract class TargetMockSpec[T](implicit t: Manifest[T])
 
     lazy val DISABLED = (config: C) => config.isEnabled returns false
     lazy val ENABLED = (config: C) => config.isEnabled returns true
+
+    lazy val IGNORE_LOCAL_REQ = (config: C) => config.getIgnoreLocalRequests returns true
+    lazy val ACCEPT_LOCAL_REQ = (config: C) => config.getIgnoreLocalRequests returns false
 }

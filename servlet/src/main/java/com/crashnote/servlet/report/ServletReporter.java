@@ -18,6 +18,8 @@ package com.crashnote.servlet.report;
 import com.crashnote.servlet.collect.ServletRequestCollector;
 import com.crashnote.servlet.collect.ServletSessionCollector;
 import com.crashnote.servlet.config.ServletConfig;
+import com.crashnote.web.collect.RequestCollector;
+import com.crashnote.web.collect.SessionCollector;
 import com.crashnote.web.report.WebReporter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,17 +27,14 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Customized implementation of the core {@link WebReporter}. Adds servlet-specific functionality.
  */
-public class ServletReporter
-        extends WebReporter<HttpServletRequest> {
+public class ServletReporter<C extends ServletConfig>
+        extends WebReporter<C, HttpServletRequest> {
 
 
     // SETUP ======================================================================================
 
-    public <C extends ServletConfig> ServletReporter(final C config) {
+    public ServletReporter(final C config) {
         super(config);
-
-        this.reqCollector = new ServletRequestCollector(config);
-        this.sesCollector = new ServletSessionCollector(config);
     }
 
 
@@ -50,5 +49,15 @@ public class ServletReporter
         } else {
             return false;
         }
+    }
+
+    @Override
+    protected RequestCollector getRequestCollector(final C config) {
+        return new ServletRequestCollector(config);
+    }
+
+    @Override
+    protected SessionCollector getSessionCollector(final C config) {
+        return new ServletSessionCollector(config);
     }
 }

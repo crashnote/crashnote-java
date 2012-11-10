@@ -28,6 +28,8 @@ trait MockSpec
 
     def anyClass = any[Class[_]]
 
+    def anyObject = any[java.lang.Object]
+
     def anyThrowable = any[Throwable]
 
     protected def doReturn(toBeReturned: Any) =

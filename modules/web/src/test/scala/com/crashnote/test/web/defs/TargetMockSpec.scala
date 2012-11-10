@@ -20,7 +20,7 @@ import com.crashnote.core.Lifecycle
 import com.crashnote.core.model.log.LogReport
 import com.crashnote.core.model.data.DataObject
 import com.crashnote.test.base.defs.BaseMockSpec
-import com.crashnote.test.base.util.FactoryUtil
+import com.crashnote.test.web.util.FactoryUtil
 
 abstract class TargetMockSpec[T : Manifest]
     extends BaseMockSpec[T] with WebEnv with FactoryUtil {

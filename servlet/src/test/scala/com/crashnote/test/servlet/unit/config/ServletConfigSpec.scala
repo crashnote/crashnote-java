@@ -34,7 +34,7 @@ class ServletConfigSpec
 
         "act as factory" >> {
             "for servlet reporter" >> {
-                c.getReporter must haveClass[ServletReporter]
+                c.getReporter must haveClass[ServletReporter[ServletConfig]]
             }
         }
     }

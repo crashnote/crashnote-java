@@ -27,24 +27,28 @@ import java.util.Set;
 /**
  * Customized implementation of the core {@link LoggerReporter}. Adds servlet-specific functionality.
  */
-public abstract class WebReporter<R>
+public abstract class WebReporter<C extends WebConfig, R>
         extends LoggerReporter {
 
     // VARS =======================================================================================
 
-    protected RequestCollector reqCollector;
-    protected SessionCollector sesCollector;
+    private final RequestCollector reqCollector;
+    private final SessionCollector sesCollector;
 
-    protected boolean ignoreLocalhost;
+    protected final boolean ignoreLocalhost;
     protected final Set<String> localAddresses;
 
 
     // SETUP ======================================================================================
 
-    public <C extends WebConfig> WebReporter(final C config) {
-        super(config);
+    public WebReporter(final C config) {
 
+        super(config);
         this.ignoreLocalhost = config.getIgnoreLocalRequests();
+
+        // init collectors
+        this.reqCollector = getRequestCollector(config);
+        this.sesCollector = getSessionCollector(config);
 
         // initialize list of local addresses (in order to distinguish remote calls from local ones)
         localAddresses = new HashSet<String>();
@@ -66,27 +70,8 @@ public abstract class WebReporter<R>
      * @param request the HTTP request
      */
     public void beforeRequest(final R request) {
-        startSession();
-    }
-
-    /**
-     * After each request, evaluate and finish the internal log session
-     *
-     * @param request the HTTP request
-     */
-    public void afterRequest(final R request) {
-
-        if (!isSessionEmpty()) {
-
-            if (!ignoreRequest(request)) {
-
-                // enrich log context with detailed request information
-                put("request", reqCollector.collect(request));
-                put("session", sesCollector.collect(request));
-
-                endSession();
-            }
-        }
+        if (!ignoreRequest(request))
+            startSession();
     }
 
     /**
@@ -97,8 +82,24 @@ public abstract class WebReporter<R>
      * @param th      the exception details
      */
     public void uncaughtException(final R request, final Thread t, final Throwable th) {
-        if (!ignoreRequest(request))
-            uncaughtException(t, th);
+        uncaughtException(t, th);
+    }
+
+    /**
+     * After each request, evaluate and finish the log session
+     *
+     * @param request the HTTP request
+     */
+    public void afterRequest(final R request) {
+
+        if (!isSessionEmpty()) {
+
+            // enrich log context with detailed request information
+            put("request", reqCollector.collect(request));
+            put("session", sesCollector.collect(request));
+
+            endSession();
+        }
     }
 
 
@@ -112,9 +113,20 @@ public abstract class WebReporter<R>
         return false;
     }
 
-    protected abstract boolean ignoreRequest(final R req);
-
+    /**
+     * test whether a request is made from localhost
+     */
     protected boolean isLocalRequest(final String req) {
         return localAddresses.contains(req);
     }
+
+
+    /**
+     * test whether a request should be ignored and not reported
+     */
+    protected abstract boolean ignoreRequest(final R req);
+
+    protected abstract RequestCollector getRequestCollector(final C config);
+
+    protected abstract SessionCollector getSessionCollector(final C config);
 }

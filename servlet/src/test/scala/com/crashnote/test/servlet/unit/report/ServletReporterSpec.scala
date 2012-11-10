@@ -23,64 +23,63 @@ import com.crashnote.core.report.impl.ThrowableLogEvt
 import com.crashnote.test.servlet.defs.TargetMockSpec
 import com.crashnote.servlet.report.ServletReporter
 import com.crashnote.servlet.collect._
+import com.crashnote.servlet.config.ServletConfig
+import com.crashnote.core.log.LogLog
 
 class ServletReporterSpec
-    extends TargetMockSpec[ServletReporter] {
+    extends TargetMockSpec[ServletReporter[ServletConfig]] {
 
-    "Reporter" should {
+    "Servlet Reporter" should {
 
-        "start session before request" >> new Started() {
-            target.beforeRequest(null)
-
-            expect {
-                one(m_session).clear()
+        "ignore requests" >> {
+            "from local" >> new Started(IGNORE_LOCAL_REQ) {
+                target.beforeRequest(req("127.0.0.1"))
+                expect {
+                    verifyUntouched(m_session)
+                }
             }
         }
 
-        "handle uncaught exception - but do NOT flush session" >> new Started() {
-            val req = mock[HttpServletRequest]
-            m_session.isEmpty returns false
-            target.uncaughtException(req, Thread.currentThread(), new RuntimeException("oops"))
-
-            expect {
-                one(m_session).addEvent(any[ThrowableLogEvt])
-                verifyUntouched(m_processor)
-                no(m_session).clear()
+        "accept requests" >> {
+            "from remote" >> new Started(IGNORE_LOCAL_REQ) {
+                target.beforeRequest(req("192.168.0.1"))
+                expect {
+                    one(m_session).clear()
+                }
             }
-        }
-
-        "end session after request" >> new Started() {
-            val req = mock[HttpServletRequest]
-            target.afterRequest(req)
-
-            expect {
-                one(m_reqColl).collect(req)
-                one(m_sesColl).collect(req)
+            "from local - when config enables it" >> new Started(ACCEPT_LOCAL_REQ) {
+                target.beforeRequest(req("127.0.0.1"))
+                expect {
+                    one(m_session).clear()
+                }
             }
         }
     }
 
     // SETUP ======================================================================================
 
+    var m_req: HttpServletRequest = _
     var m_session: ILogSession = _
     var m_processor: Processor = _
-    var m_reqColl: ServletRequestCollector = _
-    var m_sesColl: ServletSessionCollector = _
 
     def configure(config: C) = {
         config.isEnabled returns true
-        config.getIgnoreLocalRequests returns false
         new ServletReporter(config)
     }
 
     override def mock() {
         m_session = _mock[ILogSession]
         m_processor = _mock[Processor]
-        m_reqColl = _mock[ServletRequestCollector]
-        m_sesColl = _mock[ServletSessionCollector]
     }
 
     override def afterStarted() {
-        reset(m_session, m_processor)
+        reset(m_session)
+    }
+
+    def req(addr: String) = {
+        val m_req = mock[HttpServletRequest]
+        m_req.getRemoteAddr returns addr
+        m_req.getRequestURL returns new StringBuffer("crashnote.com")
+        m_req
     }
 }

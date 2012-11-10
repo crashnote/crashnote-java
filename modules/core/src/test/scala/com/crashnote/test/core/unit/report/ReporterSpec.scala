@@ -30,9 +30,11 @@ class ReporterSpec
 
         "have lifecycle" >> {
             "with 1 start" >> new Mock(ENABLED) {
+                // execute
                 target.start()
                 target.start()
 
+                // verify
                 expect {
                     one(m_session).clear()
                     one(m_processor).start()
@@ -41,9 +43,12 @@ class ReporterSpec
             }
             "with 1 stop" >> new Started(ENABLED) {
                 m_session.isEmpty returns false
+
+                // execute
                 target.stop()
                 target.stop()
 
+                // verify
                 expect {
                     one(m_session).clear()
                     one(m_processor).process(m_session)
@@ -102,7 +107,7 @@ class ReporterSpec
             "clear" >> {
                 "when operable" >> new Started(ENABLED) {
                     target.clear()
-                    there was one(m_session).clearCtx()
+                    there was one(m_session).clear()
                 }
                 "but skip when disabled" >> new Started(DISABLED) {
                     target.clear()
@@ -148,16 +153,19 @@ class ReporterSpec
                 }
             }
             "when registered" >> new Started(ENABLED) {
+                // prepare
                 val th = newExcp()
                 val t = Thread.currentThread()
                 m_session.isEmpty returns false
                 Thread.setDefaultUncaughtExceptionHandler(m_excpHandler)
 
-                // when registered
                 target.registerAsDefaultExcpHandler()
                 Thread.getDefaultUncaughtExceptionHandler === target
 
+                // execute
                 target.uncaughtException(t, th)
+
+                // verify
                 expect {
                     one(m_session).addEvent(any[ThrowableLogEvt])
                     one(m_processor).process(m_session)
