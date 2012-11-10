@@ -1,1 +1,1 @@
-Documentation under https://www.crashnote.com/docs
+Please consult the [online documentation](https://www.crashnote.com/docs) to get started.
