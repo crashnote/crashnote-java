@@ -23,6 +23,7 @@ import com.crashnote.core.model.data.DataObject;
 import com.crashnote.core.util.SystemUtil;
 
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -62,13 +63,17 @@ public abstract class BaseCollector {
 
     protected DataArray createDataArr(final Object[] values) {
         final DataArray arr = createDataArr();
-        Collections.addAll(arr, values);
+        {
+            Collections.addAll(arr, values);
+        }
         return arr;
     }
 
-    protected DataArray createDataArr(final List<Object> values) {
+    protected <T extends Object> DataArray createDataArr(final List<T> values) {
         final DataArray arr = createDataArr();
-        for (final Object v : values) arr.add(v);
+        {
+            for (final Object v : values) arr.add(v);
+        }
         return arr;
     }
 

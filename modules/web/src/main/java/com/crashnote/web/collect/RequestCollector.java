@@ -21,6 +21,7 @@ import com.crashnote.core.model.data.DataObject;
 import com.crashnote.core.util.ChksumUtil;
 import com.crashnote.web.config.WebConfig;
 
+import java.util.Enumeration;
 import java.util.List;
 
 import static com.crashnote.core.util.FilterUtil.doFilter;
@@ -84,13 +85,19 @@ public abstract class RequestCollector<R>
     }
 
     protected void addHeader(final DataObject data, final String name, final List<String> values) {
-        final String[] arr = new String[values.size()];
-        addHeader(data, name, values.toArray(arr));
+        final int size = values.size();
+        if (size > 0) {
+            if (size == 1)
+                data.put(name, values.get(0));
+            else
+                data.put(name, createDataArr(values));
+        }
     }
 
     protected void addHeader(final DataObject data, final String name, final String[] values) {
-        if (values.length > 0) {
-            if (values.length == 1)
+        final int size = values.length;
+        if (size > 0) {
+            if (size == 1)
                 data.put(name, values[0]);
             else
                 data.put(name, createDataArr(values));

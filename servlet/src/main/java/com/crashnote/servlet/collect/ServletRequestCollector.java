@@ -15,6 +15,7 @@
  */
 package com.crashnote.servlet.collect;
 
+import com.crashnote.core.model.data.DataArray;
 import com.crashnote.core.model.data.DataObject;
 import com.crashnote.servlet.config.ServletConfig;
 import com.crashnote.web.collect.RequestCollector;
@@ -57,7 +58,7 @@ public class ServletRequestCollector
             while (names.hasMoreElements()) {
                 final String name = names.nextElement().toString();
                 final Enumeration header = req.getHeaders(name);
-                addHeader(data, name, Collections.list(header));
+                addHeader(data, name, header);
             }
         }
         return data;
@@ -81,5 +82,30 @@ public class ServletRequestCollector
             }
         }
         return data;
+    }
+
+
+    // INTERNAL ===================================================================================
+
+    protected DataArray createDataArr(final Enumeration values) {
+        final DataArray arr = createDataArr();
+        {
+            while (values.hasMoreElements()) {
+                final Object val = values.nextElement();
+                arr.add(val);
+            }
+        }
+        return arr;
+    }
+
+    protected void addHeader(final DataObject data, final String name, final Enumeration values) {
+        final DataArray arr = createDataArr(values);
+        final int size = arr.size();
+        if (size > 0) {
+            if (size == 1)
+                data.put(name, arr.get(0));
+            else
+                data.put(name, arr);
+        }
     }
 }
