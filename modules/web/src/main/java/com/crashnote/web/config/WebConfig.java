@@ -40,7 +40,7 @@ public class WebConfig
     }
 
     public boolean getIgnoreLocalRequests() {
-        return getBool("request.ignore-localhost");
+        return getBool("request.ignore-localhost", true);
     }
 
     public boolean getSkipHeaderData() {
@@ -56,7 +56,7 @@ public class WebConfig
     }
 
     public List<String> getRequestFilters() {
-        return getStrings("filter.request");
+        return getOptStrings("filter.request");
     }
 
 }

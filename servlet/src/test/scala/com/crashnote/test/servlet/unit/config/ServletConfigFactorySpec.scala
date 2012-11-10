@@ -15,54 +15,48 @@
  */
 package com.crashnote.test.servlet.unit.config
 
+import java.util.Properties
 import javax.servlet.FilterConfig
-import com.crashnote.servlet.config.{ServletConfig, ServletConfigFactory}
 import com.crashnote.test.servlet.defs.TargetMockSpec
+import com.crashnote.core.config.ConfigLoader
+import com.crashnote.servlet.config.{ServletConfig, ServletConfigFactory}
 
 class ServletConfigFactorySpec
     extends TargetMockSpec[ServletConfigFactory[ServletConfig]] {
 
     "Servlet Config Factory" should {
 
-        "create configuration instance" >> {
+        "create configuration instance" >> new Configured {
+            target.get must haveClass[ServletConfig]
+        }
 
-            "by reading properties from filter" >> new Mock()  {
-                val c = target.get()
+        "load servlet filter configs before user conf file" >> new Configured {
 
-                c.getIgnoreLocalRequests === false
-                c.getSkipHeaderData === false
-                c.getSkipSessionData === true
-            }
+            // mock
+            m_loader.fromFile("crashnote") returns
+                loader.fromProps(toConfProps(List("request.max-parameter-size" -> 100)), "user props")
 
-            "and override by system" >> new Mock() {
-                // prepare
-                System.setProperty("crashnote.request.max-parameter-size", "69")
+            // execute
+            var c = getFactory(defaultWebProps).get
 
-                // execute
-                val c = target.get()
-
-                // verify
-                c.getMaxRequestParameterSize === 69
-            }
+            // verify
+            c.getMaxRequestParameterSize === 1000
         }
     }
 
     // SETUP ======================================================================================
 
+    var loader: ConfigLoader = _
+    var m_loader: ConfigLoader = _
     var m_filterConf: FilterConfig = _
 
-    val filterProps =
-        toProps(List(
-            "request.skipHeaders" -> "false",
-            "request.skip-session" -> "true",
-            "request.ignore-localhost" -> "false"
-        ))
+    def configure(config: C) =
+        getFactory(defaultWebProps)
 
-    def configure(config: C) = {
-        m_filterConf = mock[FilterConfig]
-        m_filterConf.getInitParameterNames.asInstanceOf[javaEnum[Object]] returns filterProps.keys()
-        m_filterConf.getInitParameter(anyString) answers (name => filterProps.getProperty(name.toString))
-
-        new ServletConfigFactory[ServletConfig](m_filterConf)
+    def getFactory(p: Properties, l: ConfigLoader = new ConfigLoader) = {
+        loader = l
+        m_loader = spy(l)
+        m_filterConf = filterConfDefaultMock(p)
+        new ServletConfigFactory[ServletConfig](m_filterConf, m_loader)
     }
 }

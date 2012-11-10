@@ -18,9 +18,10 @@ package com.crashnote.test.servlet.defs
 import org.specs2.specification.Scope
 import com.crashnote.core.Lifecycle
 import com.crashnote.test.base.defs.BaseMockSpec
+import com.crashnote.test.servlet.util.FactoryUtil
 
 abstract class TargetMockSpec[T](implicit t: Manifest[T])
-    extends BaseMockSpec[T] with ServletEnv {
+    extends BaseMockSpec[T] with ServletEnv with FactoryUtil {
 
     // ==== CONTEXTS
 

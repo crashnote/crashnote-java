@@ -42,7 +42,7 @@ class CollectorSpec
             }
         }
 
-        "collect ssesion" >> {
+        "collect session" >> {
             "with one event" >> new Started() {
                 val s = new LocalLogSession()
                 val evt = newLogEvt()

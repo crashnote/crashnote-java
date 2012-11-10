@@ -73,11 +73,4 @@ public class ServletConfigFactory<C extends ServletConfig>
             loader.fromProps(props, "servlet filter")       // #1 filter props
                 .withFallback(super.readCustomFileConf());  // #2 other custom props
     }
-
-    @Override
-    protected Config readDefaultFileConf() {
-        return
-            loader.fromFile("crashnote.servlet")                // #1 servlet default props
-                .withFallback(super.readDefaultFileConf());     // #2 other default props
-    }
 }

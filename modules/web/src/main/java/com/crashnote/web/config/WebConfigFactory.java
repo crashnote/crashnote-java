@@ -16,6 +16,7 @@
 package com.crashnote.web.config;
 
 import com.crashnote.core.config.ConfigLoader;
+import com.crashnote.external.config.Config;
 import com.crashnote.logger.config.LoggerConfigFactory;
 
 public class WebConfigFactory<C extends WebConfig>
@@ -31,10 +32,18 @@ public class WebConfigFactory<C extends WebConfig>
         super(loader);
     }
 
+
     // SHARED =====================================================================================
 
     @Override
     public C create() {
         return (C) new WebConfig(readConf());
+    }
+
+    @Override
+    protected Config readDefaultFileConf() {
+        return
+            loader.fromFile("crashnote.web")                // #1 web default props
+                .withFallback(super.readDefaultFileConf()); // #2 other default props
     }
 }

@@ -19,10 +19,11 @@ import org.specs2.specification.BeforeExample
 import com.crashnote.test.base.defs.MockSpec
 import com.crashnote.servlet.report.ServletReporter
 import com.crashnote.servlet.config.{ServletConfigFactory, ServletConfig}
-import javax.servlet.FilterConfig
+import com.crashnote.core.config.ConfigLoader
+import com.crashnote.test.servlet.util.FactoryUtil
 
 class ServletConfigSpec
-    extends MockSpec with BeforeExample {
+    extends MockSpec with BeforeExample with FactoryUtil {
 
     "Servlet Config" should {
 
@@ -34,12 +35,22 @@ class ServletConfigSpec
         }
     }
 
-    // SETUP =====================================================================================
+    // SETUP ======================================================================================
 
     var c: ServletConfig = _
 
     def before {
-        val fc = mock[FilterConfig]
-        c = (new ServletConfigFactory[ServletConfig](fc)).get()
+        c = getConfig("key" -> "0000000-00000-0000-0000-000000000000")
+    }
+
+    def getConfig(m: (String, Any)*) = {
+        val loader = new ConfigLoader
+        val m_loader = spy(loader)
+        m_loader.fromSystemProps() returns loader.fromProps(toConfProps(m.toList), "spec")
+
+        val m_filterConf = filterConfDefaultMock()
+
+        val c = (new ServletConfigFactory[ServletConfig](m_filterConf, m_loader)).get
+        c
     }
 }

@@ -28,6 +28,7 @@ import com.crashnote.external.config.Config;
 import com.crashnote.external.config.ConfigException;
 import com.crashnote.external.config.ConfigRenderOptions;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -246,7 +247,26 @@ public class CrashConfig {
     }
 
     protected List<String> getStrings(final String name) {
-        return conf.getStringList(getConfName(name));
+        try {
+            return conf.getStringList(getConfName(name));
+        } catch (ConfigException.Missing e) {
+            throw new CrashnoteException("can not find config key '" + name + "'", e);
+        } catch (ConfigException.WrongType e) {
+            throw new CrashnoteException("type of config key '" + name + "' is not 'string'", e);
+        }
+    }
+
+    protected List<String> getStrings(final String name, final List<String> def) {
+        try {
+            return conf.getStringList(getConfName(name));
+        } catch (Exception ignored) {
+            return def;
+        }
+    }
+
+    protected List<String> getOptStrings(final String name) {
+        final List<String> r = getStrings(name, null);
+        return r == null ? new ArrayList<String>() : r;
     }
 
     protected String getConfName(final String name) {

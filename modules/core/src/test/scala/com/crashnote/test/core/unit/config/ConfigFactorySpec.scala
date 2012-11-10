@@ -95,15 +95,15 @@ class ConfigFactorySpec
 
     // HELPER =====================================================================================
 
-    private def getConf(l: List[(String, String)], descr: String) =
+    private def getConf(l: List[(String, Any)], descr: String) =
         (new ConfigLoader).fromProps(toConfProps(l), descr)
 
     private def genProps(base: Int) =
         List(
-            "key" -> (base + 1).toString,
-            "app.build" -> (base + 2).toString,
-            "app.profile" -> (base + 3).toString,
-            "app.version" -> (base + 4).toString,
-            "network.timeout" -> (base + 5).toString
+            "key" -> (base + 1),
+            "app.build" -> (base + 2),
+            "app.profile" -> (base + 3),
+            "app.version" -> (base + 4),
+            "network.timeout" -> (base + 5)
         ).take(base / 10)
 }
