@@ -1,12 +1,8 @@
-# [Crashnote](https://www.crashnote.com): Error tracking for Java-based web apps
-
-[![Build Status](https://secure.travis-ci.org/crashnote/crashnote-java.png)](http://travis-ci.org/crashnote/crashnote-java)
+## [Crashnote](https://www.crashnote.com): [![Build Status](https://secure.travis-ci.org/crashnote/crashnote-java.png)](http://travis-ci.org/crashnote/crashnote-java)
 
 [crashnote.com](https://www.crashnote.com) is an online service that tracks errors in applications.
 
 This makes it easier to understand where problems are and helps you to fix bugs faster.
-
-The Java notifier is designed to work in all **Java Servlet applications** (even on AppEngine), by embedding a small library: the notifier.
 
 
 ## Quick Guide
