@@ -37,17 +37,6 @@ public class JSONObject
     }
 
     /**
-     * Allows creation of a JSONObject from a Map. After that, both the
-     * generated JSONObject and the Map can be modified independently.
-     *
-     * @param map
-     */
-    public JSONObject(final Map map) {
-        super(map);
-    }
-
-
-    /**
      * Encode a map into JSON text and write it to out.
      * If this map is also a JSONAware or JSONStreamAware, JSONAware or JSONStreamAware specific behaviours will be ignored at this top level.
      *

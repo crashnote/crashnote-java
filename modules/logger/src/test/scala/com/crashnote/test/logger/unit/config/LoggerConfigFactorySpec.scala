@@ -15,16 +15,31 @@
  */
 package com.crashnote.test.logger.unit.config
 
+import org.specs2.specification.BeforeExample
+
 import com.crashnote.logger.config.{LoggerConfig, LoggerConfigFactory}
 import com.crashnote.test.base.defs.UnitSpec
+import com.crashnote.core.config.CrashConfigFactory
 
 class LoggerConfigFactorySpec
-    extends UnitSpec {
+    extends UnitSpec with BeforeExample {
 
     "Logger Config Factory" should {
 
-        "create configuration instance" >> {
-            (new LoggerConfigFactory[LoggerConfig].get) must haveClass[LoggerConfig]
+        "inherit from Core Config Factory" >> {
+            cf must haveSuperclass[CrashConfigFactory[_]]
         }
+
+        "create configuration instance" >> {
+            cf.get must haveClass[LoggerConfig]
+        }
+    }
+
+    // SETUP ======================================================================================
+
+    var cf: LoggerConfigFactory[LoggerConfig] = _
+
+    def before {
+        cf = new LoggerConfigFactory[LoggerConfig]
     }
 }

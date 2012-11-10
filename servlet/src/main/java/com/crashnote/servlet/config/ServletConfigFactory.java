@@ -18,13 +18,14 @@ package com.crashnote.servlet.config;
 import com.crashnote.core.config.ConfigLoader;
 import com.crashnote.external.config.Config;
 import com.crashnote.logger.config.LoggerConfigFactory;
+import com.crashnote.web.config.WebConfigFactory;
 
 import javax.servlet.FilterConfig;
 import java.util.Enumeration;
 import java.util.Properties;
 
 public class ServletConfigFactory<C extends ServletConfig>
-    extends LoggerConfigFactory<C> {
+    extends WebConfigFactory<C> {
 
     // VARS =======================================================================================
 
@@ -47,7 +48,9 @@ public class ServletConfigFactory<C extends ServletConfig>
 
     @Override
     public C create() {
-        return (C) new ServletConfig(readConf());
+        @SuppressWarnings("unchecked")
+        final C result = (C) new ServletConfig(readConf());
+        return result;
     }
 
     /**

@@ -17,14 +17,20 @@ package com.crashnote.test.servlet.unit.config
 
 import java.util.Properties
 import javax.servlet.FilterConfig
+
 import com.crashnote.test.servlet.defs.TargetMockSpec
 import com.crashnote.core.config.ConfigLoader
+import com.crashnote.web.config.WebConfigFactory
 import com.crashnote.servlet.config.{ServletConfig, ServletConfigFactory}
 
 class ServletConfigFactorySpec
     extends TargetMockSpec[ServletConfigFactory[ServletConfig]] {
 
     "Servlet Config Factory" should {
+
+        "inherit from Web Config Factory" >> new Configured {
+            target must haveSuperclass[WebConfigFactory[_]]
+        }
 
         "create configuration instance" >> new Configured {
             target.get must haveClass[ServletConfig]
@@ -57,6 +63,7 @@ class ServletConfigFactorySpec
         loader = l
         m_loader = spy(l)
         m_filterConf = filterConfDefaultMock(p)
+
         new ServletConfigFactory[ServletConfig](m_filterConf, m_loader)
     }
 }

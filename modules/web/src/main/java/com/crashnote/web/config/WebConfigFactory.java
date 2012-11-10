@@ -37,7 +37,9 @@ public class WebConfigFactory<C extends WebConfig>
 
     @Override
     public C create() {
-        return (C) new WebConfig(readConf());
+        @SuppressWarnings("unchecked")
+        final C result = (C) new WebConfig(readConf());
+        return result;
     }
 
     @Override

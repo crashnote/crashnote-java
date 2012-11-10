@@ -40,7 +40,7 @@ public abstract class LogEvt<E>
             throw new IllegalArgumentException("argument must be non-null");
 
         this.event = event;
-        this.mdc = context;
+        this.mdc = null; //context;
     }
 
 

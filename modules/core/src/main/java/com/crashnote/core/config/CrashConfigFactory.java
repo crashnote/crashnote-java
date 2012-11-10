@@ -78,7 +78,9 @@ public class CrashConfigFactory<C extends CrashConfig> {
      * create a new configuration by reading properties and files (see below)
      */
     protected C create() {
-        return (C) new CrashConfig(readConf());
+        @SuppressWarnings("unchecked")
+        final C result = (C) new CrashConfig(readConf());
+        return result;
     }
 
     /**

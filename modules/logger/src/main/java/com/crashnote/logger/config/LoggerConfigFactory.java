@@ -35,7 +35,9 @@ public class LoggerConfigFactory<C extends LoggerConfig>
 
     @Override
     protected C create() {
-        return (C) new LoggerConfig(readConf());
+        @SuppressWarnings("unchecked")
+        final C result = (C) new LoggerConfig(readConf());
+        return result;
     }
 
 }

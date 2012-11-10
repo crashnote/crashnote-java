@@ -21,14 +21,18 @@ import com.crashnote.servlet.report.ServletReporter
 import com.crashnote.servlet.config.{ServletConfigFactory, ServletConfig}
 import com.crashnote.core.config.ConfigLoader
 import com.crashnote.test.servlet.util.FactoryUtil
+import com.crashnote.web.config.WebConfig
 
 class ServletConfigSpec
     extends MockSpec with BeforeExample with FactoryUtil {
 
     "Servlet Config" should {
 
-        "act as factory" >> {
+        "inherit from Web Config" >> {
+            c must haveSuperclass[WebConfig]
+        }
 
+        "act as factory" >> {
             "for servlet reporter" >> {
                 c.getReporter must haveClass[ServletReporter]
             }

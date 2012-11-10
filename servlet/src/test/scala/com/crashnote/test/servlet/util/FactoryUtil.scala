@@ -36,6 +36,7 @@ trait FactoryUtil {
             "request.exclude-headers" -> "false",
             "request.exclude-session" -> "true",
             "request.ignore-localhost" -> "false",
-            "request.max-parameter-size" -> 1000
+            "request.max-parameter-size" -> 1000,
+            "key" -> "0000000-00000-0000-0000-000000000000"
         ))
 }

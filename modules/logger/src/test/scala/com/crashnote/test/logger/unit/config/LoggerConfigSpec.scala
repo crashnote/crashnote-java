@@ -20,11 +20,17 @@ import org.specs2.specification.BeforeExample
 import com.crashnote.logger.config.{LoggerConfig, LoggerConfigFactory}
 import com.crashnote.logger.report.LoggerReporter
 import com.crashnote.logger.helper.AutoLogConnector
+import com.crashnote.core.config.CrashConfig
 
 class LoggerConfigSpec
     extends MockSpec with BeforeExample {
 
     "Logger Config" should {
+
+        "inherit from Crash Config" >> {
+            c must haveSuperclass[CrashConfig]
+        }
+
         "act as factory" >> {
             "for reporter" >> {
                 c.getReporter must haveClass[LoggerReporter]

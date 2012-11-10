@@ -17,9 +17,10 @@ package com.crashnote.test.appengine.defs
 
 import org.specs2.specification.Scope
 import com.crashnote.test.base.defs.BaseMockSpec
+import com.crashnote.test.appengine.util.FactoryUtil
 
 abstract class TargetMockSpec[T](implicit t: Manifest[T])
-    extends BaseMockSpec[T] with AppengineEnv {
+    extends BaseMockSpec[T] with AppengineEnv with FactoryUtil {
 
     // stage #1: config the target
     def configure(config: C): T
