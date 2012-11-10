@@ -1,0 +1,17 @@
+# See http://about.travis-ci.org/docs/user/build-configuration/
+
+language: scala
+scala:
+  - 2.9.1
+
+branches:
+  only:
+    - develop
+
+notifications:
+  email:
+    recipients:
+      - dev@crashnote.com
+
+jdk:
+  - openjdk6
