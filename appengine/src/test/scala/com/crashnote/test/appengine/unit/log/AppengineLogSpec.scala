@@ -15,20 +15,53 @@
  */
 package com.crashnote.test.appengine.unit.log
 
-import com.crashnote.test.base.defs.MockSpec
 import com.crashnote.appengine.log.AppengineLogLogFactory
 import com.crashnote.appengine.config.AppengineConfig
+import com.crashnote.test.appengine.defs.TargetMockSpec
 
 class AppengineLogSpec
-    extends MockSpec {
+    extends TargetMockSpec[AppengineLogLogFactory] {
 
     "AppEngine LogLog" should {
 
-        "init" >> {
-            val m_conf = mock[AppengineConfig]
-            val log = (new AppengineLogLogFactory(m_conf)).getLogger("TEST")
+        "instantiate via factory" >> new Configured {
+            target.getLogger("TEST").getName === "TEST"
+        }
 
-            log.getName === "TEST"
+        "print" >> {
+            "debug" >> new Configured {
+                target.getLogger("TEST").debug("test: {}", "test")
+            }
+            "info" >> new Configured {
+                target.getLogger("TEST").info("test: {}", "test")
+            }
+            "warn" >> new Configured {
+                "with message" >> {
+                    target.getLogger("TEST").warn("test: {}", "test")
+                }
+                "with message and exception" >> {
+                    target.getLogger("TEST").warn("test", th)
+                }
+                "with exception" >> {
+                    target.getLogger("TEST").warn("test: {}", th, "test")
+                }
+            }
+            "error" >> new Configured {
+                "with message" >> {
+                    target.getLogger("TEST").error("test: {}", "test")
+                }
+                "with exception" >> {
+                    target.getLogger("TEST").error("test", th, "test")
+                }
+            }
         }
     }
+
+    // SETUP ======================================================================================
+
+    def configure(config: AppengineConfig) =
+        new AppengineLogLogFactory(config)
+
+    val prefix = "CRASHNOTE"
+    val th = new RuntimeException("oops")
 }

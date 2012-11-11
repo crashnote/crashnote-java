@@ -132,10 +132,8 @@ class LogLogSpec
 
     // SETUP ======================================================================================
 
-    def configure(config: CrashConfig) = {
-        val factory = new LogLogFactory(config)
-        factory
-    }
+    def configure(config: CrashConfig) =
+        new LogLogFactory(config)
 
     val prefix = "CRASHNOTE"
     val th = new RuntimeException("oops")

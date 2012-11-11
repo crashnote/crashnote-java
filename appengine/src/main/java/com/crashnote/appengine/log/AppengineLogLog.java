@@ -21,8 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Specialized internal log, instead of using stdout/stderr it uses
- * AppEngine's default logger: JUL.
+ * Specialized internal log.
+ * Instead of using stdout/stderr it uses AppEngine's default logger: JUL.
  */
 public class AppengineLogLog extends LogLog {
 
@@ -47,17 +47,17 @@ public class AppengineLogLog extends LogLog {
 
     @Override
     public void debug(final String msg, final Object... args) {
-        log.fine(buildMsg(msg, args));
+        log.log(Level.FINE, buildMsg(msg, args));
     }
 
     @Override
     public void info(final String msg, final Object... args) {
-        log.info(buildMsg(msg, args));
+        log.log(Level.INFO, buildMsg(msg, args));
     }
 
     @Override
     public void warn(final String msg, final Object... args) {
-        log.warning(buildMsg(msg, args));
+        log.log(Level.WARNING, buildMsg(msg, args));
     }
 
     @Override
@@ -72,7 +72,7 @@ public class AppengineLogLog extends LogLog {
 
     @Override
     public void error(final String msg, final Object... args) {
-        log.severe(buildMsg(msg, args));
+        log.log(Level.SEVERE, buildMsg(msg, args));
     }
 
     @Override
