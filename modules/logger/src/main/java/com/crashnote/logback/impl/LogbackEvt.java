@@ -40,6 +40,10 @@ public class LogbackEvt
 
     // SETUP ======================================================================================
 
+    public LogbackEvt(final ILoggingEvent event) {
+        super(event);
+    }
+
     public LogbackEvt(final ILoggingEvent event, final Map context) {
         super(event, context);
     }

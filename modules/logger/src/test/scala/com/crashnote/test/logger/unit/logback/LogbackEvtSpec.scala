@@ -29,15 +29,21 @@ class LogbackEvtSpec
 
         "instantiate" >> {
             "example 1" >> {
-                val m_evt = mock[ILoggingEvent]
-                m_evt.getLevel returns Level.ERROR
+                // mock
+                val m_evt = getMock(Level.ERROR)
+
                 m_evt.getThreadName returns "main"
+                m_evt.getArgumentArray returns Array("Bob")
                 m_evt.getLoggerName returns "com.example"
                 m_evt.getTimeStamp returns 123456789L
 
+                // execute
                 val r = new LogbackEvt(m_evt, null)
+
+                // verify
                 r.getLoggerName === "com.example"
                 r.getLevel === LogLevel.ERROR
+                r.getArgs === Array("Bob")
                 r.getTimeStamp returns 123456789L
                 r.getThreadName === "main"
                 r.getThrowable === null
@@ -45,14 +51,19 @@ class LogbackEvtSpec
 
             "example 2" >> {
                 val err = new RuntimeException("oops")
-                val m_evt = mock[ILoggingEvent]
-                m_evt.getLevel returns Level.WARN
+
+                // mock
+                val m_evt = getMock(Level.WARN)
+
                 m_evt.getFormattedMessage returns "oops"
                 val m_thproxy = mock[ThrowableProxy]
                 m_evt.getThrowableProxy returns m_thproxy
                 m_thproxy.getThrowable returns err
 
+                // execute
                 val r = new LogbackEvt(m_evt, Map("test" -> "data"))
+
+                // verify
                 r.getThrowable === err
                 r.getMessage === "oops"
                 r.getLevel === LogLevel.WARN
@@ -61,5 +72,29 @@ class LogbackEvtSpec
                 //r.getMDC.get("test") === "data"
             }
         }
+
+        "convert log level" >> {
+            "info" >> {
+                new LogbackEvt(getMock(Level.INFO)).getLevel === LogLevel.INFO
+            }
+            "error" >> {
+                new LogbackEvt(getMock(Level.ERROR)).getLevel === LogLevel.ERROR
+            }
+            "warn" >> {
+                new LogbackEvt(getMock(Level.WARN)).getLevel === LogLevel.WARN
+            }
+            "debug" >> {
+                new LogbackEvt(getMock(Level.DEBUG)).getLevel === LogLevel.DEBUG
+                new LogbackEvt(getMock(Level.TRACE)).getLevel === LogLevel.DEBUG
+            }
+        }
+    }
+
+    // SETUP ======================================================================================
+
+    def getMock(l: Level) = {
+        val m_evt = mock[ILoggingEvent]
+        m_evt.getLevel returns l
+        m_evt
     }
 }

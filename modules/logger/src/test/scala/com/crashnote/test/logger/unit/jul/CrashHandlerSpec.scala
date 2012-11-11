@@ -55,6 +55,8 @@ class CrashHandlerSpec
         }
     }
 
+    // SETUP =====================================================================================
+
     override def configure(config: C) = {
         m_evt = mock[LogRecord]
         m_evt.getThrown returns err

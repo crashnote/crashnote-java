@@ -35,6 +35,10 @@ public abstract class LogEvt<E>
 
     // SETUP ======================================================================================
 
+    public LogEvt(final E event) {
+        this(event, null);
+    }
+
     public LogEvt(final E event, final Map context) {
         if (event == null)
             throw new IllegalArgumentException("argument must be non-null");

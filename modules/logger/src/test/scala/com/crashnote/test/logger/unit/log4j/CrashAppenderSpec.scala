@@ -57,6 +57,8 @@ class CrashAppenderSpec
         }
     }
 
+    // SETUP =====================================================================================
+
     override def configure(config: C) = {
         m_evt = mock[LoggingEvent]
         m_evt.getThrowableInformation returns new ThrowableInformation(err)

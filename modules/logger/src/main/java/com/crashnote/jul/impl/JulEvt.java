@@ -32,6 +32,10 @@ public class JulEvt
 
     // SETUP ======================================================================================
 
+    public JulEvt(final LogRecord event) {
+        super(event);
+    }
+
     public JulEvt(final LogRecord event, final Map context) {
         super(event, context);
     }

@@ -58,6 +58,8 @@ class CrashAppenderSpec
         }
     }
 
+    // SETUP =====================================================================================
+
     override def configure(config: C) = {
         m_evt = mock[ILoggingEvent]
         val m_thproxy = mock[ThrowableProxy]

@@ -25,6 +25,7 @@ class LoggerReporterSpec
     "Logger Reporter" should {
 
         "decide whether to accept logs" >> {
+
             "when enabled" >> new Mock(ENABLED) {
                 target.doAcceptLog("com.example") === true
                 target.doAcceptLog("com.crashnote") === false
@@ -36,6 +37,8 @@ class LoggerReporterSpec
             }
         }
     }
+
+    // SETUP =====================================================================================
 
     def configure(config: C) =
         new LoggerReporter(config)

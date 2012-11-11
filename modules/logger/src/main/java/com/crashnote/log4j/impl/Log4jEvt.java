@@ -34,6 +34,10 @@ public class Log4jEvt
 
     // SETUP ======================================================================================
 
+    public Log4jEvt(final LoggingEvent event) {
+        super(event);
+    }
+
     public Log4jEvt(final LoggingEvent event, final Map context) {
         super(event, context);
     }
@@ -92,8 +96,6 @@ public class Log4jEvt
                 return LogLevel.WARN;
             case Priority.INFO_INT:
                 return LogLevel.INFO;
-            case Priority.DEBUG_INT:
-                return LogLevel.DEBUG;
             default:
                 return LogLevel.DEBUG;
         }
