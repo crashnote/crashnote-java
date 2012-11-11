@@ -13,40 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crashnote.test.servlet.unit.config
+package com.crashnote.test.appengine.unit.config
 
-import java.util.Properties
 import javax.servlet.FilterConfig
 
-import com.crashnote.test.servlet.defs.TargetMockSpec
+import com.crashnote.appengine.config.{AppengineConfig, AppengineConfigFactory}
 import com.crashnote.core.config.ConfigLoader
-import com.crashnote.web.config.WebConfigFactory
-import com.crashnote.servlet.config.{ServletConfig, ServletConfigFactory}
+import com.crashnote.servlet.config.ServletConfigFactory
+import com.crashnote.test.appengine.defs.TargetMockSpec
+import java.util.Properties
 
-class ServletConfigFactorySpec
-    extends TargetMockSpec[ServletConfigFactory[ServletConfig]] {
+class AppengineConfigFactorySpec
+    extends TargetMockSpec[AppengineConfigFactory] {
 
-    "Servlet Config Factory" should {
+    "Appengine Config Factory" should {
 
-        "inherit from Web Config Factory" >> new Configured {
-            getFactory() must haveSuperclass[WebConfigFactory[_]]
+        "inherit from Servlet Config Factory" >> new Configured {
+            getFactory() must haveSuperclass[ServletConfigFactory[_]]
         }
 
         "create configuration instance" >> new Configured {
-            target.get must haveClass[ServletConfig]
+            target.get must haveClass[AppengineConfig]
         }
 
-        "load servlet filter configs before user conf file" >> new Configured {
+        "load dynamic config before default file confs" >> new Configured {
 
             // mock
-            m_loader.fromFile("crashnote") returns
-                loader.fromProps(toConfProps(List("request.max-parameter-size" -> 10)), "user props")
+            m_loader.fromFile("crashnote.default") returns
+                loader.fromProps(toConfProps(List("enabled" -> true, "ignore-localhost" -> true)), "default props")
 
             // execute
-            var c = target.get
+            var c = getFactory(defaultWebProps).get
 
             // verify
-            c.getMaxRequestParameterSize === 1000
+            c.isEnabled === false
+            c.getIgnoreLocalRequests === false
         }
     }
 
@@ -65,8 +66,8 @@ class ServletConfigFactorySpec
         m_filterConf = filterConfDefaultMock(p)
 
         if(p.isEmpty)
-            new ServletConfigFactory[ServletConfig](m_filterConf)
+            new AppengineConfigFactory(m_filterConf)
         else
-            new ServletConfigFactory[ServletConfig](m_filterConf, m_loader)
+            new AppengineConfigFactory(m_filterConf, m_loader)
     }
 }

@@ -15,6 +15,28 @@
  */
 package com.crashnote.test.appengine.util
 
+import com.crashnote.test.base.defs.MockSpec
+import java.util.Properties
+import javax.servlet.FilterConfig
+
 trait FactoryUtil {
 
+    self: com.crashnote.test.base.util.FactoryUtil with MockSpec =>
+
+    def filterConfDefaultMock(p: Properties = defaultWebProps) = {
+        val m_filterConf = mock[FilterConfig]
+        m_filterConf.getInitParameterNames.asInstanceOf[javaEnum[Object]] returns p.keys()
+        m_filterConf.getInitParameter(anyString) answers (name => p.getProperty(name.toString))
+        m_filterConf
+    }
+
+    val defaultWebProps =
+        toProps(List(
+            "request.hash-ip" -> "false",
+            "request.exclude-headers" -> "false",
+            "request.exclude-session" -> "true",
+            "request.ignore-localhost" -> "false",
+            "request.max-parameter-size" -> 1000,
+            "key" -> "0000000-00000-0000-0000-000000000000"
+        ))
 }

@@ -22,6 +22,9 @@ import com.crashnote.test.base.defs.MockSpec
 import com.crashnote.appengine.config.{AppengineConfig, AppengineConfigFactory}
 import com.crashnote.core.config.ConfigLoader
 import com.crashnote.servlet.config.ServletConfig
+import com.crashnote.appengine.send.AppengineSender
+import com.crashnote.appengine.util.AppengineUtil
+import com.crashnote.appengine.collect.AppengineCollector
 
 class AppengineConfigSpec
     extends MockSpec with BeforeExample {
@@ -32,14 +35,25 @@ class AppengineConfigSpec
             c must haveSuperclass[ServletConfig]
         }
 
-        //"always be in sync mode" >> {
-        //            "by default" >> new Mock(SYNC) {
-        //                target.isSync === true
-        //            }
-        //            "even when config is set to async" >> new Mock(ASYNC) {
-        //                target.isSync === true
-        //            }
-        //        }
+        "act as factory" >> {
+            "for sender" >> {
+                c.getSender must haveClass[AppengineSender]
+            }
+            "for collector" >> {
+                c.getCollector must haveClass[AppengineCollector]
+            }
+            "for system util" >> {
+                c.getSystemUtil must haveClass[AppengineUtil]
+            }
+        }
+
+        "always be in sync mode" >> {
+            c = getConfig(("sync" -> true))
+            c.isSync === true
+
+            c = getConfig(("sync" -> false))
+            c.isSync === true
+        }
     }
 
     // SETUP ======================================================================================
@@ -47,13 +61,17 @@ class AppengineConfigSpec
     var c: AppengineConfig = _
 
     def before {
+        c = getConfig()
+    }
+
+    def getConfig(p: (String, Any)*) = {
         val m_filterConf = mock[FilterConfig]
 
         val l = new ConfigLoader
         val m_loader = spy(l)
         m_loader.fromSystemProps() returns
-            l.fromProps(toConfProps(List("key" -> "0000000-00000-0000-0000-000000000000")), "sys props")
+            l.fromProps(toConfProps(p.toList ::: List("key" -> "0000000-00000-0000-0000-000000000000")), "sys props")
 
-        c = (new AppengineConfigFactory(m_filterConf, m_loader)).get
+        (new AppengineConfigFactory(m_filterConf, m_loader)).get
     }
 }
