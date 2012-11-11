@@ -129,6 +129,7 @@ trait Settings {
         Defaults.defaultSettings ++ buildSettings ++ testSettings ++ Licenses.licenseSettings ++ Seq(
             crossPaths := false,
             scalaVersion := scalaV,
+            parallelExecution in Test := false,
             libraryDependencies := Seq(Dependency.scalaLib), // must be added for IntelliJ :(
 
             resolvers += "Spray Repository" at "http://repo.spray.cc/",
