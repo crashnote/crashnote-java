@@ -27,9 +27,9 @@ class CrashnoteFilterSpec
         "init" >> {
 
             "on AppEngine" >> new Mock {
-                withSysProp("com.google.appengine.runtime.environment", "dev") {
-                    target.init(m_fconf) !== null
-                }
+                System.setProperty("com.google.appengine.runtime.environment", "dev")
+                target.init(m_fconf) !== null
+                System.clearProperty("com.google.appengine.runtime.environment")
             }
             "but not outside of AppEngine" >> new Mock {
                 target.init(m_fconf) must throwA[RuntimeException]

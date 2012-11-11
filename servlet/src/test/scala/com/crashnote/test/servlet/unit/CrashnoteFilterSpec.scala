@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,6 +22,7 @@ import com.crashnote.servlet.report.ServletReporter
 import com.crashnote.servlet.CrashnoteFilter
 import http.{HttpServletResponse, HttpServletRequest}
 import com.crashnote.test.servlet.defs.TargetMockSpec
+import java.io.IOException
 
 class CrashnoteFilterSpec
     extends TargetMockSpec[CrashnoteFilter] {
@@ -49,35 +50,57 @@ class CrashnoteFilterSpec
             }
 
             "but not inside of AppEngine" >> new Mock {
-                withSysProp("com.google.appengine.runtime.environment", "dev") {
-                    target.init(m_fconf) must throwA[RuntimeException]
-                }
+                System.setProperty("com.google.appengine.runtime.environment", "dev")
+                target.init(m_fconf) must throwA[RuntimeException]
+                System.clearProperty("com.google.appengine.runtime.environment")
             }
         }
 
         "filter" >> {
             "when NO error occurs" >> new Mock(ENABLED) {
+                // prepare
                 target.init(m_fconf)
+
+                // execute
                 target.doFilter(m_request, m_response, m_chain)
 
-                there was one(m_reporter).beforeRequest(m_request) then
+                // verify
+                there was
+                    one(m_reporter).beforeRequest(m_request) then
                     one(m_reporter).afterRequest(m_request)
             }
-            "when an error occurs" >> new Mock(ENABLED) {
-                val err = new ServletException("oops")
-                m_chain.doFilter(m_request, m_response) throws err
+            "when an error occurs" >> {
+                def example[T <: Throwable : ClassManifest](err: Throwable) =
+                    "of type '" + err.getClass + "'" >> new Mock(ENABLED) {
 
-                target.init(m_fconf)
-                target.doFilter(m_request, m_response, m_chain) must throwA[ServletException]
+                        // prepare
+                        m_chain.doFilter(m_request, m_response) throws err
+                        target.init(m_fconf)
 
-                there was one(m_reporter).beforeRequest(m_request) then
-                    one(m_reporter).uncaughtException(m_request, Thread.currentThread(), err) then
-                    one(m_reporter).afterRequest(m_request)
+                        // execute
+                        target.doFilter(m_request, m_response, m_chain) must throwA[T]
+
+                        // verify
+                        there was
+                            one(m_reporter).beforeRequest(m_request) then
+                            one(m_reporter).uncaughtException(m_request, Thread.currentThread(), err) then
+                            one(m_reporter).afterRequest(m_request)
+                    }
+
+                example[ServletException](new ServletException("oops"))
+                example[RuntimeException](new RuntimeException("oops"))
+                example[RuntimeException](new NullPointerException("oops"))
+                example[RuntimeException](new StackOverflowError("oops"))
+                example[IOException](new IOException("oops"))
             }
             "just proceed with chain if disabled" >> new Mock(DISABLED) {
+                // prepare
                 target.init(m_fconf)
+
+                // execute
                 target.doFilter(m_request, m_response, m_chain)
 
+                // verify
                 expect {
                     one(m_chain).doFilter(m_request, m_response)
                     verifyUntouched(m_reporter)
@@ -86,9 +109,13 @@ class CrashnoteFilterSpec
         }
 
         "destroy" >> new Mock(ENABLED) {
+            // prepare
             target.init(m_fconf)
+
+            // execute
             target.destroy()
 
+            // verify
             expect {
                 one(m_reporter).stop()
                 one(m_connector).stop()
@@ -106,7 +133,7 @@ class CrashnoteFilterSpec
     var m_chain: FilterChain = _
 
     var m_fconf: FilterConfig = _
-    
+
     def configure(config: C) = {
         m_reporter = mock[ServletReporter[C]]
         m_connector = mock[AutoLogConnector]

@@ -136,7 +136,7 @@ public class CrashnoteFilter
     protected void checkForAppengine() {
         if(isAppEngine())
             throw new RuntimeException("Unsupported Platform! It seems you are developing for / running on " +
-                    "Google's AppEngine. This library (crashnote-servlet) is not compatible with it - " +
+                    "Google AppEngine. This library (crashnote-servlet) is not compatible with it - " +
                     "you need the specialized crashnote-appengine. " +
                     "Please consult the online docs of Crashnote for further details.");
     }

@@ -34,7 +34,8 @@ class AppengineSenderSpec
         "send" >> new Mock() {
             target.send(m_report)
 
-            there was one(m_request).setPayload("DATA".getBytes("UTF-8")) then
+            there was
+                one(m_request).setPayload("DATA".getBytes("UTF-8")) then
                 one(m_appengineUtil).execRequest(m_request, true)
         }
     }

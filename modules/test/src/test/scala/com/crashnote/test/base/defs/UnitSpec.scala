@@ -28,12 +28,4 @@ trait UnitSpec
     with PrintCapture {
 
     sequential
-
-
-    def withSysProp(key: String, value: String)(fn: => Example): Example = {
-        System.setProperty(key, value)
-        val r = fn
-        System.clearProperty(key)
-        r
-    }
 }
