@@ -26,8 +26,9 @@ trait WebEnv {
 
     type C = WebConfig
 
+    var m_conf = mock[WebConfig]
+
     def mockConfig(): C = {
-        val m_conf = mock[WebConfig]
         val lfact = new LogLogFactory(m_conf)
         m_conf.getLogger(anyClass) returns lfact.getLogger("")
         m_conf.getLogger(anyString) returns lfact.getLogger("")

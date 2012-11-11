@@ -21,15 +21,16 @@ import com.crashnote.test.servlet.defs.TargetMockSpec
 import com.crashnote.core.model.data.DataObject
 import com.crashnote.servlet.collect._
 
-class SessionCollectorSpec
+class ServletSessionCollectorSpec
     extends TargetMockSpec[ServletSessionCollector] {
 
-    "Session Collector" should {
+    "Servlet Session Collector" should {
 
         "collect" >> {
 
-            "default" >> new Mock() {
+            "without session data" >> new Mock() {
                 val res = target.collect(mockReq())
+
                 res.get("id") === "666"
                 res.get("started_at") === 123456789L
                 res.get("data") === null
@@ -38,6 +39,7 @@ class SessionCollectorSpec
             "with session" >> new Mock(WITH_SESSION) {
                 val res = target.collect(mockReq())
                 val sesData = res.get("data").asInstanceOf[DataObject]
+
                 sesData !== null
                 sesData.get("name") === "test"
                 sesData.get("email") === "test@test.com"

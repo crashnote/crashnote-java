@@ -78,4 +78,7 @@ abstract class TargetMockSpec[T : Manifest]
     lazy val ASYNC = (config: C) => config.isSync returns false
 
     lazy val DEBUG = (config: C) => config.isDebug returns true
+
+    lazy val WITH_IP = (config: C) => config.getHashRemoteIP returns false
+    lazy val WITHOUT_HEADER = (config: C) => config.getSkipHeaderData returns true
 }

@@ -15,22 +15,23 @@
  */
 package com.crashnote.test.web.unit.collect
 
-import com.crashnote.test.web.defs.TargetMockSpec
+import com.crashnote.test.base.defs.MockSpec
+import com.crashnote.web.config.WebConfig
 import com.crashnote.web.collect.SessionCollector
+import com.crashnote.test.web.util.HTTPRequest
+import com.crashnote.core.collect.BaseCollector
 
 class SessionCollectorSpec
-    extends TargetMockSpec[SessionCollector[_]] {
+    extends MockSpec {
 
     "Session Collector" should {
 
-        "" >> {
-            1 === 1 // TODO
+        "inherit from BaseCollector" >> {
+            val conf = mock[WebConfig]
+            val sc = new SessionCollector[HTTPRequest](conf) {
+                def collect(req: HTTPRequest) = null
+            }
+            sc must haveSuperclass[BaseCollector]
         }
-    }
-
-    // SETUP ======================================================================================
-
-    def configure(config: C) = {
-        null
     }
 }

@@ -54,6 +54,8 @@ public abstract class RequestCollector<R>
     // INTERFACE ==================================================================================
 
     public DataObject collect(final R req) {
+
+        // collect general HTTP data
         final DataObject data = collectReqBase(req);
         {
             // collect HTTP parameters
@@ -62,6 +64,7 @@ public abstract class RequestCollector<R>
             // collect HTTP headers
             if (!skipHeaderData) data.putObj("headers", collectReqHeader(req));
         }
+
         return data;
     }
 

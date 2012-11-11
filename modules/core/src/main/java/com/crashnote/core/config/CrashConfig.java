@@ -101,12 +101,12 @@ public class CrashConfig {
             // validate API key
             final String key = getKey();
             if (key == null || key.length() == 0) {
-                throw new IllegalArgumentException(
+                throw new IllegalStateException(
                     "The API Key is missing; please login to '" + LIB_URL_BOARD + "', " +
                         "browse to your app and you'll find the key under 'Setup'.");
 
             } else if (key.length() != 36)
-                throw new IllegalArgumentException(
+                throw new IllegalStateException(
                     "The API Key appears to be invalid (it should be 32 characters long with 4 dashes); " +
                         "please login to '" + LIB_URL_BOARD + "', " +
                         "browse to your app you'll find the key under 'Setup'.");

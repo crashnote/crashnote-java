@@ -23,47 +23,33 @@ import com.crashnote.servlet.collect.ServletRequestCollector
 import com.crashnote.core.model.data._
 import com.crashnote.test.servlet.defs.TargetMockSpec
 
-class RequestCollectorSpec
+class ServletRequestCollectorSpec
     extends TargetMockSpec[ServletRequestCollector] {
 
-    "Request Collector" should {
+    "Servlet Request Collector" should {
 
-        "collect" >> {
+        "collect request data" >> new Mock() {
 
-            "by default" >> new Mock() {
-                // == execute
-                val res = target.collect(mockReq())
+            // == execute
+            val res = target.collect(mockReq())
 
-                // == verify
-                res.get("method") === "PUT"
-                res.get("url") === "http://test.com"
-                res.get("ip_hash") === 6279231751978338320L
+            // == verify
+            res.get("method") === "PUT"
+            res.get("url") === "http://test.com"
+            res.get("ip_hash") === 6279231751978338320L
 
-                val params = res.get("parameters").asInstanceOf[DataObject]
-                params.size() === 3
-                params.get("userName") === "stephen"
-                params.get("userPassword") === "#"
-                params.get("userBio").asInstanceOf[java.util.List[String]].asScala must contain("I was born", "1986").only
+            val params = res.get("parameters").asInstanceOf[DataObject]
+            params.size() === 3
+            params.get("userName") === "stephen"
+            params.get("userPassword") === "#"
+            params.get("userBio").asInstanceOf[java.util.List[String]].asScala must contain("I was born", "1986").only
 
-                val headers = res.get("headers").asInstanceOf[DataObject]
-                headers.size() === 2
-                headers.get("User-Agent") === "Googlebot"
-                val acceptHeader = headers.get("Accept").asInstanceOf[DataArray]
-                acceptHeader.get(0) === "text/plain"
-                acceptHeader.get(1) === "text/html"
-            }
-
-            "IP address" >> new Mock(WITH_IP) {
-                val res = target.collect(mockReq())
-
-                res.get("ip") === "127.0.0.1"
-            }
-
-            "no header data" >> new Mock(WITHOUT_HEADER) {
-                val res = target.collect(mockReq())
-
-                res.get("headers") === null
-            }
+            val headers = res.get("headers").asInstanceOf[DataObject]
+            headers.size() === 2
+            headers.get("User-Agent") === "Googlebot"
+            val acceptHeader = headers.get("Accept").asInstanceOf[DataArray]
+            acceptHeader.get(0) === "text/plain"
+            acceptHeader.get(1) === "text/html"
         }
     }
 
@@ -100,7 +86,4 @@ class RequestCollectorSpec
 
         res
     }
-
-    lazy val WITH_IP = (config: C) => config.getHashRemoteIP returns false
-    lazy val WITHOUT_HEADER = (config: C) => config.getSkipHeaderData returns true
 }

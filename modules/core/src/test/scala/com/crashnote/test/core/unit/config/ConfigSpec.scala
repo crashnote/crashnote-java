@@ -19,6 +19,13 @@ import com.crashnote.test.base.defs.MockSpec
 import org.specs2.specification.BeforeExample
 import com.crashnote.core.config.{ConfigLoader, CrashConfigFactory, CrashConfig}
 import java.util.Date
+import com.crashnote.external.config.Config
+import com.crashnote.core.log.LogLog
+import com.crashnote.core.build.Builder
+import com.crashnote.core.send.Sender
+import com.crashnote.core.collect.Collector
+import com.crashnote.core.util.SystemUtil
+import com.crashnote.core.report.Reporter
 
 class ConfigSpec
     extends MockSpec with BeforeExample {
@@ -45,32 +52,34 @@ class ConfigSpec
 
         "validate configuration" >> {
             "skip when disabled" >> {
-                1 === 1 // TODO
+                val (out, _) = capture { c.validate(null) }
+                out must contain ("OFF")
             }
             "fail when key missing" >> {
-                1 === 1
+                getConfig(List("enabled" -> true, "key" -> "")).
+                    validate(null) must throwA[IllegalStateException]
             }
         }
 
         "act as factory" >> {
             "for logger" >> {
-                c.getLogger("test") !== null
-                c.getLogger(this.getClass) !== null
+                c.getLogger("test") must haveClass[LogLog]
+                c.getLogger(this.getClass) must haveClass[LogLog]
             }
             "for builder" >> {
-                c.getBuilder !== null
+                c.getBuilder must haveClass[Builder]
             }
             "for sender" >> {
-                c.getSender !== null
+                c.getSender must haveClass[Sender]
             }
             "for collector" >> {
-                c.getCollector !== null
+                c.getCollector must haveClass[Collector]
             }
             "for system util" >> {
-                c.getSystemUtil !== null
+                c.getSystemUtil must haveClass[SystemUtil]
             }
             "for reporter" >> {
-                c.getReporter !== null
+                c.getReporter must haveClass[Reporter]
             }
         }
     }
