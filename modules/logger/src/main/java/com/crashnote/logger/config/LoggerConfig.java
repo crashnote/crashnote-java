@@ -29,10 +29,6 @@ public class LoggerConfig
 
     // SETUP ======================================================================================
 
-    public LoggerConfig() {
-        this(ConfigFactory.empty());
-    }
-
     public LoggerConfig(final Config c) {
         super(c);
     }
