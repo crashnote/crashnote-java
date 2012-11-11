@@ -44,16 +44,16 @@ public class CrashHandler
 
     // config
     private LoggerConfig config;
-    private final LoggerConfigFactory configFactory;
+    private final LoggerConfigFactory<LoggerConfig> configFactory;
 
 
     // SETUP ======================================================================================
 
     public CrashHandler() {
-        this(new LoggerConfigFactory());
+        this(new LoggerConfigFactory<LoggerConfig>());
     }
 
-    public CrashHandler(final LoggerConfigFactory configFactory) {
+    public CrashHandler(final LoggerConfigFactory<LoggerConfig> configFactory) {
         this.configFactory = configFactory;
         init();
     }
@@ -82,7 +82,7 @@ public class CrashHandler
     @Override
     public void publish(final LogRecord record) {
         if (isLoggable(record))
-            getReporter().reportLog(new JulEvt(record, getContext()));
+            getReporter().reportLog(new JulEvt(record, getMDC()));
     }
 
     @Override
@@ -125,7 +125,7 @@ public class CrashHandler
         }
     }
 
-    public static Logger getTargetLogger(final Class clazz) {
+    public static Logger getTargetLogger(final Class<?> clazz) {
         return Logger.getLogger(clazz.getName());
     }
 
@@ -142,7 +142,7 @@ public class CrashHandler
 
     private LoggerConfig getConfig() {
         if (config == null)
-            config = (LoggerConfig) configFactory.get();
+            config = configFactory.get();
         return config;
     }
 
@@ -152,9 +152,9 @@ public class CrashHandler
         return reporter;
     }
 
-    private Map getContext() {
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> getMDC() {
         return null;
         //return (mdc != null) ? mdc.getCopyOfContextMap() : null;
     }
-
 }

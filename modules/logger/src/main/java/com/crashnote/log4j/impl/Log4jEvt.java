@@ -38,7 +38,7 @@ public class Log4jEvt
         super(event);
     }
 
-    public Log4jEvt(final LoggingEvent event, final Map context) {
+    public Log4jEvt(final LoggingEvent event, final Map<String, Object> context) {
         super(event, context);
     }
 

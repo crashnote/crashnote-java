@@ -44,7 +44,7 @@ public class LogbackEvt
         super(event);
     }
 
-    public LogbackEvt(final ILoggingEvent event, final Map context) {
+    public LogbackEvt(final ILoggingEvent event, final Map<String, Object> context) {
         super(event, context);
     }
 

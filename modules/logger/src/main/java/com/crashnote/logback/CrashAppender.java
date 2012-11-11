@@ -15,20 +15,24 @@
  */
 package com.crashnote.logback;
 
+import java.util.Map;
+
+import org.slf4j.MDC;
+import org.slf4j.LoggerFactory;
+
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
+
 import com.crashnote.ICrashAppender;
 import com.crashnote.core.model.types.LogLevel;
 import com.crashnote.logback.impl.LogbackEvt;
 import com.crashnote.logger.config.LoggerConfig;
 import com.crashnote.logger.config.LoggerConfigFactory;
 import com.crashnote.logger.report.LoggerReporter;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 
 /**
  * Appender that writes logs from 'Logback' to the cloud
@@ -44,16 +48,16 @@ public class CrashAppender
 
     // config
     private LoggerConfig config;
-    private final LoggerConfigFactory configFactory;
+    private final LoggerConfigFactory<LoggerConfig> configFactory;
 
 
     // SETUP ======================================================================================
 
     public CrashAppender() {
-        this(new LoggerConfigFactory());
+        this(new LoggerConfigFactory<LoggerConfig>());
     }
 
-    public CrashAppender(final LoggerConfigFactory configFactory) {
+    public CrashAppender(final LoggerConfigFactory<LoggerConfig> configFactory) {
         this.configFactory = configFactory;
 
         addFilter(new Filter<ILoggingEvent>() {
@@ -105,7 +109,7 @@ public class CrashAppender
             threshold = Level.ERROR;
     }
 
-    public static Logger getTargetLogger(final Class clazz) {
+    public static Logger getTargetLogger(final Class<?> clazz) {
         return (Logger) LoggerFactory.getLogger(clazz);
     }
 
@@ -115,7 +119,7 @@ public class CrashAppender
     @Override
     protected void append(final ILoggingEvent event) {
         if (started)
-            getReporter().reportLog(new LogbackEvt(event, MDC.getCopyOfContextMap()));
+            getReporter().reportLog(new LogbackEvt(event, getMDC()));
     }
 
 
@@ -123,12 +127,17 @@ public class CrashAppender
 
     private LoggerConfig getConfig() {
         if (config == null)
-            config = (LoggerConfig) configFactory.get();
+            config = configFactory.get();
         return config;
     }
 
     private LoggerReporter getReporter() {
         if (reporter == null) reporter = getConfig().getReporter();
         return reporter;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> getMDC() {
+        return MDC.getCopyOfContextMap();
     }
 }

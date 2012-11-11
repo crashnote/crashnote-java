@@ -36,7 +36,7 @@ public class JulEvt
         super(event);
     }
 
-    public JulEvt(final LogRecord event, final Map context) {
+    public JulEvt(final LogRecord event, final Map<String, Object> context) {
         super(event, context);
     }
 

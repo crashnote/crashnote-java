@@ -36,14 +36,14 @@ public class AutoLogConnector
 
     private boolean started;
 
-    private final List<LogConnector> connectors;
+    private final List<LogConnector<LoggerConfig, ?>> connectors;
 
 
     // SETUP ======================================================================================
 
     public AutoLogConnector(final LoggerConfig config, final LoggerReporter reporter) {
 
-        connectors = new ArrayList<LogConnector>(3);
+        connectors = new ArrayList<LogConnector<LoggerConfig, ?>>(3);
 
         @SuppressWarnings("unchecked")
         final Class<LogConnector>[] connectorsSrc =
@@ -106,7 +106,7 @@ public class AutoLogConnector
 
     // GET ========================================================================================
 
-    public List<LogConnector> getConnectors() {
+    public List<LogConnector<LoggerConfig, ?>> getConnectors() {
         return connectors;
     }
 }

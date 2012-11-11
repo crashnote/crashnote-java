@@ -25,5 +25,4 @@ public interface ICrashAppender {
     public boolean isStarted();
 
     public void setLogLevel(LogLevel lvl);
-
 }

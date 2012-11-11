@@ -26,6 +26,8 @@ import org.apache.log4j.*;
 import org.apache.log4j.spi.Filter;
 import org.apache.log4j.spi.LoggingEvent;
 
+import java.util.Map;
+
 /**
  * Appender that writes logs from 'Log4J' to the cloud
  */
@@ -40,16 +42,16 @@ public class CrashAppender
 
     // config
     private LoggerConfig config;
-    private final LoggerConfigFactory configFactory;
+    private final LoggerConfigFactory<LoggerConfig> configFactory;
 
 
     // SETUP ======================================================================================
 
     public CrashAppender() {
-        this(new LoggerConfigFactory());
+        this(new LoggerConfigFactory<LoggerConfig>());
     }
 
-    public CrashAppender(final LoggerConfigFactory configFactory) {
+    public CrashAppender(final LoggerConfigFactory<LoggerConfig> configFactory) {
         this.configFactory = configFactory;
         start();
     }
@@ -77,7 +79,7 @@ public class CrashAppender
         }
     }
 
-    public static Logger getTargetLogger(final Class clazz) {
+    public static Logger getTargetLogger(final Class<?> clazz) {
         return Logger.getLogger(clazz);
     }
 
@@ -104,7 +106,7 @@ public class CrashAppender
     @Override
     protected void append(final LoggingEvent event) {
         if (isStarted())
-            getReporter().reportLog(new Log4jEvt(event, MDC.getContext()));
+            getReporter().reportLog(new Log4jEvt(event, getMDC()));
     }
 
 
@@ -129,12 +131,17 @@ public class CrashAppender
 
     private LoggerConfig getConfig() {
         if (config == null)
-            config = (LoggerConfig) configFactory.get();
+            config = configFactory.get();
         return config;
     }
 
     private LoggerReporter getReporter() {
         if (reporter == null) reporter = getConfig().getReporter();
         return reporter;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> getMDC() {
+        return MDC.getContext();
     }
 }
