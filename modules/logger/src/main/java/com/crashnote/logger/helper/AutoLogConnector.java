@@ -32,8 +32,12 @@ import java.util.List;
 public class AutoLogConnector
     implements Lifecycle {
 
+    // VARS =======================================================================================
+
     private boolean started;
+
     private final List<LogConnector> connectors;
+
 
     // SETUP ======================================================================================
 
@@ -41,6 +45,7 @@ public class AutoLogConnector
 
         connectors = new ArrayList<LogConnector>(3);
 
+        @SuppressWarnings("unchecked")
         final Class<LogConnector>[] connectorsSrc =
             new Class[]{LogbackConnector.class, Log4jConnector.class, JulConnector.class};
 
@@ -48,6 +53,7 @@ public class AutoLogConnector
             connect(cls, config, reporter);
         }
     }
+
 
     // LIFECYCLE ==================================================================================
 
@@ -76,13 +82,15 @@ public class AutoLogConnector
         return started;
     }
 
+
     // INTERNAL ===================================================================================
 
     private void connect(final Class<LogConnector> cls,
                          final LoggerConfig config, final LoggerReporter reporter) {
         try {
             // instantiate
-            final LogConnector c = cls.newInstance();
+            @SuppressWarnings("unchecked")
+            final LogConnector<LoggerConfig, ?> c = cls.newInstance();
             try {
                 // start-up
                 c.start(config, reporter);
@@ -94,6 +102,7 @@ public class AutoLogConnector
             // ignore
         }
     }
+
 
     // GET ========================================================================================
 
