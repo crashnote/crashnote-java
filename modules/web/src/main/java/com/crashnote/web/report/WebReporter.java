@@ -32,8 +32,8 @@ public abstract class WebReporter<C extends WebConfig, R>
 
     // VARS =======================================================================================
 
-    private final RequestCollector reqCollector;
-    private final SessionCollector sesCollector;
+    private final RequestCollector<R> reqCollector;
+    private final SessionCollector<R> sesCollector;
 
     protected final boolean ignoreLocalhost;
     protected final Set<String> localAddresses;
@@ -126,7 +126,7 @@ public abstract class WebReporter<C extends WebConfig, R>
      */
     protected abstract boolean ignoreRequest(final R req);
 
-    protected abstract RequestCollector getRequestCollector(final C config);
+    protected abstract RequestCollector<R> getRequestCollector(final C config);
 
-    protected abstract SessionCollector getSessionCollector(final C config);
+    protected abstract SessionCollector<R> getSessionCollector(final C config);
 }

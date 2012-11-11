@@ -28,7 +28,8 @@ public class CrashnoteFilter
 
     // VARS =======================================================================================
 
-    private ServletReporter reporter;
+    private ServletReporter<com.crashnote.servlet.config.ServletConfig> reporter;
+
     private AutoLogConnector connector;
 
 

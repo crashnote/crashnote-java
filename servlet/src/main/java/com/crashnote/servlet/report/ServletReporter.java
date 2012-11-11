@@ -52,12 +52,12 @@ public class ServletReporter<C extends ServletConfig>
     }
 
     @Override
-    protected RequestCollector getRequestCollector(final C config) {
+    protected RequestCollector<HttpServletRequest> getRequestCollector(final C config) {
         return new ServletRequestCollector(config);
     }
 
     @Override
-    protected SessionCollector getSessionCollector(final C config) {
+    protected SessionCollector<HttpServletRequest> getSessionCollector(final C config) {
         return new ServletSessionCollector(config);
     }
 }
