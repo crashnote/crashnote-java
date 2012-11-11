@@ -15,17 +15,20 @@
  */
 package com.crashnote.test.core.unit.config
 
-import com.crashnote.test.base.defs.MockSpec
-import org.specs2.specification.BeforeExample
-import com.crashnote.core.config.{ConfigLoader, CrashConfigFactory, CrashConfig}
 import java.util.Date
-import com.crashnote.external.config.Config
+import scala.collection.JavaConverters._
+import org.specs2.specification.BeforeExample
+
+import com.crashnote.test.base.defs.MockSpec
+import com.crashnote.core.config.{ConfigLoader, CrashConfigFactory, CrashConfig}
 import com.crashnote.core.log.LogLog
 import com.crashnote.core.build.Builder
 import com.crashnote.core.send.Sender
 import com.crashnote.core.collect.Collector
 import com.crashnote.core.util.SystemUtil
 import com.crashnote.core.report.Reporter
+import com.crashnote.core.model.excp.CrashnoteException
+import com.crashnote.external.config.{ConfigFactory, Config}
 
 class ConfigSpec
     extends MockSpec with BeforeExample {
@@ -59,6 +62,10 @@ class ConfigSpec
                 getConfig(List("enabled" -> true, "key" -> "")).
                     validate(null) must throwA[IllegalStateException]
             }
+            "fail when key invalid" >> {
+                getConfig(List("enabled" -> true, "key" -> "abra cadabra")).
+                    validate(null) must throwA[IllegalStateException]
+            }
         }
 
         "act as factory" >> {
@@ -82,6 +89,55 @@ class ConfigSpec
                 c.getReporter must haveClass[Reporter]
             }
         }
+
+        "read config key" >> {
+            "of type String" >> {
+                "successfully" >> {
+                    getConfig() must not beNull
+                }
+                "but throw exception when missing" >> {
+                    getConfigWith().getKey must throwA[CrashnoteException]
+                }
+                /*
+                "but throw exception when wrong type" >> {
+                    getConfigWith(("key" -> "[42]")).getKey must throwA[CrashnoteException]
+                }
+                */
+            }
+            "of type Bool" >> {
+                "successfully" >> {
+                    getConfig().isSync must beFalse
+                }
+                "but throw exception when missing" >> {
+                    getConfigWith().isSync must throwA[CrashnoteException]
+                }
+                "but throw exception when wrong type" >> {
+                    getConfigWith(("sync" -> "$$")).isSync must throwA[CrashnoteException]
+                }
+            }
+            "of type Millis" >> {
+                "successfully" >> {
+                    getConfig().getConnectionTimeout must beGreaterThan(1000)
+                }
+                "but throw exception when missing" >> {
+                    getConfigWith().getConnectionTimeout must throwA[CrashnoteException]
+                }
+                "but throw exception when wrong format" >> {
+                    getConfigWith(("network.timeout" -> "true")).getConnectionTimeout must throwA[CrashnoteException]
+                }
+            }
+            "of type List" >> {
+                "successfully" >> {
+                    getConfig().getEnvironmentFilters must not be empty
+                }
+                "but throw exception when missing" >> {
+                    getConfigWith().getEnvironmentFilters must throwA[CrashnoteException]
+                }
+                "but throw exception when wrong format" >> {
+                    getConfigWith(("filter.environment" -> "42")).getEnvironmentFilters must throwA[CrashnoteException]
+                }
+            }
+        }
     }
 
     // SETUP =====================================================================================
@@ -92,11 +148,21 @@ class ConfigSpec
         c = getConfig()
     }
 
-    def getConfig(m: List[(String, Any)] = List()) = {
-        val cf = new ConfigLoader
-        val _cf = spy(cf)
-        _cf.fromSystemProps() returns cf.fromProps(toConfProps(m), "spec")
-        val c = (new CrashConfigFactory[CrashConfig](_cf)).get
-        c
+    def getConfig(m: List[(String, Any)] = List()) =
+        getConf(m, spy(_))
+
+    def getConfigWith(m: (String, Any)*) =
+        getConf(m.toList, cf => {
+            val m = mock[ConfigLoader]
+            m.fromFile(anyString) returns ConfigFactory.empty()
+            m.fromEnvProps() returns ConfigFactory.empty()
+            m
+        })
+
+    private def getConf(m: List[(String, Any)], fn: (ConfigLoader) => ConfigLoader) = {
+        val cl = new ConfigLoader
+        val _cl = fn(cl)
+        _cl.fromSystemProps() returns cl.fromProps(toConfProps(m), "spec")
+        (new CrashConfigFactory[CrashConfig](_cl)).get
     }
 }

@@ -218,8 +218,8 @@ public class CrashConfig {
             return conf.getMilliseconds(getConfName(name));
         } catch (ConfigException.Missing e) {
             throw new CrashnoteException("can not find config key '" + name + "'", e);
-        } catch (ConfigException.WrongType e) {
-            throw new CrashnoteException("type of config key '" + name + "' is not 'millis'", e);
+        } catch (ConfigException.BadValue e) {
+            throw new CrashnoteException("type of config key '" + name + "' is not a duration", e);
         }
     }
 
@@ -252,7 +252,7 @@ public class CrashConfig {
         } catch (ConfigException.Missing e) {
             throw new CrashnoteException("can not find config key '" + name + "'", e);
         } catch (ConfigException.WrongType e) {
-            throw new CrashnoteException("type of config key '" + name + "' is not 'string'", e);
+            throw new CrashnoteException("config key '" + name + "' is not a list of strings", e);
         }
     }
 

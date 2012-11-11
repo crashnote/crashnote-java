@@ -39,10 +39,10 @@ class AppengineLogSpec
                 "with message" >> {
                     target.getLogger("TEST").warn("test: {}", "test")
                 }
-                "with message and exception" >> {
+                "with exception" >> {
                     target.getLogger("TEST").warn("test", th)
                 }
-                "with exception" >> {
+                "with exception and parameters" >> {
                     target.getLogger("TEST").warn("test: {}", th, "test")
                 }
             }
