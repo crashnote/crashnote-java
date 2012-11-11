@@ -26,6 +26,7 @@ import java.util.List;
  *
  * @author FangYidong<fangyidong@yahoo.com.cn>
  */
+@SuppressWarnings("unchecked")
 public class JSONArray
         extends ArrayList<Object> implements List<Object>, JSONAware, JSONStreamAware {
 

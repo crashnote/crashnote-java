@@ -27,6 +27,7 @@ import java.util.Map;
  * @author FangYidong<fangyidong@yahoo.com.cn>
  */
 
+@SuppressWarnings("unchecked")
 public class JSONObject
         extends HashMap<String, Object> implements Map<String, Object>, JSONAware, JSONStreamAware {
 
