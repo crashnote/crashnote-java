@@ -1,4 +1,4 @@
-## Crashnote for Java [![Build Status](https://secure.travis-ci.org/crashnote/crashnote-java.png)](http://travis-ci.org/crashnote/crashnote-java)
+## Crashnote for Java Servlets [![Build Status](https://secure.travis-ci.org/crashnote/crashnote-java.png)](http://travis-ci.org/crashnote/crashnote-java)
 
 [crashnote.com](https://www.crashnote.com) is an online service that tracks errors in applications.
 
