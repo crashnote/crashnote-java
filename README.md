@@ -5,13 +5,20 @@
 This makes it easier to understand where problems are and helps you to fix bugs faster.
 
 
+## Supported Platforms
+
+- [Servlets](https://github.com/crashnote/crashnote-java/tree/master/servlet)
+- [Servlets on AppEngine](https://github.com/crashnote/crashnote-java/tree/master/appengine)
+- Play2 (coming soon)
+
+
 ## Quick Guide
 
 1. [sign up](https://www.crashnote.com)
 2. embed notifier
 3. deploy
 
-A detailed guide can be found in the [Official Documentation](https://www.crashnote.com/docs).
+A detailed guide can be found in the [official documentation](https://www.crashnote.com/docs).
 
 
 ## Features
