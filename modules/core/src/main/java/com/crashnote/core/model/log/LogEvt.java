@@ -39,7 +39,7 @@ public abstract class LogEvt<E>
         this(event, null);
     }
 
-    public LogEvt(final E event, final Map context) {
+    public LogEvt(final E event, final Map<String, Object> context) {
         if (event == null)
             throw new IllegalArgumentException("argument must be non-null");
 

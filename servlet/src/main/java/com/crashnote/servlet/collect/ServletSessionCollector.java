@@ -59,9 +59,9 @@ public class ServletSessionCollector
             if (!skipSessionData) {
                 final DataObject content = createDataObj();
                 {
-                    final Enumeration names = session.getAttributeNames();
+                    final Enumeration<?> names = session.getAttributeNames();
                     while (names.hasMoreElements()) {
-                        final String name = names.nextElement().toString();
+                        final String name = (String) names.nextElement();
                         final String value = session.getAttribute(name).toString();
                         content.put(name, value);
                     }

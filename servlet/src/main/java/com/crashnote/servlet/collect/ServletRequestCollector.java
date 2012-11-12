@@ -54,9 +54,9 @@ public class ServletRequestCollector
     protected DataObject collectReqHeader(final HttpServletRequest req) {
         final DataObject data = createDataObj();
         {
-            final Enumeration names = req.getHeaderNames();
+            final Enumeration<?> names = req.getHeaderNames();
             while (names.hasMoreElements()) {
-                final String name = names.nextElement().toString();
+                final String name = (String) names.nextElement();
                 final Enumeration header = req.getHeaders(name);
                 addHeader(data, name, header);
             }
@@ -68,9 +68,9 @@ public class ServletRequestCollector
     protected DataObject collectReqParams(final HttpServletRequest req) {
         final DataObject data = createDataObj();
         {
-            final Enumeration names = req.getParameterNames();
+            final Enumeration<?> names = req.getParameterNames();
             while (names.hasMoreElements()) {
-                final String name = names.nextElement().toString();
+                final String name = (String) names.nextElement();
                 final String[] values = req.getParameterValues(name);
                 if (values != null) {
                     if (values.length == 1) {
@@ -87,7 +87,7 @@ public class ServletRequestCollector
 
     // INTERNAL ===================================================================================
 
-    protected DataArray createDataArr(final Enumeration values) {
+    protected DataArray createDataArr(final Enumeration<?> values) {
         final DataArray arr = createDataArr();
         {
             while (values.hasMoreElements()) {
@@ -98,7 +98,7 @@ public class ServletRequestCollector
         return arr;
     }
 
-    protected void addHeader(final DataObject data, final String name, final Enumeration values) {
+    protected void addHeader(final DataObject data, final String name, final Enumeration<?> values) {
         final DataArray arr = createDataArr(values);
         final int size = arr.size();
         if (size > 0) {

@@ -36,7 +36,7 @@ public class AppengineLogCollector
     // SHARED =====================================================================================
 
     @Override
-    protected DataObject collectEvt(final LogEvt evt) {
+    protected DataObject collectEvt(final LogEvt<?> evt) {
         final DataObject res = super.collectEvt(evt);
 
         // remove prefix that AppEngine gives the logger name

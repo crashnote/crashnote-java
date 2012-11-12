@@ -44,7 +44,7 @@ public class LogHeap {
      */
     public LogHeap(final LogHeap heap) {
         excps = new ArrayList<LogEvt<?>>(heap.getSize());
-        for (final LogEvt e : heap.excps) {
+        for (final LogEvt<?> e : heap.excps) {
             // by deferring the local members, copies of the references they contain are created
             // - thus they can be processed in a separate thread
             e.copy();

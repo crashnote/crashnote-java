@@ -163,7 +163,7 @@ public class CrashConfig {
     /**
      * Create an instance of the internal logger
      */
-    public LogLog getLogger(final Class clazz) {
+    public LogLog getLogger(final Class<?> clazz) {
         return getLogFactory().getLogger(clazz);
     }
 

@@ -45,7 +45,7 @@ public class AutoLogConnector
 
         connectors = new ArrayList<LogConnector<LoggerConfig, ?>>(3);
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({"unchecked", "rawtype"})
         final Class<LogConnector>[] connectorsSrc =
             new Class[]{LogbackConnector.class, Log4jConnector.class, JulConnector.class};
 
@@ -76,7 +76,8 @@ public class AutoLogConnector
             started = false;
 
             // stop each connector one by one
-            for (final LogConnector c : connectors) c.stop();
+            for (final LogConnector<LoggerConfig, ?> c : connectors)
+                c.stop();
         }
 
         return started;

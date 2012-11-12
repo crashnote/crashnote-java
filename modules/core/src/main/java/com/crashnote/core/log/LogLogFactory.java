@@ -40,7 +40,7 @@ public class LogLogFactory {
         return new LogLog(name, debug);
     }
 
-    public LogLog getLogger(final Class clazz) {
+    public LogLog getLogger(final Class<?> clazz) {
         return getLogger(clazz.getName());
     }
 

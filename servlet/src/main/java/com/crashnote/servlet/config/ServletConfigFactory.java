@@ -62,7 +62,7 @@ public class ServletConfigFactory<C extends ServletConfig>
         // extract properties of servlet configuration (from web.xml)
         final Properties props = new Properties();
         if (filterConfig != null) {
-            final Enumeration params = filterConfig.getInitParameterNames();
+            final Enumeration<?> params = filterConfig.getInitParameterNames();
             if (params != null) {
                 while (params.hasMoreElements()) {
                     final String name = (String) params.nextElement();

@@ -45,7 +45,7 @@ public class LogCollector
 
     // INTERFACE ==================================================================================
 
-    public DataObject collect(final LogEvt evt) {
+    public DataObject collect(final LogEvt<?> evt) {
         return collectEvt(evt);
     }
 
@@ -62,7 +62,7 @@ public class LogCollector
 
     // SHARED =====================================================================================
 
-    protected DataObject collectEvt(final LogEvt evt) {
+    protected DataObject collectEvt(final LogEvt<?> evt) {
         final DataObject res = createDataObj();
         {
             // meta data
@@ -82,11 +82,11 @@ public class LogCollector
 
             // context
             if (evt.isExcp()) {
-                final Map ctx = evt.getMDC();
+                final Map<String, Object> ctx = evt.getMDC();
                 if (ctx != null && ctx.size() > 0) {
                     final DataObject context = createDataObj();
-                    for (final Object key : ctx.keySet())
-                        context.put(key.toString(), ctx.get(key).toString());
+                    for (final String key : ctx.keySet())
+                        context.put(key, ctx.get(key).toString());
                     res.putObj("context", context);
                 }
             }
@@ -103,7 +103,10 @@ public class LogCollector
 
     private DataArray collectEvts(final List<LogEvt<?>> evts) {
         final DataArray data = createDataArr();
-        for (final LogEvt evt : evts) data.add(collectEvt(evt));
+        {
+            for (final LogEvt<?> evt : evts)
+                data.add(collectEvt(evt));
+        }
         return data;
     }
 
