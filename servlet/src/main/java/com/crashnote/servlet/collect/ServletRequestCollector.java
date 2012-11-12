@@ -57,7 +57,7 @@ public class ServletRequestCollector
             final Enumeration<?> names = req.getHeaderNames();
             while (names.hasMoreElements()) {
                 final String name = (String) names.nextElement();
-                final Enumeration header = req.getHeaders(name);
+                final Enumeration<?> header = req.getHeaders(name);
                 addHeader(data, name, header);
             }
         }

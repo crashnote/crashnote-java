@@ -45,7 +45,7 @@ public class AutoLogConnector
 
         connectors = new ArrayList<LogConnector<LoggerConfig, ?>>(3);
 
-        @SuppressWarnings({"unchecked", "rawtype"})
+        @SuppressWarnings({"unchecked", "rawtypes"})
         final Class<LogConnector>[] connectorsSrc =
             new Class[]{LogbackConnector.class, Log4jConnector.class, JulConnector.class};
 
