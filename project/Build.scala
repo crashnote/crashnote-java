@@ -128,7 +128,8 @@ trait Settings {
     lazy val baseSettings =
         Defaults.defaultSettings ++ buildSettings ++ testSettings ++ Licenses.licenseSettings ++ Seq(
             crossPaths := false,
-            scalaVersion := scalaV,
+            scalaVersion := scala,
+            scalaBinaryVersion := scalaM,
             parallelExecution in Test := false,
             libraryDependencies := Seq(Dependency.scalaLib), // must be added for IntelliJ :(
 
@@ -218,18 +219,17 @@ object Dependency extends Global {
     val servlet = "javax.servlet" % "servlet-api" % "2.5"
     val appengine = "com.google.appengine" % "appengine-api-1.0-sdk" % "1.5.0"
 
-    val scalaLib = "org.scala-lang" % "scala-library" % scalaV
+    val scalaLib = "org.scala-lang" % "scala-library" % scala
 
     object Test {
 
         val junit = "junit" % "junit" % "4.10" % "test"
-        val specs2 = "org.specs2" % ("specs2_" + scalaV) % "1.12.2" % "test"
+        val specs2 = "org.specs2" %% "specs2" % "1.13" % "test"
         val mockito = "org.mockito" % "mockito-all" % "1.9.5" % "test"
         val commonsIO = "commons-io" % "commons-io" % "2.3" % "test"
 
-        val akka = "com.typesafe.akka" % "akka-actor" % "2.0.3"
+        val akka = "com.typesafe.akka" %% "akka-actor" % "2.1.0"
         val jetty = "org.eclipse.jetty" % "jetty-webapp" % "7.5.1.v20110908" % "test"
-        //val spray = "io.spray" % "spray-can" % "1.1-M4.2" % "test"
     }
 
 }
@@ -342,5 +342,6 @@ object Publish {
 
 trait Global {
 
-    val scalaV = "2.9.2"
+    val scalaM = "2.10"
+    val scala = scalaM + ".0"
 }

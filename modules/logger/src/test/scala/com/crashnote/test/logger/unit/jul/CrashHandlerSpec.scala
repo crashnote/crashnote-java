@@ -36,7 +36,7 @@ class CrashHandlerSpec
                 //publish
                 target.publish(m_evt)
 
-                there was one(m_reporter).doAcceptLog("com.example") then
+                there was one(m_reporter).doAcceptLog("com.example") andThen
                     one(m_reporter).reportLog(any[JulEvt])
 
                 // close

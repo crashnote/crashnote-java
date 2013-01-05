@@ -30,7 +30,7 @@ abstract class BaseMockSpec[T](implicit t: Manifest[T])
         _set(mock(m))
 
     protected def _mock[F](fieldName: String)(implicit m: Manifest[F]): F =
-        _mock[F](t.erasure.getDeclaredField(fieldName))
+        _mock[F](t.runtimeClass.getDeclaredField(fieldName))
 
     protected def _mock[F](field: Field)(implicit m: Manifest[F]): F =
         _set(field, mock(m))
@@ -43,16 +43,16 @@ abstract class BaseMockSpec[T](implicit t: Manifest[T])
     // REFLECTION =================================================================================
 
     protected def _set[F](value: F)(implicit m: Manifest[F]): F = {
-        val clazz = t.erasure
+        val clazz = t.runtimeClass
         val fields = findFields(clazz)
         for (fld <- fields)
-            if (fld.getType.equals(m.erasure))
+            if (fld.getType.equals(m.runtimeClass))
                 return _set(fld, value)
         for (fld <- fields)
-            if (fld.getType.isAssignableFrom(m.erasure))
+            if (fld.getType.isAssignableFrom(m.runtimeClass))
                 return _set(fld, value)
 
-        sys.error("was unable to set field of type '" + m.erasure + "' to '" + value + "'")
+        sys.error("was unable to set field of type '" + m.runtimeClass + "' to '" + value + "'")
     }
 
     protected def _set[F](field: Field, value: F)(implicit m: Manifest[F]): F = {
