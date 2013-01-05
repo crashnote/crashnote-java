@@ -23,6 +23,7 @@ import com.crashnote.servlet.CrashnoteFilter
 import http.{HttpServletResponse, HttpServletRequest}
 import com.crashnote.test.servlet.defs.TargetMockSpec
 import java.io.IOException
+import reflect.ClassTag
 
 class CrashnoteFilterSpec
     extends TargetMockSpec[CrashnoteFilter] {
@@ -70,7 +71,7 @@ class CrashnoteFilterSpec
                     one(m_reporter).afterRequest(m_request)
             }
             "when an error occurs" >> {
-                def example[T <: Throwable : ClassManifest](err: Throwable) =
+                def example[T <: Throwable : ClassTag](err: Throwable) =
                     "of type '" + err.getClass + "'" >> new Mock(ENABLED) {
 
                         // prepare
