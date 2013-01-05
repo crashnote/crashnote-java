@@ -288,7 +288,7 @@ public class CrashConfig {
     // GET+ =======================================================================================
 
     public String getPostUrl() {
-        final String url = getBaseUrl() + "/api/errors?key=" + getKey();
+        final String url = getBaseUrl() + "/v1/errors?key=" + getKey();
         logger.debug("resolved POST target URL: {}", url);
         return url;
     }
