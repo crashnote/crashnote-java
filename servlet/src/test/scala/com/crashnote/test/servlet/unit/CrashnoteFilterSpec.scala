@@ -66,7 +66,7 @@ class CrashnoteFilterSpec
 
                 // verify
                 there was
-                    one(m_reporter).beforeRequest(m_request) then
+                    one(m_reporter).beforeRequest(m_request) andThen
                     one(m_reporter).afterRequest(m_request)
             }
             "when an error occurs" >> {
@@ -82,8 +82,8 @@ class CrashnoteFilterSpec
 
                         // verify
                         there was
-                            one(m_reporter).beforeRequest(m_request) then
-                            one(m_reporter).uncaughtException(m_request, Thread.currentThread(), err) then
+                            one(m_reporter).beforeRequest(m_request) andThen
+                            one(m_reporter).uncaughtException(m_request, Thread.currentThread(), err) andThen
                             one(m_reporter).afterRequest(m_request)
                     }
 

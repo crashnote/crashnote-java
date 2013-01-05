@@ -37,8 +37,8 @@ class CrashAppenderSpec
                 // publish
                 target.doAppend(m_evt)
 
-                there was one(m_reporter).start() then
-                    one(m_reporter).doAcceptLog("com.example") then
+                there was one(m_reporter).start() andThen
+                    one(m_reporter).doAcceptLog("com.example") andThen
                     one(m_reporter).reportLog(any[Log4jEvt])
 
                 // close
