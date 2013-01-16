@@ -55,7 +55,7 @@ public class ExcpCollector
                         final String sb = cls + ':' + file + ":" + meth + ":" + line;
                         trace.add(sb);
                     }
-                    excp.put("trace", trace);
+                    excp.put("stacktrace", trace);
                 }
                 excps.add(excp);
                 t = t.getCause();

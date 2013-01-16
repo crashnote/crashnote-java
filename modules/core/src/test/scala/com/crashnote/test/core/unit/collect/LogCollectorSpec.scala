@@ -42,13 +42,13 @@ class LogCollectorSpec
             val log2 = res.get(1).asInstanceOf[DataObject]
 
             log1.get("message") === "oops"
-            log1.get("time") === 123456789L
+            log1.get("occurredAt") === 123456789L
             log1.get("source") === "com.example"
             log1.get("thread") === "main"
             log1.get("level") === "CRASH"
-            log1.get("exception") !== null
+            log1.get("exceptions") !== null
 
-            val logArgs = log1.get("message_args").asInstanceOf[DataArray]
+            val logArgs = log1.get("messageArgs").asInstanceOf[DataArray]
             logArgs.get(0) === "abc"
             logArgs.get(1) === "xyz"
 

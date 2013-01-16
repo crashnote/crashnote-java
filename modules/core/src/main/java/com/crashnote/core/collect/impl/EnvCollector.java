@@ -60,8 +60,6 @@ public class EnvCollector
     public DataObject collect() {
         final DataObject data = createDataObj();
         {
-            data.put("started_at", startTime);
-
             data.putObj("app", getAppData());
             data.putObj("runtime", getRtData());
             data.putObj("system", getSysData());
@@ -79,7 +77,8 @@ public class EnvCollector
             appData.put("build", build);
             appData.put("profile", profile);
             appData.put("version", version);
-            appData.put("client", clientInfo);
+            appData.put("agent", clientInfo);
+            appData.put("startedAt", startTime);
         }
         return appData;
     }
@@ -115,12 +114,12 @@ public class EnvCollector
 
             // settings
             sysData.put("timezone", getSysUtil().getTimezoneId());
-            sysData.put("timezone_offset", getSysUtil().getTimezoneOffset());
+            sysData.put("timezoneOffset", getSysUtil().getTimezoneOffset());
             //sysData.put("language", getSysUtil().getLanguage());
 
             // OS
-            sysData.put("os_name", getSysUtil().getOSName());
-            sysData.put("os_version", getSysUtil().getOSVersion());
+            sysData.put("osName", getSysUtil().getOSName());
+            sysData.put("osVersion", getSysUtil().getOSVersion());
 
             // environment properties
             final DataObject props = createDataObj();

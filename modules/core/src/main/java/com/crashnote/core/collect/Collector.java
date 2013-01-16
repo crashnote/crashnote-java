@@ -81,22 +81,19 @@ public class Collector
             final List<LogEvt<?>> logs = session.getEvents();
 
             // log(s)
-            if (logs.size() == 1)
-                data.putObj("log", log_c.collect(logs.get(0)));
-            else
-                data.putArr("log", log_c.collect(logs));
+            data.putArr("errors", log_c.collect(logs));
 
-            // ctx
+            // context
             final DataObject ctx = createDataObj();
             {
                 final Map<String, Object> map = session.getContext();
                 for (final Map.Entry<String, Object> entry : map.entrySet())
                     ctx.put(entry.getKey(), entry.getValue());
             }
-            data.putObj("ctx", ctx);
+            data.putObj("context", ctx);
 
-            // env
-            data.putObj("env", env_c.collect());
+            // environment
+            data.putObj("environment", env_c.collect());
         }
         return data;
     }

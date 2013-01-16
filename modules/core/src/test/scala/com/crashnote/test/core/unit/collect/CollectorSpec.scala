@@ -42,31 +42,17 @@ class CollectorSpec
             }
         }
 
-        "collect session" >> {
-            "with one event" >> new Started() {
-                val s = new LocalLogSession()
-                val evt = newLogEvt()
-                s.addEvent(evt)
+        "collect session" >> new Started() {
+            val s = new LocalLogSession()
+            s.addEvent(newLogEvt())
+            s.addEvent(newLogEvt())
+            val evts = s.getEvents
 
-                val r = target.collectLog(s)
+            val r = target.collectLog(s)
 
-                expect {
-                    one(m_logColl).collect(evt)
-                    one(m_envColl).collect()
-                }
-            }
-            "with multiple events" >> new Started() {
-                val s = new LocalLogSession()
-                s.addEvent(newLogEvt())
-                s.addEvent(newLogEvt())
-                val evts = s.getEvents
-
-                val r = target.collectLog(s)
-
-                expect {
-                    one(m_logColl).collect(evts)
-                    one(m_envColl).collect()
-                }
+            expect {
+                one(m_logColl).collect(evts)
+                one(m_envColl).collect()
             }
         }
     }

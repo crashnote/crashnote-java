@@ -32,12 +32,12 @@ class EnvCollectorSpec
         "collect" >> new Mock() {
 
             val res = target.collect()
-            res.get("started_at") === 123456789L
 
             val app = res.get("app").asInstanceOf[DataObject]
+            app.get("startedAt") === 123456789L
             app.get("version") === "1.0"
             app.get("profile") === "dev"
-            app.get("client") === "cn:1.0"
+            app.get("agent") === "cn:1.0"
 
             val rt = res.get("runtime").asInstanceOf[DataObject]
             rt.get("type") === "java"
@@ -52,13 +52,13 @@ class EnvCollectorSpec
             sys.get("ip") === "192.168.0.1"
             sys.get("name") === "My-PC"
             sys.get("timezone") === "Berlin"
-            sys.get("timezone_offset") === 60
+            sys.get("timezoneOffset") === 60
             val sysProps = sys.get("props").asInstanceOf[DataObject]
             sysProps.size() === 2
             sysProps.get("instance", "small")
             sysProps.get("secret", "#")
-            sys.get("os_name") === "Windows"
-            sys.get("os_version") === "6.5"
+            sys.get("osName") === "Windows"
+            sys.get("osVersion") === "6.5"
 
             val dev = res.get("device").asInstanceOf[DataObject]
             dev.get("cores") === 2

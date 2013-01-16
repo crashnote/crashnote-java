@@ -56,21 +56,21 @@ class ExcpCollectorSpec
                 val res1 = res.get(0).asInstanceOf[DataObject]
                 res1.get("message") === "oops"
                 res1.get("class").toString must contain("Throwable")
-                val trace1 = res1.get("trace").asInstanceOf[DataArray]
+                val trace1 = res1.get("stacktrace").asInstanceOf[DataArray]
                 trace1.get(0) === "com.example.Login:Login.java:login:50"
                 trace1.get(1) === "com.example.LoginController:LoginController.java:login:60"
 
                 val res2 = res.get(1).asInstanceOf[DataObject]
                 res2.get("message") === "wrong argument"
                 res2.get("class").toString must contain("Throwable")
-                val trace2 = res2.get("trace").asInstanceOf[DataArray]
+                val trace2 = res2.get("stacktrace").asInstanceOf[DataArray]
                 trace2.get(0) === "com.example.DAO:DAO.java:loadUser:30"
                 trace2.get(1) === "com.example.DAO:DAO.java:loadUserByMail:40"
 
                 val res3 = res.get(2).asInstanceOf[DataObject]
                 res3.get("message") === "jdbc user missing"
                 res3.get("class").toString must contain("Throwable")
-                val trace3 = res3.get("trace").asInstanceOf[DataArray]
+                val trace3 = res3.get("stacktrace").asInstanceOf[DataArray]
                 trace3.get(0) === "com.example.Database:Database.java:connect:10"
                 trace3.get(1) === "com.example.Database:Database.java:connectViaJDBC:20"
             }

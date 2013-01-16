@@ -66,7 +66,7 @@ public class LogCollector
         final DataObject res = createDataObj();
         {
             // meta data
-            res.put("time", evt.getTimeStamp());
+            res.put("occurredAt", evt.getTimeStamp());
             res.put("message", evt.getMessage());
             res.put("source", evt.getLoggerName());
             res.put("thread", evt.getThreadName());
@@ -77,7 +77,7 @@ public class LogCollector
                 final DataArray args = createDataArr();
                 for (final Object obj : msgArgs)
                     args.add(obj.toString());
-                res.putArr("message_args", args);
+                res.putArr("messageArgs", args);
             }
 
             // context
@@ -93,7 +93,7 @@ public class LogCollector
 
             // exception data
             final Throwable th = evt.getThrowable();
-            if (th != null) res.putArr("exception", collectExcp(th));
+            if (th != null) res.putArr("exceptions", collectExcp(th));
         }
         return res;
     }
