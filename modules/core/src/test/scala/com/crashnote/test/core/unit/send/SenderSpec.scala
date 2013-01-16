@@ -106,7 +106,7 @@ class SenderSpec
     // SETUP ======================================================================================
 
     val key = "0000000000000000000000000000000"
-    val url = "https://api.crashnote.com:443/api/errors"
+    val url = "https://send.crashnote.com:443/v1/errors"
     val client = "spec-1.0"
 
     override def mockConfig() = {
