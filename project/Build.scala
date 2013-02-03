@@ -213,14 +213,13 @@ object Dependency extends Global {
   val slf4j = "org.slf4j" % "slf4j-api" % "1.7.0"
   val logback = "ch.qos.logback" % "logback-classic" % "1.0.0"
 
-  val play2 = "play" % "play" % "2.1"
+  val play2 = "play" % "play" % "2.1-RC3"
   val servlet = "javax.servlet" % "servlet-api" % "2.5"
   val appengine = "com.google.appengine" % "appengine-api-1.0-sdk" % "1.5.0"
 
   val scalaLib = "org.scala-lang" % "scala-library" % scala
 
   object Test {
-
     val junit = "junit" % "junit" % "4.10" % "test"
     val specs2 = "org.specs2" %% "specs2" % "1.13" % "test"
     val mockito = "org.mockito" % "mockito-all" % "1.9.5" % "test"
