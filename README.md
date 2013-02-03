@@ -18,7 +18,7 @@ This makes it easier to understand where problems are and helps you to fix bugs 
 2. embed notifier
 3. deploy
 
-A detailed guide can be found in the [official documentation](https://www.crashnote.com/docs).
+A detailed guide can be found in the [official documentation](https://docs.crashnote.com).
 
 
 ## Features

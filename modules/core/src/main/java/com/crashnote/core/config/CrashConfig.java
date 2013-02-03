@@ -54,8 +54,6 @@ public class CrashConfig {
      */
     public static final String LIB_URL = "https://www.crashnote.com";
 
-    public static final String LIB_URL_BOARD = LIB_URL + "/apps";
-
 
     // VARS =======================================================================================
 
@@ -102,13 +100,13 @@ public class CrashConfig {
             final String key = getKey();
             if (key == null || key.length() == 0) {
                 throw new IllegalStateException(
-                    "The API Key is missing; please login to '" + LIB_URL_BOARD + "', " +
+                    "The API Key is missing; please login to '" + LIB_URL + "', " +
                         "browse to your app and you'll find the key under 'Setup'.");
 
             } else if (key.length() != 36)
                 throw new IllegalStateException(
                     "The API Key appears to be invalid (it should be 32 characters long with 4 dashes); " +
-                        "please login to '" + LIB_URL_BOARD + "', " +
+                        "please login to '" + LIB_URL + "', " +
                         "browse to your app you'll find the key under 'Setup'.");
         } else {
             logger.info("Status: OFF");
