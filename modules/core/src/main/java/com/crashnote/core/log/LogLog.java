@@ -42,6 +42,10 @@ public class LogLog {
         if (debug) System.out.println(getName() + " - DEBUG - " + buildMsg(msg, args));
     }
 
+    public void debug(final String msg, final Throwable th) {
+        if (debug) System.out.println(getName() + " - DEBUG - " + msg + ": " + th.getMessage());
+    }
+
     public void info(final String msg, final Object... args) {
         System.out.println(getName() + " - INFO - " + buildMsg(msg, args));
     }

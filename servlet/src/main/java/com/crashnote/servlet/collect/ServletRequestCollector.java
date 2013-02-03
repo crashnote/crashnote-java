@@ -21,7 +21,6 @@ import com.crashnote.servlet.config.ServletConfig;
 import com.crashnote.web.collect.RequestCollector;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
 import java.util.Enumeration;
 
 /**

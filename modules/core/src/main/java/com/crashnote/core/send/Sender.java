@@ -18,13 +18,15 @@ package com.crashnote.core.send;
 import com.crashnote.core.config.CrashConfig;
 import com.crashnote.core.log.LogLog;
 import com.crashnote.core.model.log.LogReport;
+import com.crashnote.external.json.JSONArray;
 
-import java.io.*;
-import java.net.URL;
 import javax.net.ssl.*;
+import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.cert.X509Certificate;
-import java.util.zip.GZIPOutputStream;
+import java.util.zip.Deflater;
+import java.util.zip.DeflaterOutputStream;
 
 /**
  * The Dispatcher is responsible for transmitting the data from the client to the server by
@@ -39,7 +41,7 @@ public class Sender {
     private String clientInfo;
     private int connectionTimeout;
 
-    private final LogLog logger;
+    protected final LogLog logger;
 
 
     // SETUP ======================================================================================
@@ -53,89 +55,9 @@ public class Sender {
 
         // create and install a trust manager that does not validate certificate chains
         installCustomTrustManager();
-    }
 
-
-    // INTERFACE ==================================================================================
-
-    public boolean send(final LogReport report) {
-        try {
-            logger.debug("POST to '{}'", url_post);
-            POST(url_post, report);
-            return true;
-        } catch (Exception e) {
-            logger.error("POST to '{}' failed", e, url_post);
-        }
-        return false;
-    }
-
-
-    // SHARED =====================================================================================
-
-    protected void POST(final String url, final LogReport report) throws IOException {
-        final Writer writer;
-        final OutputStream out;
-        HttpURLConnection conn = null;
-
-        try {
-            // prepare connection
-            conn = createConnection(url, "POST");
-
-            // stream data to server
-            out = createStream(conn);
-            {
-                writer = createWriter(out);
-                report.streamTo(writer);
-                writer.flush();
-                writer.close();
-            }
-            out.flush();
-            out.close();
-
-            conn.getResponseCode();
-        } finally {
-            // close connection
-            if (conn != null) conn.disconnect();
-        }
-    }
-
-    HttpURLConnection createConnection(final String url, final String typeOf) throws IOException {
-
+        // config URL connections
         HttpURLConnection.setFollowRedirects(true);
-        final HttpURLConnection conn = createConnection(url);
-        {
-            conn.setDoOutput(true);
-            conn.setUseCaches(false);
-            conn.setRequestMethod(typeOf);
-            conn.setAllowUserInteraction(false);
-            conn.setReadTimeout(connectionTimeout);
-            conn.setConnectTimeout(connectionTimeout);
-
-            if (clientInfo != null)
-                conn.setRequestProperty("User-Agent", getClientInfo());
-        }
-        return conn;
-    }
-
-
-    // FACTORY ====================================================================================
-
-    protected HttpURLConnection createConnection(final String url) throws IOException {
-        return (HttpURLConnection) new URL(url).openConnection();
-    }
-
-    protected OutputStream createStream(final HttpURLConnection conn) throws IOException {
-
-        // data is gzipped JSON by default, so add the necessary request properties
-        conn.setRequestProperty("Accept", "application/x-gzip");
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestProperty("Content-Encoding", "gzip");
-
-        return new GZIPOutputStream(conn.getOutputStream());
-    }
-
-    protected Writer createWriter(final OutputStream stream) {
-        return new OutputStreamWriter(stream);
     }
 
     protected void installCustomTrustManager() {
@@ -162,6 +84,81 @@ public class Sender {
         } catch (Exception e) {
             logger.warn("unable to install custom SSL manager", e);
         }
+    }
+
+
+    // INTERFACE ==================================================================================
+
+    public void send(final LogReport report) {
+        logger.debug("POST to '{}'", url_post);
+        POST(url_post, report);
+    }
+
+
+    // SHARED =====================================================================================
+
+    protected void POST(final String url, final LogReport report) {
+        HttpURLConnection conn = null;
+        try {
+            conn = prepareConnection(url);
+            try {
+                write(conn, report);
+            } catch(IOException e) {
+                logger.debug("unable to send data", e);
+            }
+        } catch(IOException e) {
+            logger.debug("unable to open connection", e);
+        } finally {
+            if (conn != null)
+                conn.disconnect();
+        }
+    }
+
+    // INTERNALS ==================================================================================
+
+    private HttpURLConnection prepareConnection(final String url) throws IOException {
+        final HttpURLConnection conn = createConnection(url);
+        {
+            conn.setDoOutput(true);
+            conn.setUseCaches(false);
+            conn.setRequestMethod("POST");
+            conn.setAllowUserInteraction(false);
+            conn.setReadTimeout(connectionTimeout);
+            conn.setConnectTimeout(connectionTimeout);
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Accept-Encoding", "gzip");
+            conn.setRequestProperty("Content-Encoding", "gzip");
+            if (clientInfo != null)
+                conn.setRequestProperty("User-Agent", getClientInfo());
+        }
+        return conn;
+    }
+
+    private void write(final HttpURLConnection conn, final LogReport report) throws IOException {
+        Writer out = null;
+        try {
+            final OutputStream os = new DeflaterOutputStream(conn.getOutputStream(), new Deflater(-1));
+            {
+                out = createWriter(os);
+                report.streamTo(out);
+            }
+            out.flush();
+            os.close();
+        } finally {
+            if (out != null)
+                out.close();
+        }
+    }
+
+    // FACTORY ====================================================================================
+
+    protected HttpURLConnection createConnection(final String url) throws IOException {
+        return (HttpURLConnection) new URL(url).openConnection();
+    }
+
+    protected Writer createWriter(final OutputStream stream) throws UnsupportedEncodingException {
+        return new OutputStreamWriter(stream, "UTF-8");
     }
 
 

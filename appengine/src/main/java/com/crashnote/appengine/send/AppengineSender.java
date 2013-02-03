@@ -22,6 +22,8 @@ import com.crashnote.core.send.Sender;
 import com.google.appengine.api.urlfetch.*;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 
 import static com.google.appengine.api.urlfetch.FetchOptions.Builder.allowTruncate;
 
@@ -49,8 +51,24 @@ public class AppengineSender
     // SHARED =====================================================================================
 
     @Override
-    protected void POST(final String url, final LogReport report) throws IOException {
+    protected void POST(final String url, final LogReport report) {
+        try {
+            // prepare request
+            final HTTPRequest req = prepareRequest(url);
+            final byte[] data = report.toString().getBytes("UTF-8");
+            req.setPayload(data);
 
+            // execute request
+            appengineUtil.execRequest(req, true);
+
+        } catch (IOException e) {
+            logger.debug("unable to send data", e);
+        }
+    }
+
+    // INTERNALS =====================================================================================
+
+    private HTTPRequest prepareRequest(final String url) throws IOException {
         final FetchOptions fetchOptions =
             allowTruncate().doNotValidateCertificate().followRedirects()
                 .setDeadline((double) getConnectionTimeout());
@@ -60,11 +78,9 @@ public class AppengineSender
             if (getClientInfo() != null)
                 req.setHeader(new HTTPHeader("User-Agent", getClientInfo()));
 
-            final byte[] data = report.toString().getBytes("UTF-8");
-            req.setPayload(data);
-        }
 
-        appengineUtil.execRequest(req, true);
+        }
+        return req;
     }
 
     @Override

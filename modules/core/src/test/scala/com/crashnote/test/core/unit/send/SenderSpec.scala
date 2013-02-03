@@ -39,15 +39,16 @@ class SenderSpec
         target.send(report)
         checkConnection(url, "POST")
       }
+
       "with stream" >> {
         "write error" >> new Response(0) {
           m_stream.write(any[Array[Byte]]) throws new IOException("oops")
-          target.send(report) === false
+          target.send(report)
           checkConnection(url, "POST")
         }
         "flush error" >> new Response(0) {
           m_stream.flush() throws new IOException("oops")
-          target.send(report) === false
+          target.send(report)
           checkConnection(url, "POST")
         }
         "close error" >> new Response(0) {
@@ -56,15 +57,16 @@ class SenderSpec
           checkConnection(url, "POST")
         }
       }
+
       "with writer" >> {
         "write error" >> new Response(0) {
           m_writer.write(anyString) throws new IOException("oops")
-          target.send(report) === false
+          target.send(report)
           checkConnection(url, "POST")
         }
         "flush error" >> new Response(0) {
           m_writer.flush() throws new IOException("oops")
-          target.send(report) === false
+          target.send(report)
           checkConnection(url, "POST")
         }
         "close error" >> new Response(0) {
@@ -73,32 +75,29 @@ class SenderSpec
           checkConnection(url, "POST")
         }
       }
+
       "with connect error" >> new Response(-1) {
-        target.send(report) === false
+        target.send(report)
       }
     }
   }
 
-  // SETUP ======================================================================================
-
-  def checkConnection(url: String, typeOf: String = "GET") =
+  private def checkConnection(url: String, typeOf: String = "GET") =
     if (m_conn != null) {
       m_conn.getURL.toURI.toString === url
-      if (typeOf == "POST") {
-        expect {
-          one(m_conn).setRequestProperty("Accept", "application/x-gzip")
-          one(m_conn).setRequestProperty("Content-Type", "application/json")
-          one(m_conn).setRequestProperty("Content-Encoding", "gzip")
-          one(m_writer).close()
-          one(m_stream).close()
-        }
-      }
       expect {
+        one(m_conn).setRequestProperty("Accept-Encoding", "gzip")
+        one(m_conn).setRequestProperty("Content-Encoding", "gzip")
+        one(m_conn).setRequestProperty("Content-Type", "application/json")
+
         one(m_conn).setRequestMethod(typeOf)
         one(m_conn).setUseCaches(false)
         one(m_conn).setDoOutput(true)
         one(m_conn).setConnectTimeout(10000)
         one(m_conn).setReadTimeout(10000)
+
+        one(m_writer).close()
+        //one(m_stream).close()
         one(m_conn).disconnect()
       }
     }
