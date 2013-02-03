@@ -43,7 +43,9 @@ public class LogLog {
     }
 
     public void debug(final String msg, final Throwable th) {
-        if (debug) System.out.println(getName() + " - DEBUG - " + msg + ": " + th.getMessage());
+        if (debug)
+            System.out.println(getName() + " - DEBUG - " + msg + ": " + th.getMessage());
+        printStackTrace(th);
     }
 
     public void info(final String msg, final Object... args) {
@@ -56,10 +58,12 @@ public class LogLog {
 
     public void warn(final String msg, final Throwable th) {
         System.err.println(getName() + " - WARN - " + msg + ": " + th.getMessage());
+        printStackTrace(th);
     }
 
     public void warn(final String msg, final Throwable th, final Object... args) {
         System.err.println(getName() + " - WARN - " + buildMsg(msg, args) + ": " + th.getMessage());
+        printStackTrace(th);
     }
 
     public void error(final String msg, final Object... args) {
@@ -68,6 +72,7 @@ public class LogLog {
 
     public void error(final String msg, final Throwable th, final Object... args) {
         System.err.println(getName() + " - ERROR - " + buildMsg(msg, args) + ": " + th.getMessage());
+        printStackTrace(th);
     }
 
 
@@ -79,6 +84,12 @@ public class LogLog {
             res = res.replaceFirst("\\{\\}", arg.toString());
         return res;
     }
+
+    protected void printStackTrace(final Throwable th) {
+        if (debug)
+            th.printStackTrace();
+    }
+
 
     // GET ========================================================================================
 
