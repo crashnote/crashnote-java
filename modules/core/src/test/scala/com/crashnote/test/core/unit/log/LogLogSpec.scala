@@ -20,121 +20,139 @@ import com.crashnote.test.core.defs.TargetMockSpec
 import com.crashnote.core.config.CrashConfig
 
 class LogLogSpec
-    extends TargetMockSpec[LogLogFactory] {
+  extends TargetMockSpec[LogLogFactory] {
 
-    "LogLog" should {
+  "LogLog" should {
 
-        "instantiate via factory" >> {
+    "instantiate via factory" >> {
 
-            "in production mode" >> {
-                def result = {
-                    loggr: LogLog =>
-                        loggr.getName === prefix
-                        loggr.isDebug === false
-                }
-
-                "default" >> new Configured {
-                    result(target.getLogger)
-                }
-                "via name" >> new Configured {
-                    result(target.getLogger("logger"))
-                }
-                "via class" >> new Configured {
-                    result(target.getLogger(this.getClass))
-                }
-            }
-
-            "in debug mode" >> {
-                def result = {
-                    loggr: LogLog =>
-                        loggr.getName === prefix
-                        loggr.isDebug === true
-                }
-
-                "via name" >> new Configured(DEBUG) {
-                    result(target.getLogger)
-                }
-                "via name" >> new Configured(DEBUG) {
-                    result(target.getLogger("logger"))
-                }
-                "via name" >> new Configured(DEBUG) {
-                    result(target.getLogger(this.getClass))
-                }
-            }
+      "in production mode" >> {
+        def result = {
+          loggr: LogLog =>
+            loggr.getName === prefix
+            loggr.isDebug === false
         }
 
-        "print" >> {
-            def checkOutput(typeOf: String, content: String) = {
-                txt: String =>
-                    txt must startWith(prefix)
-                    txt must contain(typeOf)
-                    txt must contain(content)
-            }
-
-            "in production mode" >> {
-                "error" >> {
-                    "with message" >> new Configured {
-                        val (out, err) = capture { target.getLogger.error("test") }
-                        checkOutput("ERROR", "test")(err)
-                        out must beEmpty
-                    }
-                    "with throwable" >> new Configured {
-                        val (out, err) = capture { target.getLogger.error("test", th) }
-                        checkOutput("ERROR", "oops")(err)
-                        out must beEmpty
-                    }
-                }
-                "info" >> new Configured {
-                    val (out, err) = capture { target.getLogger.info("test") }
-                    checkOutput("INFO", "test")(out)
-                    err must beEmpty
-                }
-                "warn" >> {
-                    "with message" >> new Configured {
-                        val (out, err) = capture { target.getLogger.warn("test: {}", "A") }
-                        checkOutput("WARN", "test: A")(err)
-                        out must beEmpty
-                    }
-                    "with exception" >> new Configured {
-                        val (out, err) = capture { target.getLogger.warn("test", th) }
-                        checkOutput("WARN", "test")(err)
-                        out must beEmpty
-                    }
-                    "with exception and parameters" >> new Configured {
-                        val (out, err) = capture { target.getLogger.warn("test: {}", th, "A") }
-                        checkOutput("WARN", "test: A")(err)
-                        out must beEmpty
-                    }
-                }
-                "but no debug" >> new Configured {
-                    val (out, err) = capture { target.getLogger.debug("test") }
-                    out must beEmpty
-                    err must beEmpty
-                }
-            }
-
-            "in debug mode" >> {
-                "debug" >>  {
-                    "without arguments" >> new Configured(DEBUG) {
-                        val (out, err) = capture { target.getLogger.debug("test") }
-                        checkOutput("DEBUG", "test")(out)
-                        err must beEmpty
-                    }
-                    "with arguments" >> new Configured(DEBUG) {
-                        val (out, err) = capture { target.getLogger.debug("test: {}", "A") }
-                        checkOutput("DEBUG", "test: A")(out)
-                        err must beEmpty
-                    }
-                }
-            }
+        "default" >> new Configured {
+          result(target.getLogger)
         }
+        "via name" >> new Configured {
+          result(target.getLogger("logger"))
+        }
+        "via class" >> new Configured {
+          result(target.getLogger(this.getClass))
+        }
+      }
+
+      "in debug mode" >> {
+        def result = {
+          loggr: LogLog =>
+            loggr.getName === prefix
+            loggr.isDebug === true
+        }
+
+        "via name" >> new Configured(DEBUG) {
+          result(target.getLogger)
+        }
+        "via name" >> new Configured(DEBUG) {
+          result(target.getLogger("logger"))
+        }
+        "via name" >> new Configured(DEBUG) {
+          result(target.getLogger(this.getClass))
+        }
+      }
     }
 
-    // SETUP ======================================================================================
+    "print" >> {
+      def checkOutput(typeOf: String, content: String) = {
+        txt: String =>
+          txt must startWith(prefix)
+          txt must contain(typeOf)
+          txt must contain(content)
+      }
 
-    def configure(config: CrashConfig) =
-        new LogLogFactory(config)
+      "in production mode" >> {
+        "error" >> {
+          "with message" >> new Configured {
+            val (out, err) = capture {
+              target.getLogger.error("test")
+            }
+            checkOutput("ERROR", "test")(err)
+            out must beEmpty
+          }
+          "with throwable" >> new Configured {
+            val (out, err) = capture {
+              target.getLogger.error("test", th)
+            }
+            checkOutput("ERROR", "oops")(err)
+            out must beEmpty
+          }
+        }
+        "info" >> new Configured {
+          val (out, err) = capture {
+            target.getLogger.info("test")
+          }
+          checkOutput("INFO", "test")(out)
+          err must beEmpty
+        }
+        "warn" >> {
+          "with message" >> new Configured {
+            val (out, err) = capture {
+              target.getLogger.warn("test: {}", "A")
+            }
+            checkOutput("WARN", "test: A")(err)
+            out must beEmpty
+          }
+          "with exception" >> new Configured {
+            val (out, err) = capture {
+              target.getLogger.warn("test", th)
+            }
+            checkOutput("WARN", "test")(err)
+            out must beEmpty
+          }
+          "with exception and parameters" >> new Configured {
+            val (out, err) = capture {
+              target.getLogger.warn("test: {}", th, "A")
+            }
+            checkOutput("WARN", "test: A")(err)
+            out must beEmpty
+          }
+        }
+        "but no debug" >> new Configured {
+          val (out, err) = capture {
+            target.getLogger.debug("test")
+          }
+          out must beEmpty
+          err must beEmpty
+        }
+      }
 
-    val prefix = "CRASHNOTE"
-    val th = new RuntimeException("oops")
+      "in debug mode" >> {
+        "debug" >> {
+          "without arguments" >> new Configured(DEBUG) {
+            val (out, err) = capture {
+              target.getLogger.debug("test")
+            }
+            checkOutput("DEBUG", "test")(out)
+            err must beEmpty
+          }
+          "with arguments" >> new Configured(DEBUG) {
+            val (out, err) = capture {
+              target.getLogger.debug("test: {}", "A")
+            }
+            checkOutput("DEBUG", "test: A")(out)
+            err must beEmpty
+          }
+        }
+      }
+    }
+  }
+
+  // SETUP ======================================================================================
+
+  def configure(config: CrashConfig) =
+    new LogLogFactory(config)
+
+  val prefix = "CRASHNOTE"
+  val th = new RuntimeException("oops")
 }

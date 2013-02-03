@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,27 +19,27 @@ import com.crashnote.core.util.NetUtil
 import com.crashnote.test.base.defs.UnitSpec
 
 class NetUtilSpec
-    extends UnitSpec {
+  extends UnitSpec {
 
-    "INet Util" should {
+  "INet Util" should {
 
-        import NetUtil._
+    import NetUtil._
 
-        "instantiate" >> {
-            new NetUtil !== null
-        }
-
-        "find computer's host IP" >> {
-            getHostAddress !== null
-        }
-
-        "find computer's host anme" >> {
-            getHostName !== null
-        }
-
-        "read the mac address (or fail silently: return null)" >> {
-            getMacAddress
-            success
-        }
+    "instantiate" >> {
+      new NetUtil !== null
     }
+
+    "find computer's host IP" >> {
+      getHostAddress !== null
+    }
+
+    "find computer's host anme" >> {
+      getHostName !== null
+    }
+
+    "read the mac address (or fail silently: return null)" >> {
+      getMacAddress
+      success
+    }
+  }
 }

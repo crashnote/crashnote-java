@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,52 +22,52 @@ import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.spi._
 
 class CrashAppenderSpec
-    extends TargetMockSpec[CrashAppender] with AppenderEnv[CrashAppender, ILoggingEvent] {
+  extends TargetMockSpec[CrashAppender] with AppenderEnv[CrashAppender, ILoggingEvent] {
 
-    "instantiate and append and close appender" >> {
-        def example(descr: String, factory: () => CrashAppender) =
-            "when created via " + descr >> new Mock() {
+  "instantiate and append and close appender" >> {
+    def example(descr: String, factory: () => CrashAppender) =
+      "when created via " + descr >> new Mock() {
 
-                // instantiate
-                create(factory)
-                target.start()
+        // instantiate
+        create(factory)
+        target.start()
 
-                target.isStarted === true
-                there was one(m_reporter).start()
+        target.isStarted === true
+        there was one(m_reporter).start()
 
-                //publish
-                target.doAppend(m_evt)
+        //publish
+        target.doAppend(m_evt)
 
-                there was one(m_reporter).start() andThen
-                    one(m_reporter).doAcceptLog("com.example") andThen
-                    one(m_reporter).reportLog(any[LogbackEvt])
+        there was one(m_reporter).start() andThen
+          one(m_reporter).doAcceptLog("com.example") andThen
+          one(m_reporter).reportLog(any[LogbackEvt])
 
-                // close
-                target.stop()
+        // close
+        target.stop()
 
-                target.isStarted === false
-                there was one(m_reporter).stop()
-            }
+        target.isStarted === false
+        there was one(m_reporter).stop()
+      }
 
-        val cases = Seq(
-            ("factory", () => new CrashAppender(m_confFactory)),
-            ("existing config", () => new CrashAppender(m_conf, m_reporter)))
+    val cases = Seq(
+      ("factory", () => new CrashAppender(m_confFactory)),
+      ("existing config", () => new CrashAppender(m_conf, m_reporter)))
 
-        cases.foreach {
-            case (descr, handler) => example(descr, handler)
-        }
+    cases.foreach {
+      case (descr, handler) => example(descr, handler)
     }
+  }
 
-    // SETUP =====================================================================================
+  // SETUP =====================================================================================
 
-    override def configure(config: C) = {
-        m_evt = mock[ILoggingEvent]
-        val m_thproxy = mock[ThrowableProxy]
-        m_evt.getThrowableProxy returns m_thproxy
-        m_thproxy.getThrowable returns err
-        m_evt.getLevel returns Level.ERROR
-        m_evt.getLoggerName returns "com.example"
+  override def configure(config: C) = {
+    m_evt = mock[ILoggingEvent]
+    val m_thproxy = mock[ThrowableProxy]
+    m_evt.getThrowableProxy returns m_thproxy
+    m_thproxy.getThrowable returns err
+    m_evt.getLevel returns Level.ERROR
+    m_evt.getLoggerName returns "com.example"
 
-        super.configure(config)
-    }
+    super.configure(config)
+  }
 }

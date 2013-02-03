@@ -30,6 +30,7 @@ public class JulEvt
 
     private static final long serialVersionUID = 1L;
 
+
     // SETUP ======================================================================================
 
     public JulEvt(final LogRecord event) {

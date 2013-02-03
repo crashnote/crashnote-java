@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,29 +23,29 @@ import com.crashnote.logger.helper.AutoLogConnector
 import com.crashnote.core.config.CrashConfig
 
 class LoggerConfigSpec
-    extends MockSpec with BeforeExample {
+  extends MockSpec with BeforeExample {
 
-    "Logger Config" should {
+  "Logger Config" should {
 
-        "inherit from Crash Config" >> {
-            c must haveSuperclass[CrashConfig]
-        }
-
-        "act as factory" >> {
-            "for reporter" >> {
-                c.getReporter must haveClass[LoggerReporter]
-            }
-            "for log connector" >> {
-                c.getLogConnector(c.getReporter) must haveClass[AutoLogConnector]
-            }
-        }
+    "inherit from Crash Config" >> {
+      c must haveSuperclass[CrashConfig]
     }
 
-    // SETUP =====================================================================================
-
-    var c: LoggerConfig = _
-
-    def before {
-        c = (new LoggerConfigFactory[LoggerConfig]).get
+    "act as factory" >> {
+      "for reporter" >> {
+        c.getReporter must haveClass[LoggerReporter]
+      }
+      "for log connector" >> {
+        c.getLogConnector(c.getReporter) must haveClass[AutoLogConnector]
+      }
     }
+  }
+
+  // SETUP =====================================================================================
+
+  var c: LoggerConfig = _
+
+  def before {
+    c = (new LoggerConfigFactory[LoggerConfig]).get
+  }
 }

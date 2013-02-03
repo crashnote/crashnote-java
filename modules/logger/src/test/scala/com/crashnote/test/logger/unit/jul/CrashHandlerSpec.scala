@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,48 +21,48 @@ import com.crashnote.jul.impl.JulEvt
 import com.crashnote.test.logger.defs._
 
 class CrashHandlerSpec
-    extends TargetMockSpec[CrashHandler] with AppenderEnv[CrashHandler, LogRecord] {
+  extends TargetMockSpec[CrashHandler] with AppenderEnv[CrashHandler, LogRecord] {
 
-    "instantiate and publish and close handler" >> {
-        def example(descr: String, factory: () => CrashHandler) =
-            "when created via " + descr >> new Mock() {
+  "instantiate and publish and close handler" >> {
+    def example(descr: String, factory: () => CrashHandler) =
+      "when created via " + descr >> new Mock() {
 
-                // instantiate
-                create(factory)
+        // instantiate
+        create(factory)
 
-                target.isStarted === true
-                there was one(m_reporter).start()
+        target.isStarted === true
+        there was one(m_reporter).start()
 
-                //publish
-                target.publish(m_evt)
+        //publish
+        target.publish(m_evt)
 
-                there was one(m_reporter).doAcceptLog("com.example") andThen
-                    one(m_reporter).reportLog(any[JulEvt])
+        there was one(m_reporter).doAcceptLog("com.example") andThen
+          one(m_reporter).reportLog(any[JulEvt])
 
-                // close
-                target.close()
+        // close
+        target.close()
 
-                target.isStarted === false
-                there was one(m_reporter).stop()
-            }
+        target.isStarted === false
+        there was one(m_reporter).stop()
+      }
 
-        val cases = Seq(
-            ("factory", () => new CrashHandler(m_confFactory)),
-            ("existing config", () => new CrashHandler(m_conf, m_reporter)))
+    val cases = Seq(
+      ("factory", () => new CrashHandler(m_confFactory)),
+      ("existing config", () => new CrashHandler(m_conf, m_reporter)))
 
-        cases.foreach {
-            case (descr, handler) => example(descr, handler)
-        }
+    cases.foreach {
+      case (descr, handler) => example(descr, handler)
     }
+  }
 
-    // SETUP =====================================================================================
+  // SETUP =====================================================================================
 
-    override def configure(config: C) = {
-        m_evt = mock[LogRecord]
-        m_evt.getThrown returns err
-        m_evt.getLevel returns Level.SEVERE
-        m_evt.getLoggerName returns "com.example"
+  override def configure(config: C) = {
+    m_evt = mock[LogRecord]
+    m_evt.getThrown returns err
+    m_evt.getLevel returns Level.SEVERE
+    m_evt.getLoggerName returns "com.example"
 
-        super.configure(config)
-    }
+    super.configure(config)
+  }
 }

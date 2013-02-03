@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,28 +21,28 @@ import com.crashnote.core.util.FilterUtil
 import scala.collection.JavaConversions._
 
 class FilterUtilSpec
-    extends UnitSpec {
+  extends UnitSpec {
 
-    "Filter Util" should {
+  "Filter Util" should {
 
-        import FilterUtil._
+    import FilterUtil._
 
-        "instantiate" >> {
-            new FilterUtil !== null
-        }
-
-        "filter" >> {
-            doFilter("test", List("test")) === true
-            doFilter("TEST", List("test")) === true
-            doFilter("test", List("t", "test")) === true
-
-            doFilter("test", List("t", "e", "s", "t")) === false
-            doFilter("testing", List("test")) === false
-            doFilter(" test", List("test")) === false
-
-            doFilter(" Test", List(".*test")) === true
-            doFilter("this is a test", List("test", ".*test.*")) === true
-            doFilter("test or not to test", List("testing", ".*test.*")) === true
-        }
+    "instantiate" >> {
+      new FilterUtil !== null
     }
+
+    "filter" >> {
+      doFilter("test", List("test")) === true
+      doFilter("TEST", List("test")) === true
+      doFilter("test", List("t", "test")) === true
+
+      doFilter("test", List("t", "e", "s", "t")) === false
+      doFilter("testing", List("test")) === false
+      doFilter(" test", List("test")) === false
+
+      doFilter(" Test", List(".*test")) === true
+      doFilter("this is a test", List("test", ".*test.*")) === true
+      doFilter("test or not to test", List("testing", ".*test.*")) === true
+    }
+  }
 }

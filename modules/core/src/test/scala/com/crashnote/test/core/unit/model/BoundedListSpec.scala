@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,43 +20,43 @@ import scala.collection.JavaConversions._
 import com.crashnote.test.base.defs._
 
 class BoundedListSpec
-    extends UnitSpec {
+  extends UnitSpec {
 
-    "Bounded List" should {
+  "Bounded List" should {
 
-        val list = new BoundedList[Int](2)
+    val list = new BoundedList[Int](2)
 
-        "always obey the maximum number of elements" >> {
-            "add" >> {
-                list.add(2)
+    "always obey the maximum number of elements" >> {
+      "add" >> {
+        list.add(2)
 
-                list.toString === "[ 2 ]"
-            }
-            "add with location" >> {
-                list.add(0, 1)
+        list.toString === "[ 2 ]"
+      }
+      "add with location" >> {
+        list.add(0, 1)
 
-                list.get(0) == 1
-                list.get(1) == 2
-                list.toString === "[ 1 2 ]"
+        list.get(0) == 1
+        list.get(1) == 2
+        list.toString === "[ 1 2 ]"
 
-                list.add(1, 3)
-                list.toString === "[ 2 3 ]"
-            }
-            "add last" >> {
-                list.addLast(4)
+        list.add(1, 3)
+        list.toString === "[ 2 3 ]"
+      }
+      "add last" >> {
+        list.addLast(4)
 
-                list.toString === "[ 3 4 ]"
-            }
-        }
-
-        "throw exception for unsupported methods" >> {
-            "add all" >> {
-                list.addAll(Seq(1)) must throwA[UnsupportedOperationException]
-                list.addAll(0, Seq(1)) must throwA[UnsupportedOperationException]
-            }
-            "add first" >> {
-                list.addFirst(1) must throwA[UnsupportedOperationException]
-            }
-        }
+        list.toString === "[ 3 4 ]"
+      }
     }
+
+    "throw exception for unsupported methods" >> {
+      "add all" >> {
+        list.addAll(Seq(1)) must throwA[UnsupportedOperationException]
+        list.addAll(0, Seq(1)) must throwA[UnsupportedOperationException]
+      }
+      "add first" >> {
+        list.addFirst(1) must throwA[UnsupportedOperationException]
+      }
+    }
+  }
 }

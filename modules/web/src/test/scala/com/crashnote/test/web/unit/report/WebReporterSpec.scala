@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,99 +25,99 @@ import com.crashnote.core.report.impl.processor.Processor
 import com.crashnote.core.report.impl.ThrowableLogEvt
 
 class WebReporterSpec
-    extends TargetMockSpec[WebReporter[WebConfig, HTTPRequest]] {
+  extends TargetMockSpec[WebReporter[WebConfig, HTTPRequest]] {
 
-    "Web Reporter" should {
+  "Web Reporter" should {
 
-        "have request lifecycle" >> {
-            "#1 start session before request" >>  {
-                "init session" >> new Started() {
-                    target.beforeRequest(req())
+    "have request lifecycle" >> {
+      "#1 start session before request" >> {
+        "init session" >> new Started() {
+          target.beforeRequest(req())
 
-                    expect {
-                        one(m_session).clear()
-                    }
-                }
-                "skip when request ignored" >> new Started() {
-                    target.beforeRequest(req(ignore = true))
-
-                    expect {
-                        verifyUntouched(m_session)
-                    }
-                }
-            }
-
-            "#2 handle uncaught exception" >> new Started() {
-                target.uncaughtException(req(), thd(), excp())
-
-                expect {
-                    one(m_session).addEvent(any[ThrowableLogEvt])
-                    verifyUntouched(m_processor)
-                    no(m_session).clear()
-                }
-            }
-
-            "#3 end session after request" >> {
-                "collect data when session is non-empty" >> new Started() {
-                    val r = req()
-                    m_session.isEmpty returns false
-
-                    // execute
-                    target.afterRequest(r)
-
-                    expect {
-                        //one(m_reqColl).collect(r)
-                        //one(m_sesColl).collect(r)
-                        one(m_processor).process(any[ILogSession])
-                        one(m_session).clear()
-                    }
-                }
-                "skip when session is empty" >> new Started() {
-                    m_session.isEmpty returns true
-
-                    // execute
-                    target.afterRequest(req())
-
-                    expect {
-                        verifyUntouched(m_reqColl, m_sesColl, m_processor)
-                    }
-                }
-            }
+          expect {
+            one(m_session).clear()
+          }
         }
-    }
+        "skip when request ignored" >> new Started() {
+          target.beforeRequest(req(ignore = true))
 
-    // SETUP ======================================================================================
-
-    var m_session: ILogSession = _
-    var m_processor: Processor = _
-
-    var m_reqColl: RequestCollector[HTTPRequest] = _
-    var m_sesColl: SessionCollector[HTTPRequest] = _
-
-    override def mock() {
-        m_session = _mock[ILogSession]
-        m_processor = _mock[Processor]
-
-        m_reqColl = mock[RequestCollector[HTTPRequest]]
-        m_sesColl = mock[SessionCollector[HTTPRequest]]
-    }
-
-    def configure(config: C) = {
-        config.isEnabled returns true
-
-        new WebReporter[WebConfig, HTTPRequest](config) {
-            protected def getRequestCollector(config: WebConfig) =
-                m_reqColl
-
-            protected def getSessionCollector(config: WebConfig) =
-                m_sesColl
-
-            protected def ignoreRequest(req: HTTPRequest) =
-                req.ignore
+          expect {
+            verifyUntouched(m_session)
+          }
         }
-    }
+      }
 
-    override def afterStarted() {
-        reset(m_session, m_processor)
+      "#2 handle uncaught exception" >> new Started() {
+        target.uncaughtException(req(), thd(), excp())
+
+        expect {
+          one(m_session).addEvent(any[ThrowableLogEvt])
+          verifyUntouched(m_processor)
+          no(m_session).clear()
+        }
+      }
+
+      "#3 end session after request" >> {
+        "collect data when session is non-empty" >> new Started() {
+          val r = req()
+          m_session.isEmpty returns false
+
+          // execute
+          target.afterRequest(r)
+
+          expect {
+            //one(m_reqColl).collect(r)
+            //one(m_sesColl).collect(r)
+            one(m_processor).process(any[ILogSession])
+            one(m_session).clear()
+          }
+        }
+        "skip when session is empty" >> new Started() {
+          m_session.isEmpty returns true
+
+          // execute
+          target.afterRequest(req())
+
+          expect {
+            verifyUntouched(m_reqColl, m_sesColl, m_processor)
+          }
+        }
+      }
     }
+  }
+
+  // SETUP ======================================================================================
+
+  var m_session: ILogSession = _
+  var m_processor: Processor = _
+
+  var m_reqColl: RequestCollector[HTTPRequest] = _
+  var m_sesColl: SessionCollector[HTTPRequest] = _
+
+  override def mock() {
+    m_session = _mock[ILogSession]
+    m_processor = _mock[Processor]
+
+    m_reqColl = mock[RequestCollector[HTTPRequest]]
+    m_sesColl = mock[SessionCollector[HTTPRequest]]
+  }
+
+  def configure(config: C) = {
+    config.isEnabled returns true
+
+    new WebReporter[WebConfig, HTTPRequest](config) {
+      protected def getRequestCollector(config: WebConfig) =
+        m_reqColl
+
+      protected def getSessionCollector(config: WebConfig) =
+        m_sesColl
+
+      protected def ignoreRequest(req: HTTPRequest) =
+        req.ignore
+    }
+  }
+
+  override def afterStarted() {
+    reset(m_session, m_processor)
+  }
 }

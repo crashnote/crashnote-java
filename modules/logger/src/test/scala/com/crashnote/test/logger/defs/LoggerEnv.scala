@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,21 +15,21 @@
  */
 package com.crashnote.test.logger.defs
 
-import com.crashnote.core.log.{LogLogFactory, LogLog}
+import com.crashnote.core.log.LogLogFactory
 import com.crashnote.logger.config.LoggerConfig
 import com.crashnote.test.base.defs.BaseMockSpec
 
 trait LoggerEnv {
 
-    self: BaseMockSpec[_] =>
+  self: BaseMockSpec[_] =>
 
-    type C = LoggerConfig
+  type C = LoggerConfig
 
-    def mockConfig(): C = {
-        val m_conf = mock[LoggerConfig]
-        val lfact = new LogLogFactory(m_conf)
-        m_conf.getLogger(anyClass) returns lfact.getLogger("")
-        m_conf.getLogger(anyString) returns lfact.getLogger("")
-        m_conf
-    }
+  def mockConfig(): C = {
+    val m_conf = mock[LoggerConfig]
+    val lfact = new LogLogFactory(m_conf)
+    m_conf.getLogger(anyClass) returns lfact.getLogger("")
+    m_conf.getLogger(anyString) returns lfact.getLogger("")
+    m_conf
+  }
 }

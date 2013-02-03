@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,26 +20,26 @@ import com.crashnote.logger.report.LoggerReporter
 import com.crashnote.test.logger.defs.TargetMockSpec
 
 class LoggerReporterSpec
-    extends TargetMockSpec[LoggerReporter] {
+  extends TargetMockSpec[LoggerReporter] {
 
-    "Logger Reporter" should {
+  "Logger Reporter" should {
 
-        "decide whether to accept logs" >> {
+    "decide whether to accept logs" >> {
 
-            "when enabled" >> new Mock(ENABLED) {
-                target.doAcceptLog("com.example") === true
-                target.doAcceptLog("com.crashnote") === false
-                target.doAcceptLog("com.crashnote.core") === false
-            }
-            "when disabled" >> new Mock(DISABLED) {
-                target.doAcceptLog("com.example") === false
-                target.doAcceptLog("com.crashnote") === false
-            }
-        }
+      "when enabled" >> new Mock(ENABLED) {
+        target.doAcceptLog("com.example") === true
+        target.doAcceptLog("com.crashnote") === false
+        target.doAcceptLog("com.crashnote.core") === false
+      }
+      "when disabled" >> new Mock(DISABLED) {
+        target.doAcceptLog("com.example") === false
+        target.doAcceptLog("com.crashnote") === false
+      }
     }
+  }
 
-    // SETUP =====================================================================================
+  // SETUP =====================================================================================
 
-    def configure(config: C) =
-        new LoggerReporter(config)
+  def configure(config: C) =
+    new LoggerReporter(config)
 }

@@ -20,46 +20,46 @@ import com.crashnote.core.config.ConfigLoader
 import java.util.Properties
 
 class ConfigLoaderSpec
-    extends UnitSpec {
+  extends UnitSpec {
 
-    "Config Loader" should {
+  "Config Loader" should {
 
-        val l = new ConfigLoader()
+    val l = new ConfigLoader()
 
-        "load from file" >> {
-            val c = l.fromFile("test")
+    "load from file" >> {
+      val c = l.fromFile("test")
 
-            c.getString(path) === "42"
-        }
-
-        /*
-        "load from system" >> {
-            System.setProperty(path, "42")
-            val c = l.fromSystemProps()
-
-            c.getString(path) === "42"
-        }
-        */
-
-        "load from props" >> {
-            val p = new Properties()
-            p.setProperty(path, "42")
-            val c = l.fromProps(p, "props")
-
-            c.getString(path) === "42"
-        }
-
-        "load from String" >> {
-            val c = l.fromString(
-                """crashnote {
-                   answer = 42
-                }"""
-            )
-
-            c.getString(path) === "42"
-            1 === 1
-        }
+      c.getString(path) === "42"
     }
 
-    val path = "crashnote.answer"
+    /*
+    "load from system" >> {
+        System.setProperty(path, "42")
+        val c = l.fromSystemProps()
+
+        c.getString(path) === "42"
+    }
+    */
+
+    "load from props" >> {
+      val p = new Properties()
+      p.setProperty(path, "42")
+      val c = l.fromProps(p, "props")
+
+      c.getString(path) === "42"
+    }
+
+    "load from String" >> {
+      val c = l.fromString(
+        """crashnote {
+                   answer = 42
+                }"""
+      )
+
+      c.getString(path) === "42"
+      1 === 1
+    }
+  }
+
+  val path = "crashnote.answer"
 }

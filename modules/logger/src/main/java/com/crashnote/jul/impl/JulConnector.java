@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  * Attaches the {@link CrashHandler} to JUL.
  */
 public class JulConnector
-        extends LogConnector<LoggerConfig, CrashHandler> {
+    extends LogConnector<LoggerConfig, CrashHandler> {
 
     // VARS =======================================================================================
 

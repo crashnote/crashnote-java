@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,25 +21,25 @@ import org.slf4j.MDC
 
 class ErrorFilter extends Filter {
 
-    def init(filterConfig: FilterConfig) {
-        println("BOOT ERROR FILTER")
+  def init(filterConfig: FilterConfig) {
+    println("BOOT ERROR FILTER")
+  }
+
+  def doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
+
+    if (request.asInstanceOf[HttpServletRequest].getRequestURI.contains("/api/errors")) {
+
+      // add test data to context
+      MDC.put("TEST", "data")
+
+      // raise error
+      sys.error("default error")
+    } else {
+      chain.doFilter(request, response)
     }
+  }
 
-    def doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
-
-        if (request.asInstanceOf[HttpServletRequest].getRequestURI.contains("/api/errors")) {
-
-            // add test data to context
-            MDC.put("TEST", "data")
-
-            // raise error
-            sys.error("default error")
-        } else {
-            chain.doFilter(request, response)
-        }
-    }
-
-    def destroy() {
-        println("SHUTDOWN ERROR FILTER")
-    }
+  def destroy() {
+    println("SHUTDOWN ERROR FILTER")
+  }
 }

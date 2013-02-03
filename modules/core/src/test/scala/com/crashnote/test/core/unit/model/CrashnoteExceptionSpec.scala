@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,42 +19,42 @@ import com.crashnote.test.base.defs._
 import com.crashnote.core.model.excp.CrashnoteException
 
 class CrashnoteExceptionSpec
-    extends UnitSpec {
+  extends UnitSpec {
 
-    "Crashnote Exception" should {
+  "Crashnote Exception" should {
 
-        "have type Throwable" >> {
-            new CrashnoteException() must haveSuperclass[Throwable]
-        }
-
-        "have default constructor" >> {
-            val e = new CrashnoteException()
-
-            e.getMessage must beNull
-            e.getCause must beNull
-        }
-
-        "have constructor for String" >> {
-            val e = new CrashnoteException("oops")
-
-            e.getMessage === "oops"
-            e.getCause must beNull
-        }
-
-        "have constructor for Throwable" >> {
-            val e = new CrashnoteException(th)
-
-            e.getMessage must not(beNull)
-            e.getCause === th
-        }
-
-        "have constructor for String and Throwable" >> {
-            val e = new CrashnoteException("oops", th)
-
-            e.getMessage === "oops"
-            e.getCause === th
-        }
+    "have type Throwable" >> {
+      new CrashnoteException() must haveSuperclass[Throwable]
     }
 
-    val th = new RuntimeException("oops")
+    "have default constructor" >> {
+      val e = new CrashnoteException()
+
+      e.getMessage must beNull
+      e.getCause must beNull
+    }
+
+    "have constructor for String" >> {
+      val e = new CrashnoteException("oops")
+
+      e.getMessage === "oops"
+      e.getCause must beNull
+    }
+
+    "have constructor for Throwable" >> {
+      val e = new CrashnoteException(th)
+
+      e.getMessage must not(beNull)
+      e.getCause === th
+    }
+
+    "have constructor for String and Throwable" >> {
+      val e = new CrashnoteException("oops", th)
+
+      e.getMessage === "oops"
+      e.getCause === th
+    }
+  }
+
+  val th = new RuntimeException("oops")
 }

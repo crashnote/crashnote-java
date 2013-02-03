@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,52 +20,51 @@ import com.crashnote.core.collect.impl._
 import com.crashnote.core.report.impl.session.LocalLogSession
 import com.crashnote.core.build.Builder
 import com.crashnote.test.core.defs.TargetMockSpec
-import com.crashnote.test.core.util.FactoryUtil
 
 class CollectorSpec
-    extends TargetMockSpec[Collector] {
+  extends TargetMockSpec[Collector] {
 
-    var m_builder: Builder = _
-    var m_envColl: EnvCollector = _
-    var m_logColl: LogCollector = _
+  var m_builder: Builder = _
+  var m_envColl: EnvCollector = _
+  var m_logColl: LogCollector = _
 
-    "Collector" should {
+  "Collector" should {
 
-        "have lifecycle" >> {
-            "start" >> new Mock() {
-                target.start() === true
-                target.start() === true
-            }
-            "stop" >> new Started() {
-                target.stop() === false
-                target.stop() === false
-            }
-        }
-
-        "collect session" >> new Started() {
-            val s = new LocalLogSession()
-            s.addEvent(newLogEvt())
-            s.addEvent(newLogEvt())
-            val evts = s.getEvents
-
-            val r = target.collectLog(s)
-
-            expect {
-                one(m_logColl).collect(evts)
-                one(m_envColl).collect()
-            }
-        }
+    "have lifecycle" >> {
+      "start" >> new Mock() {
+        target.start() === true
+        target.start() === true
+      }
+      "stop" >> new Started() {
+        target.stop() === false
+        target.stop() === false
+      }
     }
 
-    // SETUP ======================================================================================
+    "collect session" >> new Started() {
+      val s = new LocalLogSession()
+      s.addEvent(newLogEvt())
+      s.addEvent(newLogEvt())
+      val evts = s.getEvents
 
-    def configure(config: C) = {
-        config.getBuilder returns new Builder
-        new Collector(config)
-    }
+      val r = target.collectLog(s)
 
-    override def mock() {
-        m_envColl = _mock[EnvCollector]
-        m_logColl = _mock[LogCollector]
+      expect {
+        one(m_logColl).collect(evts)
+        one(m_envColl).collect()
+      }
     }
+  }
+
+  // SETUP ======================================================================================
+
+  def configure(config: C) = {
+    config.getBuilder returns new Builder
+    new Collector(config)
+  }
+
+  override def mock() {
+    m_envColl = _mock[EnvCollector]
+    m_logColl = _mock[LogCollector]
+  }
 }

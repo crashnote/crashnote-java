@@ -17,12 +17,12 @@ package com.crashnote.test.web.util
 
 trait FactoryUtil {
 
-    def req(ignore: Boolean = false) =
-        new HTTPRequest(ignore)
+  def req(ignore: Boolean = false) =
+    new HTTPRequest(ignore)
 
-    def thd() =
-        Thread.currentThread()
+  def thd() =
+    Thread.currentThread()
 
-    def excp() =
-        new RuntimeException("oops")
+  def excp() =
+    new RuntimeException("oops")
 }

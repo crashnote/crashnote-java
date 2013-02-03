@@ -20,42 +20,42 @@ import com.crashnote.test.base.defs.MockSpec
 import com.crashnote.core.config.ConfigLoader
 
 class WebConfigFactorySpec
-    extends MockSpec {
+  extends MockSpec {
 
-    "Web Config Factory" should {
+  "Web Config Factory" should {
 
-        "create configuration instance" >> {
-            val factory = new WebConfigFactory[WebConfig]()
-            val c = factory.create()
-            c must haveClass[WebConfig]
-        }
-
-        "load 'crashnote.web.conf' before other default files but after user conf file" >> {
-            // mock
-            val l = new ConfigLoader
-            val m_loader = spy(l)
-            m_loader.fromFile("crashnote.web") returns
-                l.fromProps(toConfProps(List("request.max-parameter-size" -> 1000)), "web props")
-            m_loader.fromFile("crashnote.default") returns
-                l.fromProps(toConfProps(List("request.max-parameter-size" -> 10000)), "default props")
-
-            // execute
-            var c = (new WebConfigFactory[WebConfig](m_loader)).create()
-
-            // verify
-            c.getMaxRequestParameterSize === 1000
-
-            // ###
-
-            // mock
-            m_loader.fromFile("crashnote") returns
-                l.fromProps(toConfProps(List("request.max-parameter-size" -> 100)), "user props")
-
-            // execute
-            c = (new WebConfigFactory[WebConfig](m_loader)).create()
-
-            // verify
-            c.getMaxRequestParameterSize === 100
-        }
+    "create configuration instance" >> {
+      val factory = new WebConfigFactory[WebConfig]()
+      val c = factory.create()
+      c must haveClass[WebConfig]
     }
+
+    "load 'crashnote.web.conf' before other default files but after user conf file" >> {
+      // mock
+      val l = new ConfigLoader
+      val m_loader = spy(l)
+      m_loader.fromFile("crashnote.web") returns
+        l.fromProps(toConfProps(List("request.max-parameter-size" -> 1000)), "web props")
+      m_loader.fromFile("crashnote.default") returns
+        l.fromProps(toConfProps(List("request.max-parameter-size" -> 10000)), "default props")
+
+      // execute
+      var c = (new WebConfigFactory[WebConfig](m_loader)).create()
+
+      // verify
+      c.getMaxRequestParameterSize === 1000
+
+      // ###
+
+      // mock
+      m_loader.fromFile("crashnote") returns
+        l.fromProps(toConfProps(List("request.max-parameter-size" -> 100)), "user props")
+
+      // execute
+      c = (new WebConfigFactory[WebConfig](m_loader)).create()
+
+      // verify
+      c.getMaxRequestParameterSize === 100
+    }
+  }
 }

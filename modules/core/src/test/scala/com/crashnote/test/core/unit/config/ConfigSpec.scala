@@ -16,9 +16,7 @@
 package com.crashnote.test.core.unit.config
 
 import java.util.Date
-import scala.collection.JavaConverters._
 import org.specs2.specification.BeforeExample
-
 import com.crashnote.test.base.defs.MockSpec
 import com.crashnote.core.config.{ConfigLoader, CrashConfigFactory, CrashConfig}
 import com.crashnote.core.log.LogLog
@@ -28,141 +26,143 @@ import com.crashnote.core.collect.Collector
 import com.crashnote.core.util.SystemUtil
 import com.crashnote.core.report.Reporter
 import com.crashnote.core.model.excp.CrashnoteException
-import com.crashnote.external.config.{ConfigFactory, Config}
+import com.crashnote.external.config.ConfigFactory
 
 class ConfigSpec
-    extends MockSpec with BeforeExample {
+  extends MockSpec with BeforeExample {
 
-    "Config" should {
+  "Config" should {
 
-        "return" >> {
-            "POST URL" >> {
-                val bm = List("key" -> 42, "network.host" -> "mycompany.com")
+    "return" >> {
+      "POST URL" >> {
+        val bm = List("key" -> 42, "network.host" -> "mycompany.com")
 
-                "with SSL" >> {
-                    c = getConfig(bm ::: List("network.port-ssl" -> 666, "network.ssl" -> true))
-                    c.getPostUrl === "https://mycompany.com:666?key=42"
-                }
-                "without SSL" >> {
-                    c = getConfig(bm ::: List("network.port" -> 8080, "network.ssl" -> false))
-                    c.getPostUrl === "http://mycompany.com:8080?key=42"
-                }
-            }
-            "start time" >> {
-                c.getStartTime must beLessThan(new Date().getTime)
-            }
+        "with SSL" >> {
+          c = getConfig(bm ::: List("network.port-ssl" -> 666, "network.ssl" -> true))
+          c.getPostUrl === "https://mycompany.com:666?key=42"
         }
-
-        "validate configuration" >> {
-            "skip when disabled" >> {
-                val (out, _) = capture { c.validate(null) }
-                out must contain ("OFF")
-            }
-            "fail when key missing" >> {
-                getConfig(List("enabled" -> true, "key" -> "")).
-                    validate(null) must throwA[IllegalStateException]
-            }
-            "fail when key invalid" >> {
-                getConfig(List("enabled" -> true, "key" -> "abra cadabra")).
-                    validate(null) must throwA[IllegalStateException]
-            }
+        "without SSL" >> {
+          c = getConfig(bm ::: List("network.port" -> 8080, "network.ssl" -> false))
+          c.getPostUrl === "http://mycompany.com:8080?key=42"
         }
-
-        "act as factory" >> {
-            "for logger" >> {
-                c.getLogger("test") must haveClass[LogLog]
-                c.getLogger(this.getClass) must haveClass[LogLog]
-            }
-            "for builder" >> {
-                c.getBuilder must haveClass[Builder]
-            }
-            "for sender" >> {
-                c.getSender must haveClass[Sender]
-            }
-            "for collector" >> {
-                c.getCollector must haveClass[Collector]
-            }
-            "for system util" >> {
-                c.getSystemUtil must haveClass[SystemUtil]
-            }
-            "for reporter" >> {
-                c.getReporter must haveClass[Reporter]
-            }
-        }
-
-        "read config key" >> {
-            "of type String" >> {
-                "successfully" >> {
-                    getConfig() must not beNull
-                }
-                "but throw exception when missing" >> {
-                    getConfigWith().getKey must throwA[CrashnoteException]
-                }
-                /*
-                "but throw exception when wrong type" >> {
-                    getConfigWith(("key" -> "[42]")).getKey must throwA[CrashnoteException]
-                }
-                */
-            }
-            "of type Bool" >> {
-                "successfully" >> {
-                    getConfig().isSync must beFalse
-                }
-                "but throw exception when missing" >> {
-                    getConfigWith().isSync must throwA[CrashnoteException]
-                }
-                "but throw exception when wrong type" >> {
-                    getConfigWith(("sync" -> "$$")).isSync must throwA[CrashnoteException]
-                }
-            }
-            "of type Millis" >> {
-                "successfully" >> {
-                    getConfig().getConnectionTimeout must beGreaterThan(1000)
-                }
-                "but throw exception when missing" >> {
-                    getConfigWith().getConnectionTimeout must throwA[CrashnoteException]
-                }
-                "but throw exception when wrong format" >> {
-                    getConfigWith(("network.timeout" -> "true")).getConnectionTimeout must throwA[CrashnoteException]
-                }
-            }
-            "of type List" >> {
-                "successfully" >> {
-                    getConfig().getEnvironmentFilters must not be empty
-                }
-                "but throw exception when missing" >> {
-                    getConfigWith().getEnvironmentFilters must throwA[CrashnoteException]
-                }
-                "but throw exception when wrong format" >> {
-                    getConfigWith(("filter.environment" -> "42")).getEnvironmentFilters must throwA[CrashnoteException]
-                }
-            }
-        }
+      }
+      "start time" >> {
+        c.getStartTime must beLessThan(new Date().getTime)
+      }
     }
 
-    // SETUP =====================================================================================
-
-    var c: CrashConfig = _
-
-    def before {
-        c = getConfig()
+    "validate configuration" >> {
+      "skip when disabled" >> {
+        val (out, _) = capture {
+          c.validate(null)
+        }
+        out must contain("OFF")
+      }
+      "fail when key missing" >> {
+        getConfig(List("enabled" -> true, "key" -> "")).
+          validate(null) must throwA[IllegalStateException]
+      }
+      "fail when key invalid" >> {
+        getConfig(List("enabled" -> true, "key" -> "abra cadabra")).
+          validate(null) must throwA[IllegalStateException]
+      }
     }
 
-    def getConfig(m: List[(String, Any)] = List()) =
-        getConf(m, spy(_))
-
-    def getConfigWith(m: (String, Any)*) =
-        getConf(m.toList, cf => {
-            val m = mock[ConfigLoader]
-            m.fromFile(anyString) returns ConfigFactory.empty()
-            m.fromEnvProps() returns ConfigFactory.empty()
-            m
-        })
-
-    private def getConf(m: List[(String, Any)], fn: (ConfigLoader) => ConfigLoader) = {
-        val cl = new ConfigLoader
-        val _cl = fn(cl)
-        _cl.fromSystemProps() returns cl.fromProps(toConfProps(m), "spec")
-        (new CrashConfigFactory[CrashConfig](_cl)).get
+    "act as factory" >> {
+      "for logger" >> {
+        c.getLogger("test") must haveClass[LogLog]
+        c.getLogger(this.getClass) must haveClass[LogLog]
+      }
+      "for builder" >> {
+        c.getBuilder must haveClass[Builder]
+      }
+      "for sender" >> {
+        c.getSender must haveClass[Sender]
+      }
+      "for collector" >> {
+        c.getCollector must haveClass[Collector]
+      }
+      "for system util" >> {
+        c.getSystemUtil must haveClass[SystemUtil]
+      }
+      "for reporter" >> {
+        c.getReporter must haveClass[Reporter]
+      }
     }
+
+    "read config key" >> {
+      "of type String" >> {
+        "successfully" >> {
+          getConfig() must not beNull
+        }
+        "but throw exception when missing" >> {
+          getConfigWith().getKey must throwA[CrashnoteException]
+        }
+        /*
+        "but throw exception when wrong type" >> {
+            getConfigWith(("key" -> "[42]")).getKey must throwA[CrashnoteException]
+        }
+        */
+      }
+      "of type Bool" >> {
+        "successfully" >> {
+          getConfig().isSync must beFalse
+        }
+        "but throw exception when missing" >> {
+          getConfigWith().isSync must throwA[CrashnoteException]
+        }
+        "but throw exception when wrong type" >> {
+          getConfigWith(("sync" -> "$$")).isSync must throwA[CrashnoteException]
+        }
+      }
+      "of type Millis" >> {
+        "successfully" >> {
+          getConfig().getConnectionTimeout must beGreaterThan(1000)
+        }
+        "but throw exception when missing" >> {
+          getConfigWith().getConnectionTimeout must throwA[CrashnoteException]
+        }
+        "but throw exception when wrong format" >> {
+          getConfigWith(("network.timeout" -> "true")).getConnectionTimeout must throwA[CrashnoteException]
+        }
+      }
+      "of type List" >> {
+        "successfully" >> {
+          getConfig().getEnvironmentFilters must not be empty
+        }
+        "but throw exception when missing" >> {
+          getConfigWith().getEnvironmentFilters must throwA[CrashnoteException]
+        }
+        "but throw exception when wrong format" >> {
+          getConfigWith(("filter.environment" -> "42")).getEnvironmentFilters must throwA[CrashnoteException]
+        }
+      }
+    }
+  }
+
+  // SETUP =====================================================================================
+
+  var c: CrashConfig = _
+
+  def before {
+    c = getConfig()
+  }
+
+  def getConfig(m: List[(String, Any)] = List()) =
+    getConf(m, spy(_))
+
+  def getConfigWith(m: (String, Any)*) =
+    getConf(m.toList, cf => {
+      val m = mock[ConfigLoader]
+      m.fromFile(anyString) returns ConfigFactory.empty()
+      m.fromEnvProps() returns ConfigFactory.empty()
+      m
+    })
+
+  private def getConf(m: List[(String, Any)], fn: (ConfigLoader) => ConfigLoader) = {
+    val cl = new ConfigLoader
+    val _cl = fn(cl)
+    _cl.fromSystemProps() returns cl.fromProps(toConfProps(m), "spec")
+    (new CrashConfigFactory[CrashConfig](_cl)).get
+  }
 }

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,27 +20,27 @@ import com.crashnote.core.build.Builder
 import com.crashnote.core.model.data.{DataArray, DataObject}
 
 class BuilderSpec
-    extends UnitSpec {
+  extends UnitSpec {
 
-    "Builder" should {
+  "Builder" should {
 
-        val b = new Builder
+    val b = new Builder
 
-        "create empty data object" >> {
-            val obj = b.createDataObj()
+    "create empty data object" >> {
+      val obj = b.createDataObj()
 
-            obj !== null
-            obj.isEmpty === true
-            obj must haveInterface[DataObject]
-        }
-
-        "create empty data array" >> {
-            val arr = b.createDataArr()
-
-            arr !== null
-            arr.isEmpty === true
-            arr must haveInterface[DataArray]
-        }
+      obj !== null
+      obj.isEmpty === true
+      obj must haveInterface[DataObject]
     }
+
+    "create empty data array" >> {
+      val arr = b.createDataArr()
+
+      arr !== null
+      arr.isEmpty === true
+      arr must haveInterface[DataArray]
+    }
+  }
 
 }

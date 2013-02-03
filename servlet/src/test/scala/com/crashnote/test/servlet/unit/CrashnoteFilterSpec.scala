@@ -26,127 +26,127 @@ import java.io.IOException
 import reflect.ClassTag
 
 class CrashnoteFilterSpec
-    extends TargetMockSpec[CrashnoteFilter] {
+  extends TargetMockSpec[CrashnoteFilter] {
 
-    "Filter" should {
+  "Filter" should {
 
-        "init" >> {
-            "outside of AppEngine" >> {
-                "when enabled" >> new Mock(ENABLED) {
-                    target.init(m_fconf)
+    "init" >> {
+      "outside of AppEngine" >> {
+        "when enabled" >> new Mock(ENABLED) {
+          target.init(m_fconf)
 
-                    expect {
-                        one(m_reporter).start()
-                        one(m_connector).start()
-                    }
-                }
-                "but skipped when disabled" >> new Mock(DISABLED) {
-                    target.init(m_fconf)
-
-                    expect {
-                        no(m_reporter).start()
-                        no(m_connector).start()
-                    }
-                }
-            }
-
-            "but not inside of AppEngine" >> new Mock {
-                System.setProperty("com.google.appengine.runtime.environment", "dev")
-                target.init(m_fconf) must throwA[RuntimeException]
-                System.clearProperty("com.google.appengine.runtime.environment")
-            }
+          expect {
+            one(m_reporter).start()
+            one(m_connector).start()
+          }
         }
+        "but skipped when disabled" >> new Mock(DISABLED) {
+          target.init(m_fconf)
 
-        "filter" >> {
-            "when NO error occurs" >> new Mock(ENABLED) {
-                // prepare
-                target.init(m_fconf)
-
-                // execute
-                target.doFilter(m_request, m_response, m_chain)
-
-                // verify
-                there was
-                    one(m_reporter).beforeRequest(m_request) andThen
-                    one(m_reporter).afterRequest(m_request)
-            }
-            "when an error occurs" >> {
-                def example[T <: Throwable : ClassTag](err: Throwable) =
-                    "of type '" + err.getClass + "'" >> new Mock(ENABLED) {
-
-                        // prepare
-                        m_chain.doFilter(m_request, m_response) throws err
-                        target.init(m_fconf)
-
-                        // execute
-                        target.doFilter(m_request, m_response, m_chain) must throwA[T]
-
-                        // verify
-                        there was
-                            one(m_reporter).beforeRequest(m_request) andThen
-                            one(m_reporter).uncaughtException(m_request, Thread.currentThread(), err) andThen
-                            one(m_reporter).afterRequest(m_request)
-                    }
-
-                example[ServletException](new ServletException("oops"))
-                example[RuntimeException](new RuntimeException("oops"))
-                example[RuntimeException](new NullPointerException("oops"))
-                example[RuntimeException](new StackOverflowError("oops"))
-                example[IOException](new IOException("oops"))
-            }
-            "just proceed with chain if disabled" >> new Mock(DISABLED) {
-                // prepare
-                target.init(m_fconf)
-
-                // execute
-                target.doFilter(m_request, m_response, m_chain)
-
-                // verify
-                expect {
-                    one(m_chain).doFilter(m_request, m_response)
-                    verifyUntouched(m_reporter)
-                }
-            }
+          expect {
+            no(m_reporter).start()
+            no(m_connector).start()
+          }
         }
+      }
 
-        "destroy" >> new Mock(ENABLED) {
+      "but not inside of AppEngine" >> new Mock {
+        System.setProperty("com.google.appengine.runtime.environment", "dev")
+        target.init(m_fconf) must throwA[RuntimeException]
+        System.clearProperty("com.google.appengine.runtime.environment")
+      }
+    }
+
+    "filter" >> {
+      "when NO error occurs" >> new Mock(ENABLED) {
+        // prepare
+        target.init(m_fconf)
+
+        // execute
+        target.doFilter(m_request, m_response, m_chain)
+
+        // verify
+        there was
+          one(m_reporter).beforeRequest(m_request) andThen
+          one(m_reporter).afterRequest(m_request)
+      }
+      "when an error occurs" >> {
+        def example[T <: Throwable : ClassTag](err: Throwable) =
+          "of type '" + err.getClass + "'" >> new Mock(ENABLED) {
+
             // prepare
+            m_chain.doFilter(m_request, m_response) throws err
             target.init(m_fconf)
 
             // execute
-            target.destroy()
+            target.doFilter(m_request, m_response, m_chain) must throwA[T]
 
             // verify
-            expect {
-                one(m_reporter).stop()
-                one(m_connector).stop()
-            }
+            there was
+              one(m_reporter).beforeRequest(m_request) andThen
+              one(m_reporter).uncaughtException(m_request, Thread.currentThread(), err) andThen
+              one(m_reporter).afterRequest(m_request)
+          }
+
+        example[ServletException](new ServletException("oops"))
+        example[RuntimeException](new RuntimeException("oops"))
+        example[RuntimeException](new NullPointerException("oops"))
+        example[RuntimeException](new StackOverflowError("oops"))
+        example[IOException](new IOException("oops"))
+      }
+      "just proceed with chain if disabled" >> new Mock(DISABLED) {
+        // prepare
+        target.init(m_fconf)
+
+        // execute
+        target.doFilter(m_request, m_response, m_chain)
+
+        // verify
+        expect {
+          one(m_chain).doFilter(m_request, m_response)
+          verifyUntouched(m_reporter)
         }
+      }
     }
 
-    // SETUP ======================================================================================
+    "destroy" >> new Mock(ENABLED) {
+      // prepare
+      target.init(m_fconf)
 
-    var m_reporter: ServletReporter[C] = _
-    var m_connector: AutoLogConnector = _
+      // execute
+      target.destroy()
 
-    var m_request: HttpServletRequest = _
-    var m_response: HttpServletResponse = _
-    var m_chain: FilterChain = _
-
-    var m_fconf: FilterConfig = _
-
-    def configure(config: C) = {
-        m_reporter = mock[ServletReporter[C]]
-        m_connector = mock[AutoLogConnector]
-        m_request = mock[HttpServletRequest]
-        m_response = mock[HttpServletResponse]
-        m_chain = mock[FilterChain]
-
-        m_conf.getReporter returns m_reporter
-        m_conf.getLogConnector(any[ServletReporter[C]]) returns m_connector
-
-        new CrashnoteFilter() {
-            override protected def getConfig(fc: FilterConfig) = m_conf
-        }
+      // verify
+      expect {
+        one(m_reporter).stop()
+        one(m_connector).stop()
+      }
     }
+  }
+
+  // SETUP ======================================================================================
+
+  var m_reporter: ServletReporter[C] = _
+  var m_connector: AutoLogConnector = _
+
+  var m_request: HttpServletRequest = _
+  var m_response: HttpServletResponse = _
+  var m_chain: FilterChain = _
+
+  var m_fconf: FilterConfig = _
+
+  def configure(config: C) = {
+    m_reporter = mock[ServletReporter[C]]
+    m_connector = mock[AutoLogConnector]
+    m_request = mock[HttpServletRequest]
+    m_response = mock[HttpServletResponse]
+    m_chain = mock[FilterChain]
+
+    m_conf.getReporter returns m_reporter
+    m_conf.getLogConnector(any[ServletReporter[C]]) returns m_connector
+
+    new CrashnoteFilter() {
+      override protected def getConfig(fc: FilterConfig) = m_conf
+    }
+  }
 }

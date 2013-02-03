@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,24 +22,24 @@ import com.crashnote.test.base.defs.UnitSpec
 import com.crashnote.core.config.CrashConfigFactory
 
 class LoggerConfigFactorySpec
-    extends UnitSpec with BeforeExample {
+  extends UnitSpec with BeforeExample {
 
-    "Logger Config Factory" should {
+  "Logger Config Factory" should {
 
-        "inherit from Core Config Factory" >> {
-            cf must haveSuperclass[CrashConfigFactory[_]]
-        }
-
-        "create configuration instance" >> {
-            cf.get must haveClass[LoggerConfig]
-        }
+    "inherit from Core Config Factory" >> {
+      cf must haveSuperclass[CrashConfigFactory[_]]
     }
 
-    // SETUP ======================================================================================
-
-    var cf: LoggerConfigFactory[LoggerConfig] = _
-
-    def before {
-        cf = new LoggerConfigFactory[LoggerConfig]
+    "create configuration instance" >> {
+      cf.get must haveClass[LoggerConfig]
     }
+  }
+
+  // SETUP ======================================================================================
+
+  var cf: LoggerConfigFactory[LoggerConfig] = _
+
+  def before {
+    cf = new LoggerConfigFactory[LoggerConfig]
+  }
 }
