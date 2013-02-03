@@ -41,11 +41,11 @@ class ConfigSpec
 
                 "with SSL" >> {
                     c = getConfig(bm ::: List("network.port-ssl" -> 666, "network.ssl" -> true))
-                    c.getPostUrl === "https://mycompany.com:666/v1/errors?key=42"
+                    c.getPostUrl === "https://mycompany.com:666?key=42"
                 }
                 "without SSL" >> {
                     c = getConfig(bm ::: List("network.port" -> 8080, "network.ssl" -> false))
-                    c.getPostUrl === "http://mycompany.com:8080/v1/errors?key=42"
+                    c.getPostUrl === "http://mycompany.com:8080?key=42"
                 }
             }
             "start time" >> {
