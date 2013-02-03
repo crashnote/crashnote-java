@@ -97,7 +97,7 @@ class SenderSpec
         one(m_conn).setReadTimeout(10000)
 
         one(m_writer).close()
-        //one(m_stream).close()
+        one(m_stream).close()
         one(m_conn).disconnect()
       }
     }
