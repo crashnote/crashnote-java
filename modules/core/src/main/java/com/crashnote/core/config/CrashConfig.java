@@ -272,7 +272,7 @@ public class CrashConfig {
 
     // INTERNALS ==================================================================================
 
-    private String getBaseUrl() {
+    private String getBaseURL() {
         final boolean ssl = getBool("network.ssl");
         final String host = getString("network.host");
         final int port = (ssl ? getInt("network.port-ssl") : getInt("network.port"));
@@ -283,8 +283,8 @@ public class CrashConfig {
 
     // GET+ =======================================================================================
 
-    public String getPostUrl() {
-        final String url = getBaseUrl() + "?key=" + getKey();
+    public String getPostURL() {
+        final String url = getBaseURL() + "/?key=" + getKey();
         logger.debug("resolved POST target URL: {}", url);
         return url;
     }
