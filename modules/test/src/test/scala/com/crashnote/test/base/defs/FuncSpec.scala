@@ -34,6 +34,8 @@ import org.eclipse.jetty.server.{Request, Server}
 import org.eclipse.jetty.server.handler.AbstractHandler
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.specs2.specification.{Fragments, Step}
+import collection.mutable
+import org.apache.commons.io.IOUtils
 
 trait FuncSpec
   extends UnitSpec {
@@ -45,7 +47,7 @@ trait FuncSpec
   // SETUP =====================================================================================
 
   override def map(fs: => Fragments) =
-    Step(startServer()) ^ fs ^ Step(stopServer())
+    Step(startServer()) ^ Step(executeRequest()) ^ Step(stopServer()) ^ fs
 
   def startServer() {
     println(s"CREATING JETTY ($serverPort)")
@@ -68,6 +70,8 @@ trait FuncSpec
     server.start()
   }
 
+  def executeRequest()
+
   def stopServer() {
     if (server != null)
       server.stop()
@@ -76,7 +80,24 @@ trait FuncSpec
 
   // SHARED ====================================================================================
 
-  protected def handleReq(target: String, baseRequest: Request, request: HttpServletRequest, response: HttpServletResponse)
+  var body: String = null
+  var query: String = null
+  var headers: mutable.Map[String, String] = null
+
+  protected def handleReq(target: String, baseRequest: Request, request: HttpServletRequest, response: HttpServletResponse) {
+    import collection.JavaConverters._
+
+    headers = mutable.Map[String, String]()
+    for (hn <- baseRequest.getHeaderNames.asScala) {
+      headers += (hn.toString -> baseRequest.getHeader(hn.toString))
+    }
+
+    query = baseRequest.getQueryString
+
+    val bytes = new Array[Char](request.getContentLength)
+    IOUtils.read(baseRequest.getReader, bytes)
+    body = new String(bytes)
+  }
 
 
   // INTERNALS =================================================================================
