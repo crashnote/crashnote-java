@@ -36,6 +36,8 @@ import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.specs2.specification.{Fragments, Step}
 import collection.mutable
 import org.apache.commons.io.IOUtils
+import java.io.ByteArrayInputStream
+import java.util.zip.GZIPInputStream
 
 trait FuncSpec
   extends UnitSpec {
@@ -80,8 +82,8 @@ trait FuncSpec
 
   // SHARED ====================================================================================
 
-  var body: String = null
   var query: String = null
+  var body: Array[Byte] = null
   var headers: mutable.Map[String, String] = null
 
   protected def handleReq(target: String, baseRequest: Request, request: HttpServletRequest, response: HttpServletResponse) {
@@ -93,11 +95,15 @@ trait FuncSpec
     }
 
     query = baseRequest.getQueryString
+    body = IOUtils.toByteArray(baseRequest.getReader)
 
-    val bytes = new Array[Char](request.getContentLength)
-    IOUtils.read(baseRequest.getReader, bytes)
-    body = new String(bytes)
+    response.setContentType("application/json")
+    response.setStatus(HttpServletResponse.SC_OK)
+    baseRequest.setHandled(true)
   }
+
+  protected def unzip(data: Array[Byte]): Array[Byte] =
+    IOUtils.toByteArray(new GZIPInputStream(new ByteArrayInputStream(data)))
 
 
   // INTERNALS =================================================================================
