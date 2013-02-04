@@ -18,6 +18,7 @@ package com.crashnote.core.send;
 import com.crashnote.core.config.CrashConfig;
 import com.crashnote.core.log.LogLog;
 import com.crashnote.core.model.log.LogReport;
+import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
 import javax.net.ssl.*;
 import java.io.*;
@@ -101,11 +102,11 @@ public class Sender {
             conn = prepareConnection(url);
             try {
                 write(conn, report);
-            } catch(IOException e) {
+            } catch (IOException e) {
                 logger.debug("unable to send data", e);
             }
-            conn.getResponseCode();
-        } catch(IOException e) {
+            readResponse(conn);
+        } catch (IOException e) {
             logger.debug("unable to open connection", e);
         } finally {
             if (conn != null)
@@ -126,7 +127,6 @@ public class Sender {
             conn.setReadTimeout(connectionTimeout);
             conn.setConnectTimeout(connectionTimeout);
 
-            conn.setRequestMethod("POST");
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
             conn.setRequestProperty("Content-Encoding", "gzip");
@@ -146,7 +146,7 @@ public class Sender {
             }
             out.flush();
             os.close();
-        } catch(IOException e) {
+        } catch (IOException e) {
             logger.debug("unable to write data to stream", e);
         } finally {
             if (out != null)
@@ -154,6 +154,28 @@ public class Sender {
         }
     }
 
+    private void readResponse(final HttpURLConnection conn) throws IOException {
+        final int statusCode = conn.getResponseCode();
+
+        if (logger.isDebug()) {
+            final InputStream in;
+            if (conn.getResponseCode() >= 400) {
+                in = conn.getErrorStream();
+            } else {
+                in = conn.getInputStream();
+            }
+
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            final byte[] buffer = new byte[1024];
+            int length = 0;
+            while ((length = in.read(buffer)) != -1) {
+                baos.write(buffer, 0, length);
+            }
+            final String body = new String(baos.toByteArray());
+
+            logger.debug("request was answered with code '{}' and content: {}", statusCode, body);
+        }
+    }
 
     // FACTORY ====================================================================================
 
