@@ -18,15 +18,12 @@ package com.crashnote.core.send;
 import com.crashnote.core.config.CrashConfig;
 import com.crashnote.core.log.LogLog;
 import com.crashnote.core.model.log.LogReport;
-import com.crashnote.external.json.JSONArray;
 
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.cert.X509Certificate;
-import java.util.zip.Deflater;
-import java.util.zip.DeflaterOutputStream;
 
 /**
  * The Dispatcher is responsible for transmitting the data from the client to the server by
@@ -37,9 +34,9 @@ public class Sender {
     // VARS =======================================================================================
 
     // configuration settings:
-    private String url_post;
-    private String clientInfo;
-    private int connectionTimeout;
+    private final String postURL;
+    private final String clientInfo;
+    private final int connectionTimeout;
 
     protected final LogLog logger;
 
@@ -47,7 +44,7 @@ public class Sender {
     // SETUP ======================================================================================
 
     public <C extends CrashConfig> Sender(final C config) {
-        this.url_post = config.getPostUrl();
+        this.postURL = config.getPostURL();
         this.clientInfo = config.getClientInfo();
         this.connectionTimeout = config.getConnectionTimeout();
 
@@ -90,8 +87,8 @@ public class Sender {
     // INTERFACE ==================================================================================
 
     public void send(final LogReport report) {
-        logger.debug("POST to '{}'", url_post);
-        POST(url_post, report);
+        logger.debug("POST to '{}'", postURL);
+        POST(postURL, report);
     }
 
 
@@ -106,6 +103,7 @@ public class Sender {
             } catch(IOException e) {
                 logger.debug("unable to send data", e);
             }
+            conn.getResponseCode();
         } catch(IOException e) {
             logger.debug("unable to open connection", e);
         } finally {
@@ -114,6 +112,7 @@ public class Sender {
         }
     }
 
+
     // INTERNALS ==================================================================================
 
     private HttpURLConnection prepareConnection(final String url) throws IOException {
@@ -121,13 +120,14 @@ public class Sender {
         {
             conn.setDoOutput(true);
             conn.setUseCaches(false);
-            conn.setRequestMethod("POST");
             conn.setAllowUserInteraction(false);
+
             conn.setReadTimeout(connectionTimeout);
             conn.setConnectTimeout(connectionTimeout);
-            conn.setRequestProperty("Connection", "Keep-Alive");
+
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Accept-Encoding", "gzip");
             conn.setRequestProperty("Content-Encoding", "gzip");
             if (clientInfo != null)
                 conn.setRequestProperty("User-Agent", getClientInfo());
@@ -138,18 +138,21 @@ public class Sender {
     private void write(final HttpURLConnection conn, final LogReport report) throws IOException {
         Writer out = null;
         try {
-            final OutputStream os = new DeflaterOutputStream(conn.getOutputStream(), new Deflater(-1));
+            final OutputStream os = conn.getOutputStream(); //DeflaterOutputStream(conn.getOutputStream(), new Deflater(-1));
             {
                 out = createWriter(os);
                 report.streamTo(out);
             }
             out.flush();
             os.close();
+        } catch(IOException e) {
+            logger.debug("unable to write data to stream", e);
         } finally {
             if (out != null)
                 out.close();
         }
     }
+
 
     // FACTORY ====================================================================================
 

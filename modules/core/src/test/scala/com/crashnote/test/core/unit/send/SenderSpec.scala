@@ -86,7 +86,6 @@ class SenderSpec
     if (m_conn != null) {
       m_conn.getURL.toURI.toString === url
       expect {
-        one(m_conn).setRequestProperty("Accept-Encoding", "gzip")
         one(m_conn).setRequestProperty("Content-Encoding", "gzip")
         one(m_conn).setRequestProperty("Content-Type", "application/json")
 
@@ -111,7 +110,7 @@ class SenderSpec
   override def mockConfig() = {
     val mc = super.mockConfig()
     mc.getKey returns key
-    mc.getPostUrl returns url
+    mc.getPostURL returns url
     mc.getClientInfo returns client
     mc.getConnectionTimeout returns 10000
     mc
