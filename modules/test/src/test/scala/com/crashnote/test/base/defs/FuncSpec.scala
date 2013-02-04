@@ -30,13 +30,13 @@
  */
 package com.crashnote.test.base.defs
 
-import org.specs2.mutable.BeforeAfter
 import org.eclipse.jetty.server.{Request, Server}
 import org.eclipse.jetty.server.handler.AbstractHandler
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
+import org.specs2.specification.{Fragments, Step}
 
 trait FuncSpec
-  extends UnitSpec with BeforeAfter {
+  extends UnitSpec {
 
   var server: Server = null
   val serverPort = nextFreePort()
@@ -44,7 +44,10 @@ trait FuncSpec
 
   // SETUP =====================================================================================
 
-  def before {
+  override def map(fs: => Fragments) =
+    Step(startServer()) ^ fs ^ Step(stopServer())
+
+  def startServer() {
     println(s"CREATING JETTY ($serverPort)")
     server = new Server(serverPort)
     server.setHandler(new AbstractHandler() {
@@ -65,7 +68,7 @@ trait FuncSpec
     server.start()
   }
 
-  def after {
+  def stopServer() {
     if (server != null)
       server.stop()
   }
