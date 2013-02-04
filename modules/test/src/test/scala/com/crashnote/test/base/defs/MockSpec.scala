@@ -19,34 +19,34 @@ import org.specs2.mock.Mockito
 import java.io.File
 
 trait MockSpec
-    extends UnitSpec with Mockito {
+  extends UnitSpec with Mockito {
 
 
-    // STUBBING ===================================================================================
+  // STUBBING ===================================================================================
 
-    def anyFile = any[File]
+  def anyFile = any[File]
 
-    def anyClass = any[Class[_]]
+  def anyClass = any[Class[_]]
 
-    def anyObject = any[java.lang.Object]
+  def anyObject = any[java.lang.Object]
 
-    def anyThrowable = any[Throwable]
+  def anyThrowable = any[Throwable]
 
-    protected def doReturn(toBeReturned: Any) =
-        org.mockito.Mockito.doReturn(toBeReturned)
+  protected def doReturn(toBeReturned: Any) =
+    org.mockito.Mockito.doReturn(toBeReturned)
 
-    protected def doThrow(toBeThrown: Throwable) =
-        org.mockito.Mockito.doThrow(toBeThrown)
+  protected def doThrow(toBeThrown: Throwable) =
+    org.mockito.Mockito.doThrow(toBeThrown)
 
-    protected def doThrow(toBeThrown: Class[_ <: Throwable]) =
-        org.mockito.Mockito.doThrow(toBeThrown)
+  protected def doThrow(toBeThrown: Class[_ <: Throwable]) =
+    org.mockito.Mockito.doThrow(toBeThrown)
 
 
-    // VERIFYING ==================================================================================
+  // VERIFYING ==================================================================================
 
-    def expect[S](s: => S) = there was s
+  def expect[S](s: => S) = there was s
 
-    protected def verifyUntouched[S <: AnyRef](mocks: S*) {
-        org.mockito.Mockito.verifyZeroInteractions(mocks: _*)
-    }
+  protected def verifyUntouched[S <: AnyRef](mocks: S*) {
+    org.mockito.Mockito.verifyZeroInteractions(mocks: _*)
+  }
 }

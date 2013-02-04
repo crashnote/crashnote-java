@@ -19,31 +19,31 @@ import java.io.{OutputStream, PrintStream, ByteArrayOutputStream}
 
 trait PrintCapture {
 
-    private var sysOut: PrintStream = _
-    private var byteOut: OutputStream = _
+  private var sysOut: PrintStream = _
+  private var byteOut: OutputStream = _
 
-    private var sysErr: PrintStream = _
-    private var byteErr: OutputStream = _
+  private var sysErr: PrintStream = _
+  private var byteErr: OutputStream = _
 
-    def capture(fn: => Any): (String, String) = {
+  def capture(fn: => Any): (String, String) = {
 
-        // capture streams
-        sysOut = System.out
-        byteOut = new ByteArrayOutputStream
-        System.setOut(new PrintStream(byteOut))
+    // capture streams
+    sysOut = System.out
+    byteOut = new ByteArrayOutputStream
+    System.setOut(new PrintStream(byteOut))
 
-        sysErr = System.err
-        byteErr = new ByteArrayOutputStream
-        System.setErr(new PrintStream(byteErr))
+    sysErr = System.err
+    byteErr = new ByteArrayOutputStream
+    System.setErr(new PrintStream(byteErr))
 
-        // execute
-        fn
+    // execute
+    fn
 
-        // reset streams
-        System.setOut(sysOut)
-        System.setErr(sysErr)
+    // reset streams
+    System.setOut(sysOut)
+    System.setErr(sysErr)
 
-        // read
-        (byteOut.toString.trim, byteErr.toString.trim)
-    }
+    // read
+    (byteOut.toString.trim, byteErr.toString.trim)
+  }
 }

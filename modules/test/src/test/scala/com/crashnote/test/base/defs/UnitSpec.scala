@@ -18,14 +18,12 @@ package com.crashnote.test.base.defs
 import org.specs2.matcher.DataTables
 import org.specs2.mutable._
 import com.crashnote.test.base.util.FactoryUtil
-import java.io.{OutputStream, PrintStream, ByteArrayOutputStream}
-import org.specs2.specification.Example
 
 trait UnitSpec
-    extends SpecificationWithJUnit
-    with DataTables
-    with FactoryUtil
-    with PrintCapture {
+  extends SpecificationWithJUnit
+  with DataTables
+  with FactoryUtil
+  with PrintCapture {
 
-    sequential
+  sequential
 }
