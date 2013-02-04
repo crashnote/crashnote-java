@@ -43,7 +43,7 @@ class AppengineSenderSpec
     // SETUP ======================================================================================
 
     def configure(config: C) = {
-        config.getPostUrl returns "http://api.com"
+        config.getPostURL returns "http://api.com"
         config.getConnectionTimeout returns 10000
         config.getClientInfo returns "CN"
         new AppengineSender(config)
