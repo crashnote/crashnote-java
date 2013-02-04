@@ -128,7 +128,7 @@ public class Sender {
 
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Accept", "application/json");
-            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
             conn.setRequestProperty("Content-Encoding", "gzip");
             if (clientInfo != null)
                 conn.setRequestProperty("User-Agent", getClientInfo());

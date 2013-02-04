@@ -87,7 +87,7 @@ class SenderSpec
       m_conn.getURL.toURI.toString === url
       expect {
         one(m_conn).setRequestProperty("Content-Encoding", "gzip")
-        one(m_conn).setRequestProperty("Content-Type", "application/json")
+        one(m_conn).setRequestProperty("Content-Type", "application/json; charset=utf-8")
 
         one(m_conn).setRequestMethod(typeOf)
         one(m_conn).setUseCaches(false)
