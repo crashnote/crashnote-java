@@ -49,11 +49,10 @@ public class ExcpCollector
                     final DataArray trace = createDataArr();
                     for (final StackTraceElement element : t.getStackTrace()) {
                         final int line = element.getLineNumber();
-                        final String meth = element.getMethodName();
+                        final String method = element.getMethodName();
                         final String file = element.getFileName();
                         final String cls = element.getClassName();
-                        final String sb = cls + ':' + file + ":" + meth + ":" + line;
-                        trace.add(sb);
+                        trace.add(cls + ':' + file + ":" + method + ":" + line);
                     }
                     excp.put("stacktrace", trace);
                 }
