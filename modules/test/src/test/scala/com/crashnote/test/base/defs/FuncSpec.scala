@@ -36,7 +36,7 @@ import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.specs2.specification.{Fragments, Step}
 import collection.mutable
 import org.apache.commons.io.IOUtils
-import java.io.ByteArrayInputStream
+import java.io.{InputStream, ByteArrayInputStream}
 import java.util.zip.GZIPInputStream
 
 trait FuncSpec
@@ -95,15 +95,15 @@ trait FuncSpec
     }
 
     query = baseRequest.getQueryString
-    body = IOUtils.toByteArray(baseRequest.getReader)
+    body = read(request.getInputStream)
 
     response.setContentType("application/json")
     response.setStatus(HttpServletResponse.SC_OK)
     baseRequest.setHandled(true)
   }
 
-  protected def unzip(data: Array[Byte]): Array[Byte] =
-    IOUtils.toByteArray(new GZIPInputStream(new ByteArrayInputStream(data)))
+  protected def read(stream: InputStream): Array[Byte] =
+    IOUtils.toByteArray(new GZIPInputStream(stream))
 
 
   // INTERNALS =================================================================================
