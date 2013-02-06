@@ -37,24 +37,24 @@ class SenderSpec
     "send" >> {
       "with success" >> new Response(200) {
         target.send(report)
-        checkConnection(url, "POST")
+        checkConnection(url)
       }
 
       "with stream" >> {
         "write error" >> new Response(0) {
           m_stream.write(any[Array[Byte]]) throws new IOException("oops")
           target.send(report)
-          checkConnection(url, "POST")
+          checkConnection(url)
         }
         "flush error" >> new Response(0) {
           m_stream.flush() throws new IOException("oops")
           target.send(report)
-          checkConnection(url, "POST")
+          checkConnection(url)
         }
         "close error" >> new Response(0) {
           m_stream.close() throws new IOException("oops")
           target.send(report)
-          checkConnection(url, "POST")
+          checkConnection(url)
         }
       }
 
@@ -62,17 +62,17 @@ class SenderSpec
         "write error" >> new Response(0) {
           m_writer.write(anyString) throws new IOException("oops")
           target.send(report)
-          checkConnection(url, "POST")
+          checkConnection(url)
         }
         "flush error" >> new Response(0) {
           m_writer.flush() throws new IOException("oops")
           target.send(report)
-          checkConnection(url, "POST")
+          checkConnection(url)
         }
         "close error" >> new Response(0) {
           m_writer.close() throws new IOException("oops")
           target.send(report)
-          checkConnection(url, "POST")
+          checkConnection(url)
         }
       }
 
@@ -82,14 +82,13 @@ class SenderSpec
     }
   }
 
-  private def checkConnection(url: String, typeOf: String = "GET") =
+  private def checkConnection(url: String) =
     if (m_conn != null) {
       m_conn.getURL.toURI.toString === url
       expect {
         one(m_conn).setRequestProperty("Content-Encoding", "gzip")
         one(m_conn).setRequestProperty("Content-Type", "application/json; charset=utf-8")
 
-        one(m_conn).setRequestMethod(typeOf)
         one(m_conn).setUseCaches(false)
         one(m_conn).setDoOutput(true)
         one(m_conn).setConnectTimeout(10000)

@@ -18,7 +18,6 @@ package com.crashnote.core.send;
 import com.crashnote.core.config.CrashConfig;
 import com.crashnote.core.log.LogLog;
 import com.crashnote.core.model.log.LogReport;
-import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
 import javax.net.ssl.*;
 import java.io.*;
