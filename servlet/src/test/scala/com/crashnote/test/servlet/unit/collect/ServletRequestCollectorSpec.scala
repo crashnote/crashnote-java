@@ -36,7 +36,7 @@ class ServletRequestCollectorSpec
       // == verify
       res.get("method") === "PUT"
       res.get("url") === "http://test.com"
-      res.get("ip_hash") === 6279231751978338320L
+      res.get("ip_hash") === 145490358
 
       val params = res.get("parameters").asInstanceOf[DataObject]
       params.size() === 3

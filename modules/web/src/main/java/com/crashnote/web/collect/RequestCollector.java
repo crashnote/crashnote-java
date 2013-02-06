@@ -20,8 +20,6 @@ import com.crashnote.core.model.data.DataArray;
 import com.crashnote.core.model.data.DataObject;
 import com.crashnote.core.util.ChksumUtil;
 import com.crashnote.web.config.WebConfig;
-
-import java.util.Enumeration;
 import java.util.List;
 
 import static com.crashnote.core.util.FilterUtil.doFilter;
