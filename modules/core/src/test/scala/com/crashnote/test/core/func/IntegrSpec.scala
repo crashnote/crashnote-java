@@ -43,7 +43,9 @@ class IntegrSpec
       body mustNotEqual (null)
       body must not(beEmpty)
 
-      new String(body) must startWith("{") and endWith("}")
+      val s = new String(body)
+      println(s)
+      s must startWith("{") and endWith("}")
     }
   }
 
