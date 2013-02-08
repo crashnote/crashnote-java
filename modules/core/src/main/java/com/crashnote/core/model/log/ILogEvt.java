@@ -46,4 +46,6 @@ public interface ILogEvt {
     public Map<String, Object> getMDC();
 
     public Object[] getArgs();
+
+    public String getID();
 }

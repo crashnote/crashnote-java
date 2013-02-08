@@ -71,6 +71,7 @@ public class LogCollector
             res.put("source", evt.getLoggerName());
             res.put("thread", evt.getThreadName());
             res.put("level", evt.getLevel().toString());
+            res.put("id", evt.getID());
 
             final Object[] msgArgs = evt.getArgs();
             if (msgArgs != null && msgArgs.length > 0) {

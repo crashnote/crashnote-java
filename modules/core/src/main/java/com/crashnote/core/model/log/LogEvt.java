@@ -28,6 +28,8 @@ public abstract class LogEvt<E>
 
     // VARS =======================================================================================
 
+    private final String id;
+
     protected final E event;
 
     protected Map<String, Object> mdc;
@@ -45,6 +47,7 @@ public abstract class LogEvt<E>
 
         this.event = event;
         this.mdc = null; //context;
+        this.id = Long.toHexString(Double.doubleToLongBits(Math.random()));
     }
 
 
@@ -65,5 +68,10 @@ public abstract class LogEvt<E>
     @Override
     public Map<String, Object> getMDC() {
         return mdc;
+    }
+
+    @Override
+    public String getID() {
+        return id;
     }
 }

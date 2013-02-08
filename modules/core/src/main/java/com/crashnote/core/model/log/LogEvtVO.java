@@ -30,6 +30,7 @@ public class LogEvtVO
     private final LogLevel level;
     private final String message;
     private final Throwable throwable;
+    private final String id;
 
     private final Object[] args;
     private final Map<String, Object> mdc;
@@ -49,6 +50,7 @@ public class LogEvtVO
         throwable = event.getThrowable();
         mdc = event.getMDC();  //if (mdc != null) this.mdc = new HashMap<String, Object>(mdc);
         args = event.getArgs();
+        id = event.getID();
     }
 
 
@@ -99,5 +101,10 @@ public class LogEvtVO
     @Override
     public long getTimeStamp() {
         return timeStamp;
+    }
+
+    @Override
+    public String getID() {
+        return id;
     }
 }
