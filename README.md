@@ -30,6 +30,7 @@ A detailed guide can be found in the [official documentation](https://docs.crash
 - **simple**: single JAR, no dependencies
 - **modern**: uses JSON format and GZIP compression
 - **flexible**: supports all major logging APIs: JUL, Log4j and Logback
+- **versatile**: compatible with Java, Groovy, JRuby, Clojure, Kotlin and Scala
 
 
 ## License
