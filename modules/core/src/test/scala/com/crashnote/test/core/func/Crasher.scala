@@ -26,7 +26,7 @@ object Crasher {
   }
 
   def apply(error: Throwable,
-            url: String = "send.crashnote.com",
+            url: String = "send.crashnote.io",
             port: Int = 80) {
 
     // create config

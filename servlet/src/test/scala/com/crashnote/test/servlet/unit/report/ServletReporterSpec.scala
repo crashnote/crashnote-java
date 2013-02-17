@@ -76,7 +76,7 @@ class ServletReporterSpec
   def req(addr: String) = {
     val m_req = mock[HttpServletRequest]
     m_req.getRemoteAddr returns addr
-    m_req.getRequestURL returns new StringBuffer("crashnote.com")
+    m_req.getRequestURL returns new StringBuffer("crashnote.io")
     m_req
   }
 }
