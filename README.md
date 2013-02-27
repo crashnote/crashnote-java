@@ -15,7 +15,7 @@ This makes it easier to understand where problems are and helps you to fix bugs 
 ## Quick Guide
 
 1. [sign up](https://www.crashnote.com)
-2. embed notifier
+2. embed agent
 3. deploy
 
 A detailed guide can be found in the [official documentation](https://docs.crashnote.com).
@@ -24,13 +24,13 @@ A detailed guide can be found in the [official documentation](https://docs.crash
 ## Features
 
 - **fast**: pure Java
-- **scalable**: runs asynchronously
 - **stable:** test coverage of >90%
-- **secure:** HTTPS for data transfer
+- **secure:** SSL for data transfer
 - **simple**: single JAR, no dependencies
 - **modern**: uses JSON format and GZIP compression
+- **scalable**: runs asynchronously in the background
 - **flexible**: supports all major logging APIs: JUL, Log4j and Logback
-- **versatile**: compatible with Java, Groovy, JRuby, Clojure, Kotlin and Scala
+- **versatile**: compatible with Java, Groovy, Scala, JRuby, Clojure, Kotlin etc.
 
 
 ## License
