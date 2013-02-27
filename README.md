@@ -24,8 +24,8 @@ A detailed guide can be found in the [official documentation](https://docs.crash
 ## Features
 
 - **fast**: pure Java
-- **stable:** test coverage of >90%
 - **secure:** SSL for data transfer
+- **stable:** test coverage of >90%
 - **simple**: single JAR, no dependencies
 - **modern**: uses JSON format and GZIP compression
 - **scalable**: runs asynchronously in the background
