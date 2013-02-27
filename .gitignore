@@ -4,6 +4,7 @@
 *.temp
 *.iml
 *.gpg*
+*.sh
 
 .idea
 target
