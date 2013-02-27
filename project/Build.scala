@@ -1,5 +1,6 @@
 import sbt._
 import sbt.Keys._
+import xml.{Text, NodeSeq, Elem}
 
 object Build
   extends sbt.Build with Projects {
@@ -11,26 +12,26 @@ object Build
     Project(id = "crashnote", base = file("."))
       .configs(UnitTest, FuncTest)
       .settings(moduleSettings: _*)
-      .aggregate(/*play2Notifier,*/ servletNotifier, appengineNotifier, coreModule, loggerModule, webModule, testModule)
+      .aggregate(/*play2Agent,*/ servletAgent, appengineAgent, coreModule, loggerModule, webModule, testModule)
 
 
-  // ### Notifiers ------------------------------------------------------------------------------
+  // ### Agents ----------------------------------------------------------------------------------
 
-  lazy val servletNotifier =
-    NotifierProject("servlet", "Crashnote Servlet Notifier",
+  lazy val servletAgent =
+    AgentProject("servlet", "Crashnote Servlet Agent",
       withProjects = Seq(webModule),
       withLibraries = loggerKit ++ List(servlet))
       .settings(description := "Reports exceptions from Java servlet apps to crashnote.com")
 
-  lazy val appengineNotifier =
-    NotifierProject("appengine", "Crashnote Appengine Notifier",
-      withProjects = Seq(servletNotifier),
+  lazy val appengineAgent =
+    AgentProject("appengine", "Crashnote Appengine Agent",
+      withProjects = Seq(servletAgent),
       withLibraries = loggerKit ++ List(servlet, appengine))
       .settings(description := "Reports exceptions from Java apps on Appengine to crashnote.com")
 
   /*
-  lazy val play2Notifier =
-      NotifierProject("play2", "Crashnote Play2 Notifier",
+  lazy val play2Agent =
+      AgentProject("play2", "Crashnote Play2 Agent",
           withProjects = Seq(webModule),
           withLibraries = loggerKit ++ List(play2))
           .settings(description := "Reports exceptions from play2 apps to crashnote.com")
@@ -83,13 +84,13 @@ trait Projects
         .dependsOn((Seq(testModule % "test->test") ++ withModules): _*)
   }
 
-  object NotifierProject {
+  object AgentProject {
 
     def apply(name: String, displayName: String,
               withProjects: Seq[ClasspathRef], withLibraries: Seq[ModuleID] = Seq(), withSources: Seq[ClasspathRef] = Seq()) =
       Project(name, file(name))
         .configs(UnitTest, FuncTest)
-        .settings(notifierSettings: _*)
+        .settings(agentSettings: _*)
         .settings(libraryDependencies ++= withLibraries)
         .settings(normalizedName := "crashnote-" + name)
         .dependsOn((Seq(testModule % "test->test") ++ withProjects): _*)
@@ -133,7 +134,6 @@ trait Settings {
       parallelExecution in Test := false,
       libraryDependencies := Seq(Dependency.scalaLib), // must be added for IntelliJ :(
 
-      resolvers += "Spray Repository" at "http://repo.spray.cc/",
       resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
 
       javacOptions ++= Seq("-source", "1.6", "-target", "1.6", "-Xlint"),
@@ -145,13 +145,22 @@ trait Settings {
   lazy val moduleSettings =
     baseSettings ++ Seq(publish := false, publishLocal := false)
 
-  lazy val notifierSettings =
+  lazy val agentSettings =
     baseSettings ++ About.aboutSettings ++ Publish.settings ++ Seq(
 
       //managedClasspath in Compile <<=
       //    (managedClasspath in Compile) map {(cp) => cp}
 
-      // add source and resource directories from dependencies to notifier
+      publishTo <<= version {
+        (v: String) =>
+          val nexus = "https://oss.sonatype.org/"
+          if (v.trim.endsWith("SNAPSHOT"))
+            Some("snapshots" at nexus + "content/repositories/snapshots")
+          else
+            Some("releases" at nexus + "service/local/staging/deploy/maven2")
+      },
+
+      // add source and resource directories from dependencies to agent
       unmanagedSourceDirectories in Compile <++= (thisProject in Compile, loadedBuild) {
         (p, struct) => srcDirs(getAllDeps(p, struct))
       },
@@ -230,7 +239,7 @@ object Dependency extends Global {
 }
 
 
-// ### DEPLOYING ----------------------------------------------------------------------------------
+// ### PUBLISHING -------------------------------------------------------------------------------
 
 object Publish {
 
@@ -262,7 +271,6 @@ object Publish {
       },
 
       pomPostProcess := {
-        import scala.xml._
         var displayName: String = null
         Rewrite.rewriter {
           // remove module dependencies
@@ -279,7 +287,7 @@ object Publish {
 
           // a) extract artifactId and convert to display name
           case e: Elem if e.label == "artifactId" && (e.text).contains("crashnote") =>
-            displayName = (e.text).split("-").map(_.capitalize).mkString(" ") + " Notifier"
+            displayName = (e.text).split("-").map(_.capitalize).mkString(" ") + " Agent"
             e
 
           // b) apply display name
