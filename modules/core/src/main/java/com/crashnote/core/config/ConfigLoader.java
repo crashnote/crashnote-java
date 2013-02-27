@@ -22,7 +22,7 @@ import com.crashnote.external.config.ConfigParseOptions;
 import java.util.Properties;
 
 /**
- * Create {@see Config} instance from various input sources.
+ * Create Config instance from various input sources.
  */
 public class ConfigLoader {
 
@@ -36,35 +36,35 @@ public class ConfigLoader {
     // INTERFACE ==================================================================================
 
     /**
-     * create {@see Config} from environment props
+     * create Config from environment props
      */
     public Config fromEnvProps() {
         return ConfigFactory.systemEnvironment();
     }
 
     /**
-     * create {@see Config} from system props
+     * create Config from system props
      */
     public Config fromSystemProps() {
         return ConfigFactory.systemProperties();
     }
 
     /**
-     * create {@see Config} from loading file
+     * create Config from loading file
      */
     public Config fromFile(final String name) {
         return ConfigFactory.load(name + ".conf");
     }
 
     /**
-     * create {@see Config} from String
+     * create Config from String
      */
     public Config fromString(final String str) {
         return ConfigFactory.parseString(str);
     }
 
     /**
-     * create {@see Config} from properties
+     * create Config from properties
      */
     public Config fromProps(final Properties props, final String descr) {
         final ConfigParseOptions opts =  ConfigParseOptions.defaults().setOriginDescription(descr);
