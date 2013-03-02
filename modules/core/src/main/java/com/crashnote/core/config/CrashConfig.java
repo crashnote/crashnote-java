@@ -328,15 +328,24 @@ public class CrashConfig {
     }
 
     public String getAppEnv() {
-        return getOptString("app.env");
+        String v = getOptString("env");
+        if (v == null)
+            v = getOptString("app.env");
+        return v;
     }
 
     public String getAppVersion() {
-        return getOptString("app.version");
+        String v = getOptString("version");
+        if (v == null)
+            v = getOptString("app.version");
+        return v;
     }
 
     public String getAppBuild() {
-        return getOptString("app.build");
+        String v = getOptString("build");
+        if (v == null)
+            v = getOptString("app.build");
+        return v;
     }
 
     public int getConnectionTimeout() {
