@@ -34,7 +34,7 @@ public class EnvCollector
 
     // configuration settings:
     private final Long startTime;
-    private final String profile;
+    private final String env;
     private final String version;
     private final String build;
     private final String clientInfo;
@@ -46,7 +46,7 @@ public class EnvCollector
     public <C extends CrashConfig> EnvCollector(final C config) {
         super(config);
 
-        this.profile = config.getAppProfile();
+        this.env = config.getAppEnv();
         this.build = config.getAppBuild();
         this.version = config.getAppVersion();
         this.startTime = config.getStartTime();
@@ -75,7 +75,7 @@ public class EnvCollector
         final DataObject appData = createDataObj();
         {
             appData.put("build", build);
-            appData.put("profile", profile);
+            appData.put("env", env);
             appData.put("version", version);
             appData.put("agent", clientInfo);
             appData.put("startedAt", startTime);

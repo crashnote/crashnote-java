@@ -327,8 +327,8 @@ public class CrashConfig {
         return getStrings("filter.environment");
     }
 
-    public String getAppProfile() {
-        return getOptString("app.profile");
+    public String getAppEnv() {
+        return getOptString("app.env");
     }
 
     public String getAppVersion() {

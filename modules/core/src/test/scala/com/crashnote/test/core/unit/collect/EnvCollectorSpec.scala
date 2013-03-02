@@ -36,7 +36,7 @@ class EnvCollectorSpec
       val app = res.get("app").asInstanceOf[DataObject]
       app.get("startedAt") === 123456789L
       app.get("version") === "1.0"
-      app.get("profile") === "dev"
+      app.get("env") === "dev"
       app.get("agent") === "cn:1.0"
 
       val rt = res.get("runtime").asInstanceOf[DataObject]
@@ -70,7 +70,7 @@ class EnvCollectorSpec
   // SETUP ======================================================================================
 
   def configure(config: C) = {
-    config.getAppProfile returns "dev"
+    config.getAppEnv returns "dev"
     config.getStartTime returns 123456789L
     config.getAppVersion returns "1.0"
     config.getClientInfo returns "cn:1.0"

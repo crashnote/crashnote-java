@@ -36,7 +36,7 @@ class ConfigFactorySpec
         }
         "#3 user props" >> new Mock {
           val c = target.get()
-          c.getAppProfile === "33"
+          c.getAppEnv === "33"
         }
         "#4 about props" >> new Mock {
           val c = target.get()
@@ -104,7 +104,7 @@ class ConfigFactorySpec
     List(
       "key" -> (base + 1),
       "app.build" -> (base + 2),
-      "app.profile" -> (base + 3),
+      "app.env" -> (base + 3),
       "app.version" -> (base + 4),
       "network.timeout" -> (base + 5)
     ).take(base / 10)
