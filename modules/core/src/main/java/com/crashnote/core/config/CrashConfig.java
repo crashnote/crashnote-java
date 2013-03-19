@@ -52,7 +52,7 @@ public class CrashConfig {
     /**
      * URL to service's website
      */
-    public static final String LIB_URL = "https://www.crashnote.com";
+    public static final String LIB_URL = "http://www.crashnote.com";
 
 
     // VARS =======================================================================================
