@@ -44,7 +44,7 @@ class ServletConfigSpec
   var c: ServletConfig = _
 
   def before {
-    c = getConfig("key" -> "0000000-00000-0000-0000-000000000000")
+    c = getConfig("key" -> "0000000-00000-0000-0000-000000000000", "projectId" -> "42")
   }
 
   def getConfig(m: (String, Any)*) = {

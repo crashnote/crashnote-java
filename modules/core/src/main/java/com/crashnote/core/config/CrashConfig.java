@@ -52,7 +52,7 @@ public class CrashConfig {
     /**
      * URL to service's website
      */
-    public static final String LIB_URL = "http://www.crashnote.com";
+    public static final String LIB_URL = "https://app.crashnote.com";
 
 
     // VARS =======================================================================================
@@ -96,15 +96,22 @@ public class CrashConfig {
             // validate config ("fail fast")
             conf.checkValid(schema, "crashnote");
 
+            // validate project id
+            final String projectId = getProjectId();
+            if (projectId == null || projectId.length() == 0) {
+                throw new IllegalStateException(
+                    "The project id is missing; please login to '" + LIB_URL + "', and retrieve it.");
+            }
+
             // validate API key
             final String key = getKey();
             if (key == null || key.length() == 0) {
                 throw new IllegalStateException(
-                    "The API Key is missing; please login to '" + LIB_URL + "', and retrieve it.");
+                    "The API key is missing; please login to '" + LIB_URL + "', and retrieve it.");
 
             } else if (key.length() != 36)
                 throw new IllegalStateException(
-                    "The API Key appears to be invalid (it should be 32 characters long with 4 dashes); " +
+                    "The API key appears to be invalid (it should be 32 characters long with 4 dashes); " +
                         "please login to '" + LIB_URL + "' and retrieve it.");
         } else {
             logger.info("Status: OFF");
@@ -284,7 +291,7 @@ public class CrashConfig {
     // GET+ =======================================================================================
 
     public String getPostURL() {
-        final String url = getBaseURL() + "/?key=" + getKey();
+        final String url = getBaseURL() + "/?key=" + getKey() + "&projectId=" + getProjectId();
         logger.debug("resolved POST target URL: {}", url);
         return url;
     }
@@ -317,6 +324,19 @@ public class CrashConfig {
 
     public String getKey() {
         return getString("key");
+    }
+
+    public String getProjectId() {
+        String v = getOptString("projectId");
+        if (v == null)
+            v = getOptString("projectID");
+        if (v == null)
+            v = getOptString("projectid");
+        if (v == null)
+            v = getOptString("project");
+        if (v == null)
+            v = getOptString("project_id");
+        return v;
     }
 
     public boolean isEnabled() {

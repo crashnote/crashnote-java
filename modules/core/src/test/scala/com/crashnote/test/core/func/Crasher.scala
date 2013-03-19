@@ -35,6 +35,7 @@ object Crasher {
         fromString {
           s"""
             |crashnote.key = "00000000-0000-0000-0000-000000000000"
+            |crashnote.projectId = 42
             |crashnote.network.port = $port
             |crashnote.network.host = "$url"
             |crashnote.network.ssl = false

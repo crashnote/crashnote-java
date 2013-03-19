@@ -72,7 +72,7 @@ class WebConfigSpec
   def getConfig(m: (String, Any)*) = {
     val m_loader = spy(new ConfigLoader)
     m_loader.fromSystemProps() returns
-      (new ConfigLoader).fromProps(toConfProps(m.toList ::: List("key" -> "0000000-00000-0000-0000-000000000000")), "spec")
+      (new ConfigLoader).fromProps(toConfProps(m.toList ::: List("key" -> "0000000-00000-0000-0000-000000000000", "projectId" -> "42")), "spec")
 
     (new WebConfigFactory[WebConfig](m_loader)).get
   }

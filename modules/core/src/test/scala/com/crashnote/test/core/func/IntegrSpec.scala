@@ -36,7 +36,7 @@ class IntegrSpec
 
     "have correct query parameters" >> {
       //println(query)
-      query === "key=00000000-0000-0000-0000-000000000000"
+      query === "key=00000000-0000-0000-0000-000000000000&projectId=42"
     }
 
     "contain compressed body" >> {

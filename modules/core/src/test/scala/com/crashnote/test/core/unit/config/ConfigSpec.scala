@@ -35,15 +35,15 @@ class ConfigSpec
 
     "return" >> {
       "POST URL" >> {
-        val bm = List("key" -> 42, "network.host" -> "mycompany.com")
+        val bm = List("key" -> "abc", "projectId" -> "xyz", "network.host" -> "mycompany.com")
 
         "with SSL" >> {
           c = getConfig(bm ::: List("network.port-ssl" -> 666, "network.ssl" -> true))
-          c.getPostURL === "https://mycompany.com:666/?key=42"
+          c.getPostURL === "https://mycompany.com:666/?key=abc&projectId=xyz"
         }
         "without SSL" >> {
           c = getConfig(bm ::: List("network.port" -> 8080, "network.ssl" -> false))
-          c.getPostURL === "http://mycompany.com:8080/?key=42"
+          c.getPostURL === "http://mycompany.com:8080/?key=abc&projectId=xyz"
         }
       }
       "start time" >> {
@@ -58,12 +58,16 @@ class ConfigSpec
         }
         out must contain("OFF")
       }
+      "fail when project id missing" >> {
+        getConfig(List("enabled" -> true, "key" -> "0000000-00000-0000-0000-000000000000")).
+          validate(null) must throwA[IllegalStateException]
+      }
       "fail when key missing" >> {
-        getConfig(List("enabled" -> true, "key" -> "")).
+        getConfig(List("enabled" -> true, "key" -> "", "projectId" -> "xyz")).
           validate(null) must throwA[IllegalStateException]
       }
       "fail when key invalid" >> {
-        getConfig(List("enabled" -> true, "key" -> "abra cadabra")).
+        getConfig(List("enabled" -> true, "key" -> "abra cadabra", "projectId" -> "xyz")).
           validate(null) must throwA[IllegalStateException]
       }
     }
