@@ -39,6 +39,7 @@ public abstract class BaseCollector {
     private final Builder builder;
     private final SystemUtil sysUtil;
 
+    private final DateFormat iso8601;
     protected final String filtered = "#";
 
 
@@ -48,14 +49,16 @@ public abstract class BaseCollector {
         this.builder = config.getBuilder();
         this.logger = config.getLogger(this.getClass());
         this.sysUtil = config.getSystemUtil();
+
+        iso8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'"); // ISO 8601
+        iso8601.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
 
     // SHARED =====================================================================================
 
     protected String formatTimestamp(final long timestamp) {
-        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ"); // ISO 8601
-        return df.format(new Date(timestamp));
+        return iso8601.format(new Date(timestamp));
     }
 
     protected DataObject createDataObj() {

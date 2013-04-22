@@ -42,7 +42,7 @@ class LogCollectorSpec
       val log2 = res.get(1).asInstanceOf[DataObject]
 
       log1.get("message") === "oops"
-      log1.get("occurredAt") === "2000-01-01T07:00+0100"
+      log1.get("occurredAt") === "2000-01-01T06:00Z"
       log1.get("source") === "com.example"
       log1.get("thread") === "main"
       log1.get("level") === "CRASH"

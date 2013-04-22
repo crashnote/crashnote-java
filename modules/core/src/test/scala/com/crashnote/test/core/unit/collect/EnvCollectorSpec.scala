@@ -34,7 +34,7 @@ class EnvCollectorSpec
       val res = target.collect()
 
       val app = res.get("app").asInstanceOf[DataObject]
-      app.get("startedAt") === "2000-01-01T07:00+0100"
+      app.get("startedAt") === "2000-01-01T06:00Z"
       app.get("version") === "1.0"
       app.get("env") === "dev"
       app.get("agent") === "cn:1.0"

@@ -32,7 +32,7 @@ class ServletSessionCollectorSpec
         val res = target.collect(mockReq())
 
         res.get("id") === "666"
-        res.get("startedAt") === "2000-01-01T07:00+0100"
+        res.get("startedAt") === "2000-01-01T06:00Z"
         res.get("data") === null
       }
 
