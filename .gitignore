@@ -1,3 +1,4 @@
+.DS_Store
 *.jav
 *.scal
 *.tmp
@@ -5,9 +6,17 @@
 *.iml
 *.gpg*
 *.sh
+*-plugin.xml
 
 .idea
+.idea_modules
+Procfile
+
 target
 generated
 play2
 example
+maven.xml
+sandbox
+_old
+modules/core/src/main/java/com/crashnote/core/collect/BaseCollector.java
