@@ -53,7 +53,7 @@ public class ServletSessionCollector
 
             // collect basic info
             data.put("id", session.getId());
-            data.put("started_at", session.getCreationTime());
+            data.put("startedAt", formatTimestamp(session.getCreationTime()));
 
             // collect session data
             if (!skipSessionData) {

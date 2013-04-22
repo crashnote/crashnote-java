@@ -78,7 +78,7 @@ public class EnvCollector
             appData.put("env", env);
             appData.put("version", version);
             appData.put("agent", clientInfo);
-            appData.put("startedAt", startTime);
+            appData.put("startedAt", formatTimestamp(startTime));
         }
         return appData;
     }

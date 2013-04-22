@@ -42,7 +42,7 @@ class LogCollectorSpec
       val log2 = res.get(1).asInstanceOf[DataObject]
 
       log1.get("message") === "oops"
-      log1.get("occurredAt") === 123456789L
+      log1.get("occurredAt") === "2000-01-01T07:00+0100"
       log1.get("source") === "com.example"
       log1.get("thread") === "main"
       log1.get("level") === "CRASH"
@@ -68,7 +68,7 @@ class LogCollectorSpec
   override def mock() {
     m_evt = mock[LogEvt[_]]
     m_evt.getMessage returns "oops"
-    m_evt.getTimeStamp returns 123456789L
+    m_evt.getTimeStamp returns 946706400000L
     m_evt.getLoggerName returns "com.example"
     m_evt.getThreadName returns "main"
     m_evt.getThrowable returns newExcp()

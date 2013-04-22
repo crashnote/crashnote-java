@@ -22,9 +22,9 @@ import com.crashnote.core.model.data.DataArray;
 import com.crashnote.core.model.data.DataObject;
 import com.crashnote.core.util.SystemUtil;
 
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Base class for sub-classes that want to save data into structured data objects and arrays.
@@ -52,6 +52,11 @@ public abstract class BaseCollector {
 
 
     // SHARED =====================================================================================
+
+    protected String formatTimestamp(final long timestamp) {
+        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ"); // ISO 8601
+        return df.format(new Date(timestamp));
+    }
 
     protected DataObject createDataObj() {
         return builder.createDataObj();

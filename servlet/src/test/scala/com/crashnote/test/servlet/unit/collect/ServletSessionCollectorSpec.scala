@@ -32,7 +32,7 @@ class ServletSessionCollectorSpec
         val res = target.collect(mockReq())
 
         res.get("id") === "666"
-        res.get("started_at") === 123456789L
+        res.get("startedAt") === "2000-01-01T07:00+0100"
         res.get("data") === null
       }
 
@@ -61,7 +61,7 @@ class ServletSessionCollectorSpec
   def mockReq() = {
     val m_ses = mock[HttpSession]
     m_ses.getId returns "666"
-    m_ses.getCreationTime returns 123456789L
+    m_ses.getCreationTime returns 946706400000L
     m_ses.getAttributeNames.asInstanceOf[javaEnum[String]] returns toEnum(List("name", "email"))
     m_ses.getAttribute("name") returns "test"
     m_ses.getAttribute("email") returns "test@test.com"

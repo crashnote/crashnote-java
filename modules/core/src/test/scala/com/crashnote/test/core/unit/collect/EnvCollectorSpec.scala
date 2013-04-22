@@ -34,7 +34,7 @@ class EnvCollectorSpec
       val res = target.collect()
 
       val app = res.get("app").asInstanceOf[DataObject]
-      app.get("startedAt") === 123456789L
+      app.get("startedAt") === "2000-01-01T07:00+0100"
       app.get("version") === "1.0"
       app.get("env") === "dev"
       app.get("agent") === "cn:1.0"
@@ -71,7 +71,7 @@ class EnvCollectorSpec
 
   def configure(config: C) = {
     config.getAppEnv returns "dev"
-    config.getStartTime returns 123456789L
+    config.getStartTime returns 946706400000L
     config.getAppVersion returns "1.0"
     config.getClientInfo returns "cn:1.0"
     config.getEnvironmentFilters returns List("secret")

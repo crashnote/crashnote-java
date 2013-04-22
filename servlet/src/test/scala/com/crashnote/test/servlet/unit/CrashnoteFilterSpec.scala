@@ -28,6 +28,8 @@ import reflect.ClassTag
 class CrashnoteFilterSpec
   extends TargetMockSpec[CrashnoteFilter] {
 
+  sequential
+
   "Filter" should {
 
     "init" >> {

@@ -65,8 +65,9 @@ public class LogCollector
     protected DataObject collectEvt(final LogEvt<?> evt) {
         final DataObject res = createDataObj();
         {
+
             // meta data
-            res.put("occurredAt", evt.getTimeStamp());
+            res.put("occurredAt", formatTimestamp(evt.getTimeStamp()));
             res.put("message", evt.getMessage());
             res.put("source", evt.getLoggerName());
             res.put("thread", evt.getThreadName());
