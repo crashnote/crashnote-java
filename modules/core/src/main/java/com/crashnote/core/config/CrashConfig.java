@@ -216,6 +216,14 @@ public class CrashConfig {
         }
     }
 
+    protected int getOptInt(final String name, final int defaultValue) {
+        try {
+            return conf.getInt(getConfName(name));
+        } catch (Exception ignored) {
+            return defaultValue;
+        }
+    }
+
     protected Long getMillis(final String name) {
         try {
             return conf.getMilliseconds(getConfName(name));
@@ -280,11 +288,10 @@ public class CrashConfig {
     // INTERNALS ==================================================================================
 
     private String getBaseURL() {
-        final boolean ssl = getBool("network.ssl");
+        final String protocol = getString("network.protocol");
         final String host = getString("network.host");
-        final int port = (ssl ? getInt("network.port-ssl") : getInt("network.port"));
-        final String protocol = ssl ? "https://" : "http://";
-        return protocol + host + ":" + port;
+        final int port = getOptInt("network.port", 0);
+        return protocol + "://" + host + (port > 0 ? ":" + port : "");
     }
 
 

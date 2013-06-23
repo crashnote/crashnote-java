@@ -43,7 +43,7 @@ class EnvCollectorSpec
       rt.get("type") === "java"
       rt.get("name") === "Java 1.6.0"
       rt.get("version") === "1.6.0"
-      val rtProps = rt.get("props").asInstanceOf[DataObject]
+      val rtProps = rt.get("properties").asInstanceOf[DataObject]
       rtProps.get("prop1") === "value1"
       rtProps.get("prop2") === "value2"
 
@@ -53,7 +53,7 @@ class EnvCollectorSpec
       sys.get("name") === "My-PC"
       sys.get("timezone") === "Berlin"
       sys.get("timezoneOffset") === 60
-      val sysProps = sys.get("props").asInstanceOf[DataObject]
+      val sysProps = sys.get("properties").asInstanceOf[DataObject]
       sysProps.size() === 2
       sysProps.get("instance", "small")
       sysProps.get("secret", "#")

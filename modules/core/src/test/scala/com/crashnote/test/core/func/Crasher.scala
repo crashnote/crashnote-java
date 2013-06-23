@@ -38,7 +38,7 @@ object Crasher {
             |crashnote.projectId = 42
             |crashnote.network.port = $port
             |crashnote.network.host = "$url"
-            |crashnote.network.ssl = false
+            |crashnote.network.protocol = http
             |crashnote.debug = true
             |crashnote.enabled = true
           """.stripMargin
