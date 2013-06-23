@@ -44,7 +44,7 @@ class ConfigLoaderSpec
     "load from props" >> {
       val p = new Properties()
       p.setProperty(path, "42")
-      val c = l.fromProps(p, "props")
+      val c = l.fromProps(p, "properties")
 
       c.getString(path) === "42"
     }

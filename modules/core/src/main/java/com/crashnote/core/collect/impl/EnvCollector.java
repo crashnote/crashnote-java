@@ -99,7 +99,7 @@ public class EnvCollector
                     if (!ignoreProperty(name, value)) props.put(name, value);
                 }
             }
-            rtData.put("props", props);
+            rtData.put("properties", props);
         }
         return rtData;
     }
@@ -127,7 +127,7 @@ public class EnvCollector
                 for (final String name : getSysUtil().getEnvKeys())
                     props.put(name, doFilter(name, envFilters) ? filtered : getSysUtil().getEnv(name));
             }
-            sysData.putObj("props", props);
+            sysData.putObj("properties", props);
         }
         return sysData;
     }
