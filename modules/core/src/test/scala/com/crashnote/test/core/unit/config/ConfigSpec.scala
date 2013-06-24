@@ -35,15 +35,15 @@ class ConfigSpec
 
     "return" >> {
       "POST URL" >> {
-        val bm = List("key" -> "abc", "projectId" -> "xyz", "network.host" -> "mycompany.com")
+        val bm = List("key" -> "xyz", "projectId" -> "abc", "network.host" -> "mycompany.com")
 
         "with custom protocol" >> {
           c = getConfig(bm ::: List("network.protocol" -> "udp"))
-          c.getPostURL === "udp://mycompany.com/?key=abc&projectId=xyz"
+          c.getPostURL === "udp://abc:xyz@mycompany.com"
         }
         "without custom port" >> {
           c = getConfig(bm ::: List("network.port" -> 8080))
-          c.getPostURL === "https://mycompany.com:8080/?key=abc&projectId=xyz"
+          c.getPostURL === "https://abc:xyz@mycompany.com:8080"
         }
       }
       "start time" >> {

@@ -285,20 +285,14 @@ public class CrashConfig {
     }
 
 
-    // INTERNALS ==================================================================================
-
-    private String getBaseURL() {
-        final String protocol = getString("network.protocol");
-        final String host = getString("network.host");
-        final int port = getOptInt("network.port", 0);
-        return protocol + "://" + host + (port > 0 ? ":" + port : "");
-    }
-
-
     // GET+ =======================================================================================
 
     public String getPostURL() {
-        final String url = getBaseURL() + "/?key=" + getKey() + "&projectId=" + getProjectId();
+        final String protocol = getString("network.protocol");
+        final String host = getString("network.host");
+        final int port = getOptInt("network.port", 0);
+        final String url = protocol + "://" + getProjectId() + ":" + getKey() + "@" +
+            host + (port > 0 ? ":" + port : "");
         logger.debug("resolved POST target URL: {}", url);
         return url;
     }

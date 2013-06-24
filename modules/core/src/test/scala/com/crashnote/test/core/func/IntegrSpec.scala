@@ -23,7 +23,7 @@ class IntegrSpec
   "crash note request" should {
 
     "have correct headers" >> {
-      headers mustNotEqual(null)
+      headers mustNotEqual null
 
       //println(headers)
       headers must havePair("Accept" -> "application/json")
@@ -36,15 +36,15 @@ class IntegrSpec
 
     "have correct query parameters" >> {
       //println(query)
-      query === "key=00000000-0000-0000-0000-000000000000&projectId=42"
+      query === null
     }
 
     "contain compressed body" >> {
-      body mustNotEqual (null)
+      body mustNotEqual null
       body must not(beEmpty)
 
       val s = new String(body)
-      println(s)
+      //println(s)
       s must startWith("{") and endWith("}")
     }
   }
