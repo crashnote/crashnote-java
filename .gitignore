@@ -4,6 +4,7 @@
 *.tmp
 *.temp
 *.iml
+*.ipr
 *.sh
 gpg.*
 *-plugin.xml
