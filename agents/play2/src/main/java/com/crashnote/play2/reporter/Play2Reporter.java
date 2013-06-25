@@ -8,7 +8,7 @@ import com.crashnote.web.collect.SessionCollector;
 import com.crashnote.web.report.WebReporter;
 
 /**
- * Customized implementation of the core {@link com.crashnote.web.report.WebReporter}. Adds servlet-specific functionality.
+ * Customized implementation of the core {@link WebReporter}. Adds servlet-specific functionality.
  */
 public class Play2Reporter
     extends WebReporter<Play2Config, ReqHeader> {
