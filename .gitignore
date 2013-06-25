@@ -4,6 +4,7 @@
 *.tmp
 *.temp
 *.iml
+*.iws
 *.ipr
 *.sh
 gpg.*
