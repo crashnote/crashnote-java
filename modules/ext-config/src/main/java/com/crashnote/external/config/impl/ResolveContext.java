@@ -1,18 +1,3 @@
-/**
- * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.crashnote.external.config.impl;
 
 import java.util.List;
@@ -44,8 +29,8 @@ final class ResolveContext {
     // resolution fails.
     final private List<SubstitutionExpression> expressionTrace;
 
-    ResolveContext(final ResolveSource source, final ResolveMemos memos, final ConfigResolveOptions options,
-            final Path restrictToChild, final List<SubstitutionExpression> expressionTrace) {
+    ResolveContext(ResolveSource source, ResolveMemos memos, ConfigResolveOptions options,
+            Path restrictToChild, List<SubstitutionExpression> expressionTrace) {
         this.source = source;
         this.memos = memos;
         this.options = options;
@@ -53,7 +38,7 @@ final class ResolveContext {
         this.expressionTrace = expressionTrace;
     }
 
-    ResolveContext(final AbstractConfigObject root, final ConfigResolveOptions options, final Path restrictToChild) {
+    ResolveContext(AbstractConfigObject root, ConfigResolveOptions options, Path restrictToChild) {
         // LinkedHashSet keeps the traversal order which is at least useful
         // in error messages if nothing else
         this(new ResolveSource(root), new ResolveMemos(), options, restrictToChild,
@@ -76,7 +61,7 @@ final class ResolveContext {
         return restrictToChild;
     }
 
-    ResolveContext restrict(final Path restrictTo) {
+    ResolveContext restrict(Path restrictTo) {
         if (restrictTo == restrictToChild)
             return this;
         else
@@ -87,7 +72,7 @@ final class ResolveContext {
         return restrict(null);
     }
 
-    void trace(final SubstitutionExpression expr) {
+    void trace(SubstitutionExpression expr) {
         expressionTrace.add(expr);
     }
 
@@ -96,9 +81,9 @@ final class ResolveContext {
     }
 
     String traceString() {
-        final String separator = ", ";
-        final StringBuilder sb = new StringBuilder();
-        for (final SubstitutionExpression expr : expressionTrace) {
+        String separator = ", ";
+        StringBuilder sb = new StringBuilder();
+        for (SubstitutionExpression expr : expressionTrace) {
             sb.append(expr.toString());
             sb.append(separator);
         }
@@ -107,7 +92,7 @@ final class ResolveContext {
         return sb.toString();
     }
 
-    AbstractConfigValue resolve(final AbstractConfigValue original) throws NotPossibleToResolve {
+    AbstractConfigValue resolve(AbstractConfigValue original) throws NotPossibleToResolve {
         // a fully-resolved (no restrictToChild) object can satisfy a
         // request for a restricted object, so always check that first.
         final MemoKey fullKey = new MemoKey(original, null);
@@ -126,7 +111,7 @@ final class ResolveContext {
         if (cached != null) {
             return cached;
         } else {
-            final AbstractConfigValue resolved = source.resolveCheckingReplacement(this, original);
+            AbstractConfigValue resolved = source.resolveCheckingReplacement(this, original);
 
             if (resolved == null || resolved.resolveStatus() == ResolveStatus.RESOLVED) {
                 // if the resolved object is fully resolved by resolving
@@ -154,9 +139,9 @@ final class ResolveContext {
         }
     }
 
-    static AbstractConfigValue resolve(final AbstractConfigValue value, final AbstractConfigObject root,
-            final ConfigResolveOptions options, final Path restrictToChildOrNull) {
-        final ResolveContext context = new ResolveContext(root, options, null /* restrictToChild */);
+    static AbstractConfigValue resolve(AbstractConfigValue value, AbstractConfigObject root,
+            ConfigResolveOptions options, Path restrictToChildOrNull) {
+        ResolveContext context = new ResolveContext(root, options, null /* restrictToChild */);
 
         try {
             return context.resolve(value);
@@ -167,8 +152,8 @@ final class ResolveContext {
         }
     }
 
-    static AbstractConfigValue resolve(final AbstractConfigValue value, final AbstractConfigObject root,
-            final ConfigResolveOptions options) {
+    static AbstractConfigValue resolve(AbstractConfigValue value, AbstractConfigObject root,
+            ConfigResolveOptions options) {
         return resolve(value, root, options, null);
     }
 }

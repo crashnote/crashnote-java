@@ -1,23 +1,8 @@
-/**
- * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.crashnote.external.config.impl;
 
 /** The key used to memoize already-traversed nodes when resolving substitutions */
 final class MemoKey {
-    MemoKey(final AbstractConfigValue value, final Path restrictToChildOrNull) {
+    MemoKey(AbstractConfigValue value, Path restrictToChildOrNull) {
         this.value = value;
         this.restrictToChildOrNull = restrictToChildOrNull;
     }
@@ -27,7 +12,7 @@ final class MemoKey {
 
     @Override
     public final int hashCode() {
-        final int h = System.identityHashCode(value);
+        int h = System.identityHashCode(value);
         if (restrictToChildOrNull != null) {
             return h + 41 * (41 + restrictToChildOrNull.hashCode());
         } else {
@@ -36,9 +21,9 @@ final class MemoKey {
     }
 
     @Override
-    public final boolean equals(final Object other) {
+    public final boolean equals(Object other) {
         if (other instanceof MemoKey) {
-            final MemoKey o = (MemoKey) other;
+            MemoKey o = (MemoKey) other;
             if (o.value != this.value)
                 return false;
             else if (o.restrictToChildOrNull == this.restrictToChildOrNull)

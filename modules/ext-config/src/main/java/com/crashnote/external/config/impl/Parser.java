@@ -26,10 +26,10 @@ import com.crashnote.external.config.ConfigValueType;
 
 final class Parser {
 
-    static AbstractConfigValue parse(final Iterator<Token> tokens,
-            final ConfigOrigin origin, final ConfigParseOptions options,
-            final ConfigIncludeContext includeContext) {
-        final ParseContext context = new ParseContext(options.getSyntax(), origin, tokens,
+    static AbstractConfigValue parse(Iterator<Token> tokens,
+            ConfigOrigin origin, ConfigParseOptions options,
+            ConfigIncludeContext includeContext) {
+        ParseContext context = new ParseContext(options.getSyntax(), origin, tokens,
                 SimpleIncluder.makeFull(options.getIncluder()), includeContext);
         return context.parse();
     }
@@ -38,32 +38,32 @@ final class Parser {
         final Token token;
         final List<Token> comments;
 
-        TokenWithComments(final Token token, final List<Token> comments) {
+        TokenWithComments(Token token, List<Token> comments) {
             this.token = token;
             this.comments = comments;
         }
 
-        TokenWithComments(final Token token) {
+        TokenWithComments(Token token) {
             this(token, Collections.<Token> emptyList());
         }
 
-        TokenWithComments prepend(final List<Token> earlier) {
+        TokenWithComments prepend(List<Token> earlier) {
             if (this.comments.isEmpty()) {
                 return new TokenWithComments(token, earlier);
             } else {
-                final List<Token> merged = new ArrayList<Token>();
+                List<Token> merged = new ArrayList<Token>();
                 merged.addAll(earlier);
                 merged.addAll(comments);
                 return new TokenWithComments(token, merged);
             }
         }
 
-        SimpleConfigOrigin setComments(final SimpleConfigOrigin origin) {
+        SimpleConfigOrigin setComments(SimpleConfigOrigin origin) {
             if (comments.isEmpty()) {
                 return origin;
             } else {
-                final List<String> newComments = new ArrayList<String>();
-                for (final Token c : comments) {
+                List<String> newComments = new ArrayList<String>();
+                for (Token c : comments) {
                     newComments.add(Tokens.getCommentText(c));
                 }
                 return origin.setComments(newComments);
@@ -92,8 +92,8 @@ final class Parser {
         // someone may think this is .properties format.
         int equalsCount;
 
-        ParseContext(final ConfigSyntax flavor, final ConfigOrigin origin, final Iterator<Token> tokens,
-                final FullIncluder includer, final ConfigIncludeContext includeContext) {
+        ParseContext(ConfigSyntax flavor, ConfigOrigin origin, Iterator<Token> tokens,
+                FullIncluder includer, ConfigIncludeContext includeContext) {
             lineNumber = 1;
             buffer = new Stack<TokenWithComments>();
             this.tokens = tokens;
@@ -105,14 +105,14 @@ final class Parser {
             this.equalsCount = 0;
         }
 
-        private void consolidateCommentBlock(final Token commentToken) {
+        private void consolidateCommentBlock(Token commentToken) {
             // a comment block "goes with" the following token
             // unless it's separated from it by a blank line.
             // we want to build a list of newline tokens followed
             // by a non-newline non-comment token; with all comments
             // associated with that final non-newline non-comment token.
-            final List<Token> newlines = new ArrayList<Token>();
-            final List<Token> comments = new ArrayList<Token>();
+            List<Token> newlines = new ArrayList<Token>();
+            List<Token> comments = new ArrayList<Token>();
 
             Token previous = null;
             Token next = commentToken;
@@ -140,7 +140,7 @@ final class Parser {
             buffer.push(new TokenWithComments(next, comments));
 
             // now put all the newlines back in front of it
-            final ListIterator<Token> li = newlines.listIterator(newlines.size());
+            ListIterator<Token> li = newlines.listIterator(newlines.size());
             while (li.hasPrevious()) {
                 buffer.push(new TokenWithComments(li.previous()));
             }
@@ -148,7 +148,7 @@ final class Parser {
 
         private TokenWithComments popToken() {
             if (buffer.isEmpty()) {
-                final Token t = tokens.next();
+                Token t = tokens.next();
                 if (Tokens.isComment(t)) {
                     consolidateCommentBlock(t);
                     return buffer.pop();
@@ -164,13 +164,13 @@ final class Parser {
             TokenWithComments withComments = null;
 
             withComments = popToken();
-            final Token t = withComments.token;
+            Token t = withComments.token;
 
             if (Tokens.isProblem(t)) {
-                final ConfigOrigin origin = t.origin();
+                ConfigOrigin origin = t.origin();
                 String message = Tokens.getProblemMessage(t);
-                final Throwable cause = Tokens.getProblemCause(t);
-                final boolean suggestQuotes = Tokens.getProblemSuggestQuotes(t);
+                Throwable cause = Tokens.getProblemCause(t);
+                boolean suggestQuotes = Tokens.getProblemSuggestQuotes(t);
                 if (suggestQuotes) {
                     message = addQuoteSuggestion(t.toString(), message);
                 } else {
@@ -191,7 +191,7 @@ final class Parser {
             }
         }
 
-        private void putBack(final TokenWithComments token) {
+        private void putBack(TokenWithComments token) {
             buffer.push(token);
         }
 
@@ -200,11 +200,18 @@ final class Parser {
 
             while (Tokens.isNewline(t.token)) {
                 // line number tokens have the line that was _ended_ by the
-                // newline, so we have to add one.
+                // newline, so we have to add one. We have to update lineNumber
+                // here and also below, because not all tokens store a line
+                // number, but newline tokens always do.
                 lineNumber = t.token.lineNumber() + 1;
 
                 t = nextToken();
             }
+
+            // update line number again, iff we have one
+            int newNumber = t.token.lineNumber();
+            if (newNumber >= 0)
+                lineNumber = newNumber;
 
             return t;
         }
@@ -217,7 +224,7 @@ final class Parser {
         // is left just after the comma or the newline.
         private boolean checkElementSeparator() {
             if (flavor == ConfigSyntax.JSON) {
-                final TokenWithComments t = nextTokenIgnoringNewline();
+                TokenWithComments t = nextTokenIgnoringNewline();
                 if (t.token == Tokens.COMMA) {
                     return true;
                 } else {
@@ -247,10 +254,10 @@ final class Parser {
             }
         }
 
-        private static SubstitutionExpression tokenToSubstitutionExpression(final Token valueToken) {
-            final List<Token> expression = Tokens.getSubstitutionPathExpression(valueToken);
-            final Path path = parsePathExpression(expression.iterator(), valueToken.origin());
-            final boolean optional = Tokens.getSubstitutionOptional(valueToken);
+        private static SubstitutionExpression tokenToSubstitutionExpression(Token valueToken) {
+            List<Token> expression = Tokens.getSubstitutionPathExpression(valueToken);
+            Path path = parsePathExpression(expression.iterator(), valueToken.origin());
+            boolean optional = Tokens.getSubstitutionOptional(valueToken);
 
             return new SubstitutionExpression(path, optional);
         }
@@ -304,7 +311,7 @@ final class Parser {
             if (values == null)
                 return;
 
-            final AbstractConfigValue consolidated = ConfigConcatenation.concatenate(values);
+            AbstractConfigValue consolidated = ConfigConcatenation.concatenate(values);
 
             putBack(new TokenWithComments(Tokens.newValue(consolidated),
                     firstValueWithComments.comments));
@@ -314,15 +321,15 @@ final class Parser {
             return ((SimpleConfigOrigin) baseOrigin).setLineNumber(lineNumber);
         }
 
-        private ConfigException parseError(final String message) {
+        private ConfigException parseError(String message) {
             return parseError(message, null);
         }
 
-        private ConfigException parseError(final String message, final Throwable cause) {
+        private ConfigException parseError(String message, Throwable cause) {
             return new ConfigException.Parse(lineOrigin(), message, cause);
         }
 
-        private String previousFieldName(final Path lastPath) {
+        private String previousFieldName(Path lastPath) {
             if (lastPath != null) {
                 return lastPath.render();
             } else if (pathStack.isEmpty())
@@ -334,7 +341,7 @@ final class Parser {
         private Path fullCurrentPath() {
             Path full = null;
             // pathStack has top of stack at front
-            for (final Path p : pathStack) {
+            for (Path p : pathStack) {
                 if (full == null)
                     full = p;
                 else
@@ -347,8 +354,8 @@ final class Parser {
             return previousFieldName(null);
         }
 
-        private String addKeyName(final String message) {
-            final String previousFieldName = previousFieldName();
+        private String addKeyName(String message) {
+            String previousFieldName = previousFieldName();
             if (previousFieldName != null) {
                 return "in value for key '" + previousFieldName + "': " + message;
             } else {
@@ -356,15 +363,15 @@ final class Parser {
             }
         }
 
-        private String addQuoteSuggestion(final String badToken, final String message) {
+        private String addQuoteSuggestion(String badToken, String message) {
             return addQuoteSuggestion(null, equalsCount > 0, badToken, message);
         }
 
-        private String addQuoteSuggestion(final Path lastPath, final boolean insideEquals, final String badToken,
-                final String message) {
-            final String previousFieldName = previousFieldName(lastPath);
+        private String addQuoteSuggestion(Path lastPath, boolean insideEquals, String badToken,
+                String message) {
+            String previousFieldName = previousFieldName(lastPath);
 
-            final String part;
+            String part;
             if (badToken.equals(Tokens.END.toString())) {
                 // EOF requires special handling for the error to make sense.
                 if (previousFieldName != null)
@@ -392,7 +399,7 @@ final class Parser {
                 return part + ")";
         }
 
-        private AbstractConfigValue parseValue(final TokenWithComments t) {
+        private AbstractConfigValue parseValue(TokenWithComments t) {
             AbstractConfigValue v;
 
             if (Tokens.isValue(t.token)) {
@@ -411,11 +418,11 @@ final class Parser {
             return v;
         }
 
-        private static AbstractConfigObject createValueUnderPath(final Path path,
-                final AbstractConfigValue value) {
+        private static AbstractConfigObject createValueUnderPath(Path path,
+                AbstractConfigValue value) {
             // for path foo.bar, we are creating
             // { "foo" : { "bar" : value } }
-            final List<String> keys = new ArrayList<String>();
+            List<String> keys = new ArrayList<String>();
 
             String key = path.first();
             Path remaining = path.remainder();
@@ -433,13 +440,13 @@ final class Parser {
             // on the exact leaf node they apply to.
             // a comment before "foo.bar" applies to the full setting
             // "foo.bar" not also to "foo"
-            final ListIterator<String> i = keys.listIterator(keys.size());
-            final String deepest = i.previous();
+            ListIterator<String> i = keys.listIterator(keys.size());
+            String deepest = i.previous();
             AbstractConfigObject o = new SimpleConfigObject(value.origin().setComments(null),
                     Collections.<String, AbstractConfigValue> singletonMap(
                             deepest, value));
             while (i.hasPrevious()) {
-                final Map<String, AbstractConfigValue> m = Collections.<String, AbstractConfigValue> singletonMap(
+                Map<String, AbstractConfigValue> m = Collections.<String, AbstractConfigValue> singletonMap(
                         i.previous(), o);
                 o = new SimpleConfigObject(value.origin().setComments(null), m);
             }
@@ -447,17 +454,17 @@ final class Parser {
             return o;
         }
 
-        private Path parseKey(final TokenWithComments token) {
+        private Path parseKey(TokenWithComments token) {
             if (flavor == ConfigSyntax.JSON) {
                 if (Tokens.isValueWithType(token.token, ConfigValueType.STRING)) {
-                    final String key = (String) Tokens.getValue(token.token).unwrapped();
+                    String key = (String) Tokens.getValue(token.token).unwrapped();
                     return Path.newKey(key);
                 } else {
                     throw parseError(addKeyName("Expecting close brace } or a field name here, got "
                             + token));
                 }
             } else {
-                final List<Token> expression = new ArrayList<Token>();
+                List<Token> expression = new ArrayList<Token>();
                 TokenWithComments t = token;
                 while (Tokens.isValue(t.token) || Tokens.isUnquotedText(t.token)) {
                     expression.add(t.token);
@@ -474,26 +481,26 @@ final class Parser {
             }
         }
 
-        private static boolean isIncludeKeyword(final Token t) {
+        private static boolean isIncludeKeyword(Token t) {
             return Tokens.isUnquotedText(t)
                     && Tokens.getUnquotedText(t).equals("include");
         }
 
-        private static boolean isUnquotedWhitespace(final Token t) {
+        private static boolean isUnquotedWhitespace(Token t) {
             if (!Tokens.isUnquotedText(t))
                 return false;
 
-            final String s = Tokens.getUnquotedText(t);
+            String s = Tokens.getUnquotedText(t);
 
             for (int i = 0; i < s.length(); ++i) {
-                final char c = s.charAt(i);
+                char c = s.charAt(i);
                 if (!ConfigImplUtil.isWhitespace(c))
                     return false;
             }
             return true;
         }
 
-        private void parseInclude(final Map<String, AbstractConfigValue> values) {
+        private void parseInclude(Map<String, AbstractConfigValue> values) {
             TokenWithComments t = nextTokenIgnoringNewline();
             while (isUnquotedWhitespace(t.token)) {
                 t = nextTokenIgnoringNewline();
@@ -504,7 +511,7 @@ final class Parser {
             // we either have a quoted string or the "file()" syntax
             if (Tokens.isUnquotedText(t.token)) {
                 // get foo(
-                final String kind = Tokens.getUnquotedText(t.token);
+                String kind = Tokens.getUnquotedText(t.token);
 
                 if (kind.equals("url(")) {
 
@@ -524,7 +531,7 @@ final class Parser {
                 }
 
                 // quoted string
-                final String name;
+                String name;
                 if (Tokens.isValueWithType(t.token, ConfigValueType.STRING)) {
                     name = (String) Tokens.getValue(t.token).unwrapped();
                 } else {
@@ -544,7 +551,7 @@ final class Parser {
                 }
 
                 if (kind.equals("url(")) {
-                    final URL url;
+                    URL url;
                     try {
                         url = new URL(name);
                     } catch (MalformedURLException e) {
@@ -560,7 +567,7 @@ final class Parser {
                     throw new ConfigException.BugOrBroken("should not be reached");
                 }
             } else if (Tokens.isValueWithType(t.token, ConfigValueType.STRING)) {
-                final String name = (String) Tokens.getValue(t.token).unwrapped();
+                String name = (String) Tokens.getValue(t.token).unwrapped();
                 obj = (AbstractConfigObject) includer
                         .include(includeContext, name);
             } else {
@@ -568,13 +575,13 @@ final class Parser {
             }
 
             if (!pathStack.isEmpty()) {
-                final Path prefix = new Path(pathStack);
+                Path prefix = new Path(pathStack);
                 obj = obj.relativized(prefix);
             }
 
-            for (final String key : obj.keySet()) {
-                final AbstractConfigValue v = obj.get(key);
-                final AbstractConfigValue existing = values.get(key);
+            for (String key : obj.keySet()) {
+                AbstractConfigValue v = obj.get(key);
+                AbstractConfigValue existing = values.get(key);
                 if (existing != null) {
                     values.put(key, v.withFallback(existing));
                 } else {
@@ -583,7 +590,7 @@ final class Parser {
             }
         }
 
-        private boolean isKeyValueSeparatorToken(final Token t) {
+        private boolean isKeyValueSeparatorToken(Token t) {
             if (flavor == ConfigSyntax.JSON) {
                 return t == Tokens.COLON;
             } else {
@@ -591,10 +598,10 @@ final class Parser {
             }
         }
 
-        private AbstractConfigObject parseObject(final boolean hadOpenCurly) {
+        private AbstractConfigObject parseObject(boolean hadOpenCurly) {
             // invoked just after the OPEN_CURLY (or START, if !hadOpenCurly)
-            final Map<String, AbstractConfigValue> values = new HashMap<String, AbstractConfigValue>();
-            final ConfigOrigin objectOrigin = lineOrigin();
+            Map<String, AbstractConfigValue> values = new HashMap<String, AbstractConfigValue>();
+            ConfigOrigin objectOrigin = lineOrigin();
             boolean afterComma = false;
             Path lastPath = null;
             boolean lastInsideEquals = false;
@@ -618,15 +625,15 @@ final class Parser {
 
                     afterComma = false;
                 } else {
-                    final TokenWithComments keyToken = t;
-                    final Path path = parseKey(keyToken);
-                    final TokenWithComments afterKey = nextTokenIgnoringNewline();
+                    TokenWithComments keyToken = t;
+                    Path path = parseKey(keyToken);
+                    TokenWithComments afterKey = nextTokenIgnoringNewline();
                     boolean insideEquals = false;
 
                     // path must be on-stack while we parse the value
                     pathStack.push(path);
 
-                    final TokenWithComments valueToken;
+                    TokenWithComments valueToken;
                     AbstractConfigValue newValue;
                     if (flavor == ConfigSyntax.CONF && afterKey.token == Tokens.OPEN_CURLY) {
                         // can omit the ':' or '=' before an object value
@@ -650,10 +657,10 @@ final class Parser {
                     newValue = parseValue(valueToken.prepend(keyToken.comments));
 
                     if (afterKey.token == Tokens.PLUS_EQUALS) {
-                        final List<AbstractConfigValue> concat = new ArrayList<AbstractConfigValue>(2);
-                        final AbstractConfigValue previousRef = new ConfigReference(newValue.origin(),
+                        List<AbstractConfigValue> concat = new ArrayList<AbstractConfigValue>(2);
+                        AbstractConfigValue previousRef = new ConfigReference(newValue.origin(),
                                 new SubstitutionExpression(fullCurrentPath(), true /* optional */));
-                        final AbstractConfigValue list = new SimpleConfigList(newValue.origin(),
+                        AbstractConfigValue list = new SimpleConfigList(newValue.origin(),
                                 Collections.singletonList(newValue));
                         concat.add(previousRef);
                         concat.add(list);
@@ -666,11 +673,11 @@ final class Parser {
                     }
                     lastInsideEquals = insideEquals;
 
-                    final String key = path.first();
-                    final Path remaining = path.remainder();
+                    String key = path.first();
+                    Path remaining = path.remainder();
 
                     if (remaining == null) {
-                        final AbstractConfigValue existing = values.get(key);
+                        AbstractConfigValue existing = values.get(key);
                         if (existing != null) {
                             // In strict JSON, dups should be an error; while in
                             // our custom config language, they should be merged
@@ -695,7 +702,7 @@ final class Parser {
 
                         AbstractConfigObject obj = createValueUnderPath(
                                 remaining, newValue);
-                        final AbstractConfigValue existing = values.get(key);
+                        AbstractConfigValue existing = values.get(key);
                         if (existing != null) {
                             obj = obj.withFallback(existing);
                         }
@@ -736,8 +743,8 @@ final class Parser {
 
         private SimpleConfigList parseArray() {
             // invoked just after the OPEN_SQUARE
-            final ConfigOrigin arrayOrigin = lineOrigin();
-            final List<AbstractConfigValue> values = new ArrayList<AbstractConfigValue>();
+            ConfigOrigin arrayOrigin = lineOrigin();
+            List<AbstractConfigValue> values = new ArrayList<AbstractConfigValue>();
 
             consolidateValueTokens();
 
@@ -844,7 +851,7 @@ final class Parser {
         // an element can be empty if it has a quoted empty string "" in it
         boolean canBeEmpty;
 
-        Element(final String initial, final boolean canBeEmpty) {
+        Element(String initial, boolean canBeEmpty) {
             this.canBeEmpty = canBeEmpty;
             this.sb = new StringBuilder(initial);
         }
@@ -855,10 +862,10 @@ final class Parser {
         }
     }
 
-    private static void addPathText(final List<Element> buf, final boolean wasQuoted,
-            final String newText) {
-        final int i = wasQuoted ? -1 : newText.indexOf('.');
-        final Element current = buf.get(buf.size() - 1);
+    private static void addPathText(List<Element> buf, boolean wasQuoted,
+            String newText) {
+        int i = wasQuoted ? -1 : newText.indexOf('.');
+        Element current = buf.get(buf.size() - 1);
         if (i < 0) {
             // add to current path element
             current.sb.append(newText);
@@ -876,16 +883,16 @@ final class Parser {
         }
     }
 
-    private static Path parsePathExpression(final Iterator<Token> expression,
-            final ConfigOrigin origin) {
+    private static Path parsePathExpression(Iterator<Token> expression,
+            ConfigOrigin origin) {
         return parsePathExpression(expression, origin, null);
     }
 
     // originalText may be null if not available
-    private static Path parsePathExpression(final Iterator<Token> expression,
-            final ConfigOrigin origin, final String originalText) {
+    private static Path parsePathExpression(Iterator<Token> expression,
+            ConfigOrigin origin, String originalText) {
         // each builder in "buf" is an element in the path.
-        final List<Element> buf = new ArrayList<Element>();
+        List<Element> buf = new ArrayList<Element>();
         buf.add(new Element("", false));
 
         if (!expression.hasNext()) {
@@ -894,12 +901,12 @@ final class Parser {
         }
 
         while (expression.hasNext()) {
-            final Token t = expression.next();
+            Token t = expression.next();
             if (Tokens.isValueWithType(t, ConfigValueType.STRING)) {
-                final AbstractConfigValue v = Tokens.getValue(t);
+                AbstractConfigValue v = Tokens.getValue(t);
                 // this is a quoted string; so any periods
                 // in here don't count as path separators
-                final String s = v.transformToString();
+                String s = v.transformToString();
 
                 addPathText(buf, true, s);
             } else if (t == Tokens.END) {
@@ -910,7 +917,7 @@ final class Parser {
             } else {
                 // any periods outside of a quoted string count as
                 // separators
-                final String text;
+                String text;
                 if (Tokens.isValue(t)) {
                     // appending a number here may add
                     // a period, but we _do_ count those as path
@@ -919,7 +926,7 @@ final class Parser {
                     // though there's a number in it. The fact that
                     // we tokenize non-string values is largely an
                     // implementation detail.
-                    final AbstractConfigValue v = Tokens.getValue(t);
+                    AbstractConfigValue v = Tokens.getValue(t);
                     text = v.transformToString();
                 } else if (Tokens.isUnquotedText(t)) {
                     text = Tokens.getUnquotedText(t);
@@ -936,8 +943,8 @@ final class Parser {
             }
         }
 
-        final PathBuilder pb = new PathBuilder();
-        for (final Element e : buf) {
+        PathBuilder pb = new PathBuilder();
+        for (Element e : buf) {
             if (e.sb.length() == 0 && !e.canBeEmpty) {
                 throw new ConfigException.BadPath(
                         origin,
@@ -953,15 +960,15 @@ final class Parser {
 
     static ConfigOrigin apiOrigin = SimpleConfigOrigin.newSimple("path parameter");
 
-    static Path parsePath(final String path) {
-        final Path speculated = speculativeFastParsePath(path);
+    static Path parsePath(String path) {
+        Path speculated = speculativeFastParsePath(path);
         if (speculated != null)
             return speculated;
 
-        final StringReader reader = new StringReader(path);
+        StringReader reader = new StringReader(path);
 
         try {
-            final Iterator<Token> tokens = Tokenizer.tokenize(apiOrigin, reader,
+            Iterator<Token> tokens = Tokenizer.tokenize(apiOrigin, reader,
                     ConfigSyntax.CONF);
             tokens.next(); // drop START
             return parsePathExpression(tokens, apiOrigin, path);
@@ -972,9 +979,9 @@ final class Parser {
 
     // the idea is to see if the string has any chars that might require the
     // full parser to deal with.
-    private static boolean hasUnsafeChars(final String s) {
+    private static boolean hasUnsafeChars(String s) {
         for (int i = 0; i < s.length(); ++i) {
-            final char c = s.charAt(i);
+            char c = s.charAt(i);
             if (Character.isLetter(c) || c == '.')
                 continue;
             else
@@ -983,8 +990,8 @@ final class Parser {
         return false;
     }
 
-    private static void appendPathString(final PathBuilder pb, final String s) {
-        final int splitAt = s.indexOf('.');
+    private static void appendPathString(PathBuilder pb, String s) {
+        int splitAt = s.indexOf('.');
         if (splitAt < 0) {
             pb.appendKey(s);
         } else {
@@ -995,8 +1002,8 @@ final class Parser {
 
     // do something much faster than the full parser if
     // we just have something like "foo" or "foo.bar"
-    private static Path speculativeFastParsePath(final String path) {
-        final String s = ConfigImplUtil.unicodeTrim(path);
+    private static Path speculativeFastParsePath(String path) {
+        String s = ConfigImplUtil.unicodeTrim(path);
         if (s.isEmpty())
             return null;
         if (hasUnsafeChars(s))
@@ -1004,7 +1011,7 @@ final class Parser {
         if (s.startsWith(".") || s.endsWith(".") || s.contains(".."))
             return null; // let the full parser throw the error
 
-        final PathBuilder pb = new PathBuilder();
+        PathBuilder pb = new PathBuilder();
         appendPathString(pb, s);
         return pb.result();
     }

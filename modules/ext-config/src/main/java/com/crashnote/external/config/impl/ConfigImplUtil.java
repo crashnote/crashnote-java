@@ -19,7 +19,7 @@ import com.crashnote.external.config.ConfigOrigin;
 
 /** This is public just for the "config" package to use, don't touch it */
 final public class ConfigImplUtil {
-    static boolean equalsHandlingNull(final Object a, final Object b) {
+    static boolean equalsHandlingNull(Object a, Object b) {
         if (a == null && b != null)
             return false;
         else if (a != null && b == null)
@@ -34,11 +34,11 @@ final public class ConfigImplUtil {
      * This is public ONLY for use by the "config" package, DO NOT USE this ABI
      * may change.
      */
-    public static String renderJsonString(final String s) {
-        final StringBuilder sb = new StringBuilder();
+    public static String renderJsonString(String s) {
+        StringBuilder sb = new StringBuilder();
         sb.append('"');
         for (int i = 0; i < s.length(); ++i) {
-            final char c = s.charAt(i);
+            char c = s.charAt(i);
             switch (c) {
             case '"':
                 sb.append("\\\"");
@@ -72,13 +72,13 @@ final public class ConfigImplUtil {
         return sb.toString();
     }
 
-    static String renderStringUnquotedIfPossible(final String s) {
+    static String renderStringUnquotedIfPossible(String s) {
         // this can quote unnecessarily as long as it never fails to quote when
         // necessary
         if (s.length() == 0)
             return renderJsonString(s);
 
-        final int first = s.codePointAt(0);
+        int first = s.codePointAt(0);
         if (Character.isDigit(first))
             return renderJsonString(s);
 
@@ -88,7 +88,7 @@ final public class ConfigImplUtil {
 
         // only unquote if it's pure alphanumeric
         for (int i = 0; i < s.length(); ++i) {
-            final char c = s.charAt(i);
+            char c = s.charAt(i);
             if (!(Character.isLetter(c) || Character.isDigit(c)))
                 return renderJsonString(s);
         }
@@ -96,7 +96,7 @@ final public class ConfigImplUtil {
         return s;
     }
 
-    static boolean isWhitespace(final int codepoint) {
+    static boolean isWhitespace(int codepoint) {
         switch (codepoint) {
         // try to hit the most common ASCII ones first, then the nonbreaking
         // spaces that Java brokenly leaves out of isWhitespace.
@@ -105,6 +105,10 @@ final public class ConfigImplUtil {
         case '\u00A0':
         case '\u2007':
         case '\u202F':
+            // this one is the BOM, see
+            // http://www.unicode.org/faq/utf_bom.html#BOM
+            // we just accept it as a zero-width nonbreaking space.
+        case '\uFEFF':
             return true;
         default:
             return Character.isWhitespace(codepoint);
@@ -112,7 +116,7 @@ final public class ConfigImplUtil {
     }
 
     /** This is public just for the "config" package to use, don't touch it! */
-    public static String unicodeTrim(final String s) {
+    public static String unicodeTrim(String s) {
         // this is dumb because it looks like there aren't any whitespace
         // characters that need surrogate encoding. But, points for
         // pedantic correctness! It's future-proof or something.
@@ -124,11 +128,11 @@ final public class ConfigImplUtil {
 
         int start = 0;
         while (start < length) {
-            final char c = s.charAt(start);
+            char c = s.charAt(start);
             if (c == ' ' || c == '\n') {
                 start += 1;
             } else {
-                final int cp = s.codePointAt(start);
+                int cp = s.codePointAt(start);
                 if (isWhitespace(cp))
                     start += Character.charCount(cp);
                 else
@@ -138,12 +142,12 @@ final public class ConfigImplUtil {
 
         int end = length;
         while (end > start) {
-            final char c = s.charAt(end - 1);
+            char c = s.charAt(end - 1);
             if (c == ' ' || c == '\n') {
                 --end;
             } else {
-                final int cp;
-                final int delta;
+                int cp;
+                int delta;
                 if (Character.isLowSurrogate(c)) {
                     cp = s.codePointAt(end - 2);
                     delta = 2;
@@ -161,8 +165,8 @@ final public class ConfigImplUtil {
     }
 
     /** This is public just for the "config" package to use, don't touch it! */
-    public static ConfigException extractInitializerError(final ExceptionInInitializerError e) {
-        final Throwable cause = e.getCause();
+    public static ConfigException extractInitializerError(ExceptionInInitializerError e) {
+        Throwable cause = e.getCause();
         if (cause != null && cause instanceof ConfigException) {
             return (ConfigException) cause;
         } else {
@@ -170,7 +174,7 @@ final public class ConfigImplUtil {
         }
     }
 
-    static File urlToFile(final URL url) {
+    static File urlToFile(URL url) {
         // this isn't really right, clearly, but not sure what to do.
         try {
             // this will properly handle hex escapes, etc.
@@ -190,7 +194,7 @@ final public class ConfigImplUtil {
      * This is public ONLY for use by the "config" package, DO NOT USE this ABI
      * may change. You can use the version in ConfigUtil instead.
      */
-    public static String joinPath(final String... elements) {
+    public static String joinPath(String... elements) {
         return (new Path(elements)).render();
     }
 
@@ -198,7 +202,7 @@ final public class ConfigImplUtil {
      * This is public ONLY for use by the "config" package, DO NOT USE this ABI
      * may change. You can use the version in ConfigUtil instead.
      */
-    public static String joinPath(final List<String> elements) {
+    public static String joinPath(List<String> elements) {
         return joinPath(elements.toArray(new String[0]));
     }
 
@@ -206,9 +210,9 @@ final public class ConfigImplUtil {
      * This is public ONLY for use by the "config" package, DO NOT USE this ABI
      * may change. You can use the version in ConfigUtil instead.
      */
-    public static List<String> splitPath(final String path) {
+    public static List<String> splitPath(String path) {
         Path p = Path.newPath(path);
-        final List<String> elements = new ArrayList<String>();
+        List<String> elements = new ArrayList<String>();
         while (p != null) {
             elements.add(p.first());
             p = p.remainder();
@@ -216,11 +220,11 @@ final public class ConfigImplUtil {
         return elements;
     }
 
-    public static ConfigOrigin readOrigin(final ObjectInputStream in) throws IOException {
+    public static ConfigOrigin readOrigin(ObjectInputStream in) throws IOException {
         return SerializedConfigValue.readOrigin(in, null);
     }
 
-    public static void writeOrigin(final ObjectOutputStream out, final ConfigOrigin origin) throws IOException {
+    public static void writeOrigin(ObjectOutputStream out, ConfigOrigin origin) throws IOException {
         SerializedConfigValue.writeOrigin(new DataOutputStream(out), (SimpleConfigOrigin) origin,
                 null);
     }

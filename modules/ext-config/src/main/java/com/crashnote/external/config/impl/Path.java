@@ -13,17 +13,17 @@ final class Path {
     final private String first;
     final private Path remainder;
 
-    Path(final String first, final Path remainder) {
+    Path(String first, Path remainder) {
         this.first = first;
         this.remainder = remainder;
     }
 
-    Path(final String... elements) {
+    Path(String... elements) {
         if (elements.length == 0)
             throw new ConfigException.BugOrBroken("empty path");
         this.first = elements[0];
         if (elements.length > 1) {
-            final PathBuilder pb = new PathBuilder();
+            PathBuilder pb = new PathBuilder();
             for (int i = 1; i < elements.length; ++i) {
                 pb.appendKey(elements[i]);
             }
@@ -34,15 +34,15 @@ final class Path {
     }
 
     // append all the paths in the list together into one path
-    Path(final List<Path> pathsToConcat) {
+    Path(List<Path> pathsToConcat) {
         if (pathsToConcat.isEmpty())
             throw new ConfigException.BugOrBroken("empty path");
 
-        final Iterator<Path> i = pathsToConcat.iterator();
-        final Path firstPath = i.next();
+        Iterator<Path> i = pathsToConcat.iterator();
+        Path firstPath = i.next();
         this.first = firstPath.first;
 
-        final PathBuilder pb = new PathBuilder();
+        PathBuilder pb = new PathBuilder();
         if (firstPath.remainder != null) {
             pb.appendPath(firstPath.remainder);
         }
@@ -72,7 +72,7 @@ final class Path {
         if (remainder == null)
             return null;
 
-        final PathBuilder pb = new PathBuilder();
+        PathBuilder pb = new PathBuilder();
         Path p = this;
         while (p.remainder != null) {
             pb.appendKey(p.first);
@@ -93,8 +93,8 @@ final class Path {
         return p.first;
     }
 
-    Path prepend(final Path toPrepend) {
-        final PathBuilder pb = new PathBuilder();
+    Path prepend(Path toPrepend) {
+        PathBuilder pb = new PathBuilder();
         pb.appendPath(toPrepend);
         pb.appendPath(this);
         return pb.result();
@@ -110,7 +110,7 @@ final class Path {
         return count;
     }
 
-    Path subPath(final int removeFromFront) {
+    Path subPath(int removeFromFront) {
         int count = removeFromFront;
         Path p = this;
         while (p != null && count > 0) {
@@ -120,12 +120,12 @@ final class Path {
         return p;
     }
 
-    Path subPath(final int firstIndex, final int lastIndex) {
+    Path subPath(int firstIndex, int lastIndex) {
         if (lastIndex < firstIndex)
             throw new ConfigException.BugOrBroken("bad call to subPath");
 
         Path from = subPath(firstIndex);
-        final PathBuilder pb = new PathBuilder();
+        PathBuilder pb = new PathBuilder();
         int count = lastIndex - firstIndex;
         while (count > 0) {
             count -= 1;
@@ -138,9 +138,9 @@ final class Path {
     }
 
     @Override
-    public boolean equals(final Object other) {
+    public boolean equals(Object other) {
         if (other instanceof Path) {
-            final Path that = (Path) other;
+            Path that = (Path) other;
             return this.first.equals(that.first)
                     && ConfigImplUtil.equalsHandlingNull(this.remainder,
                             that.remainder);
@@ -157,8 +157,8 @@ final class Path {
 
     // this doesn't have a very precise meaning, just to reduce
     // noise from quotes in the rendered path for average cases
-    static boolean hasFunkyChars(final String s) {
-        final int length = s.length();
+    static boolean hasFunkyChars(String s) {
+        int length = s.length();
 
         if (length == 0)
             return false;
@@ -167,12 +167,12 @@ final class Path {
         // we need to quote it because the number could be invalid,
         // for example it could be a hyphen with no digit afterward
         // or the exponent "e" notation could be mangled.
-        final char first = s.charAt(0);
+        char first = s.charAt(0);
         if (!(Character.isLetter(first)))
             return true;
 
         for (int i = 1; i < length; ++i) {
-            final char c = s.charAt(i);
+            char c = s.charAt(i);
 
             if (Character.isLetterOrDigit(c) || c == '-' || c == '_')
                 continue;
@@ -182,7 +182,7 @@ final class Path {
         return false;
     }
 
-    private void appendToStringBuilder(final StringBuilder sb) {
+    private void appendToStringBuilder(StringBuilder sb) {
         if (hasFunkyChars(first) || first.isEmpty())
             sb.append(ConfigImplUtil.renderJsonString(first));
         else
@@ -195,7 +195,7 @@ final class Path {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         sb.append("Path(");
         appendToStringBuilder(sb);
         sb.append(")");
@@ -207,16 +207,16 @@ final class Path {
      * error-message-oriented human-readable one.
      */
     String render() {
-        final StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         appendToStringBuilder(sb);
         return sb.toString();
     }
 
-    static Path newKey(final String key) {
+    static Path newKey(String key) {
         return new Path(key, null);
     }
 
-    static Path newPath(final String path) {
+    static Path newPath(String path) {
         return Parser.parsePath(path);
     }
 }

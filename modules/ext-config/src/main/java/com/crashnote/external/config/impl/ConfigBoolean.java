@@ -11,11 +11,11 @@ import com.crashnote.external.config.ConfigValueType;
 
 final class ConfigBoolean extends AbstractConfigValue implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     final private boolean value;
 
-    ConfigBoolean(final ConfigOrigin origin, final boolean value) {
+    ConfigBoolean(ConfigOrigin origin, boolean value) {
         super(origin);
         this.value = value;
     }
@@ -36,7 +36,7 @@ final class ConfigBoolean extends AbstractConfigValue implements Serializable {
     }
 
     @Override
-    protected ConfigBoolean newCopy(final ConfigOrigin origin) {
+    protected ConfigBoolean newCopy(ConfigOrigin origin) {
         return new ConfigBoolean(origin, value);
     }
 

@@ -27,6 +27,13 @@ import com.crashnote.external.config.impl.Parseable;
  * operation potentially parsing multiple resources and resolving substitutions,
  * while the ones with "parse" in the name just create a {@link ConfigValue}
  * from a resource and nothing else.
+ *
+ * <p> You can find an example app and library <a
+ * href="https://github.com/typesafehub/config/tree/master/examples">on
+ * GitHub</a>.  Also be sure to read the <a
+ * href="package-summary.html#package_description">package
+ * overview</a> which describes the big picture as shown in those
+ * examples.
  */
 public final class ConfigFactory {
     private ConfigFactory() {
@@ -57,7 +64,7 @@ public final class ConfigFactory {
      *            name (optionally without extension) of a resource on classpath
      * @return configuration for an application relative to context class loader
      */
-    public static Config load(final String resourceBasename) {
+    public static Config load(String resourceBasename) {
         return load(resourceBasename, ConfigParseOptions.defaults(),
                 ConfigResolveOptions.defaults());
     }
@@ -70,7 +77,7 @@ public final class ConfigFactory {
      * @param resourceBasename
      * @return configuration for an application relative to given class loader
      */
-    public static Config load(final ClassLoader loader, final String resourceBasename) {
+    public static Config load(ClassLoader loader, String resourceBasename) {
         return load(resourceBasename, ConfigParseOptions.defaults().setClassLoader(loader),
                 ConfigResolveOptions.defaults());
     }
@@ -87,9 +94,9 @@ public final class ConfigFactory {
      *            options to use when resolving the stack
      * @return configuration for an application
      */
-    public static Config load(final String resourceBasename, final ConfigParseOptions parseOptions,
-            final ConfigResolveOptions resolveOptions) {
-        final Config appConfig = ConfigFactory.parseResourcesAnySyntax(resourceBasename, parseOptions);
+    public static Config load(String resourceBasename, ConfigParseOptions parseOptions,
+            ConfigResolveOptions resolveOptions) {
+        Config appConfig = ConfigFactory.parseResourcesAnySyntax(resourceBasename, parseOptions);
         return load(parseOptions.getClassLoader(), appConfig, resolveOptions);
     }
 
@@ -110,8 +117,8 @@ public final class ConfigFactory {
      *            options to use when resolving the stack
      * @return configuration for an application
      */
-    public static Config load(final ClassLoader loader, final String resourceBasename,
-            final ConfigParseOptions parseOptions, final ConfigResolveOptions resolveOptions) {
+    public static Config load(ClassLoader loader, String resourceBasename,
+            ConfigParseOptions parseOptions, ConfigResolveOptions resolveOptions) {
         return load(resourceBasename, parseOptions.setClassLoader(loader), resolveOptions);
     }
 
@@ -125,11 +132,11 @@ public final class ConfigFactory {
      *            the application's portion of the configuration
      * @return resolved configuration with overrides and fallbacks added
      */
-    public static Config load(final Config config) {
+    public static Config load(Config config) {
         return load(Thread.currentThread().getContextClassLoader(), config);
     }
 
-    public static Config load(final ClassLoader loader, final Config config) {
+    public static Config load(ClassLoader loader, Config config) {
         return load(loader, config, ConfigResolveOptions.defaults());
     }
 
@@ -143,7 +150,7 @@ public final class ConfigFactory {
      *            options for resolving the assembled config stack
      * @return resolved configuration with overrides and fallbacks added
      */
-    public static Config load(final Config config, final ConfigResolveOptions resolveOptions) {
+    public static Config load(Config config, ConfigResolveOptions resolveOptions) {
         return load(Thread.currentThread().getContextClassLoader(), config, resolveOptions);
     }
 
@@ -160,24 +167,24 @@ public final class ConfigFactory {
      *            options for resolving the assembled config stack
      * @return resolved configuration with overrides and fallbacks added
      */
-    public static Config load(final ClassLoader loader, final Config config, final ConfigResolveOptions resolveOptions) {
+    public static Config load(ClassLoader loader, Config config, ConfigResolveOptions resolveOptions) {
         return defaultOverrides(loader).withFallback(config).withFallback(defaultReference(loader))
                 .resolve(resolveOptions);
     }
 
-    private static Config loadDefaultConfig(final ClassLoader loader) {
+    private static Config loadDefaultConfig(ClassLoader loader) {
         return loadDefaultConfig(loader, ConfigParseOptions.defaults());
     }
 
-    private static Config loadDefaultConfig(final ClassLoader loader, final ConfigParseOptions parseOptions) {
+    private static Config loadDefaultConfig(ClassLoader loader, ConfigParseOptions parseOptions) {
         return loadDefaultConfig(loader, parseOptions, ConfigResolveOptions.defaults());
     }
 
-    private static Config loadDefaultConfig(final ClassLoader loader, final ConfigResolveOptions resolveOptions) {
+    private static Config loadDefaultConfig(ClassLoader loader, ConfigResolveOptions resolveOptions) {
         return loadDefaultConfig(loader, ConfigParseOptions.defaults(), resolveOptions);
     }
 
-    private static Config loadDefaultConfig(final ClassLoader loader, final ConfigParseOptions parseOptions, final ConfigResolveOptions resolveOptions) {
+    private static Config loadDefaultConfig(ClassLoader loader, ConfigParseOptions parseOptions, ConfigResolveOptions resolveOptions) {
         int specified = 0;
 
         // override application.conf with config.file, config.resource,
@@ -185,10 +192,10 @@ public final class ConfigFactory {
         String resource = System.getProperty("config.resource");
         if (resource != null)
             specified += 1;
-        final String file = System.getProperty("config.file");
+        String file = System.getProperty("config.file");
         if (file != null)
             specified += 1;
-        final String url = System.getProperty("config.url");
+        String url = System.getProperty("config.url");
         if (url != null)
             specified += 1;
 
@@ -262,7 +269,7 @@ public final class ConfigFactory {
      *            Options for parsing resources
      * @return configuration for an application
      */
-    public static Config load(final ConfigParseOptions parseOptions) {
+    public static Config load(ConfigParseOptions parseOptions) {
         return load(Thread.currentThread().getContextClassLoader(), parseOptions);
     }
 
@@ -293,7 +300,7 @@ public final class ConfigFactory {
      *            Options for parsing resources
      * @return configuration for an application
      */
-    public static Config load(final ClassLoader loader, final ConfigParseOptions parseOptions) {
+    public static Config load(ClassLoader loader, ConfigParseOptions parseOptions) {
         return loadDefaultConfig(loader, parseOptions);
     }
 
@@ -307,7 +314,7 @@ public final class ConfigFactory {
      *            options for resolving the assembled config stack
      * @return configuration for an application
      */
-    public static Config load(final ClassLoader loader, final ConfigResolveOptions resolveOptions) {
+    public static Config load(ClassLoader loader, ConfigResolveOptions resolveOptions) {
         return loadDefaultConfig(loader, resolveOptions);
     }
 
@@ -324,7 +331,7 @@ public final class ConfigFactory {
      *            options for resolving the assembled config stack
      * @return configuration for an application
      */
-    public static Config load(final ClassLoader loader, final ConfigParseOptions parseOptions, final ConfigResolveOptions resolveOptions) {
+    public static Config load(ClassLoader loader, ConfigParseOptions parseOptions, ConfigResolveOptions resolveOptions) {
         return loadDefaultConfig(loader, parseOptions, resolveOptions);
     }
 
@@ -367,7 +374,7 @@ public final class ConfigFactory {
      * @param loader
      * @return the default reference config for this class loader
      */
-    public static Config defaultReference(final ClassLoader loader) {
+    public static Config defaultReference(ClassLoader loader) {
         return ConfigImpl.defaultReference(loader);
     }
 
@@ -397,7 +404,7 @@ public final class ConfigFactory {
      * @param loader
      * @return the default override configuration
      */
-    public static Config defaultOverrides(final ClassLoader loader) {
+    public static Config defaultOverrides(ClassLoader loader) {
         return systemProperties();
     }
 
@@ -449,7 +456,7 @@ public final class ConfigFactory {
      *            description of the config
      * @return an empty configuration
      */
-    public static Config empty(final String originDescription) {
+    public static Config empty(String originDescription) {
         return ConfigImpl.emptyConfig(originDescription);
     }
 
@@ -514,36 +521,36 @@ public final class ConfigFactory {
      * @param options
      * @return the parsed configuration
      */
-    public static Config parseProperties(final Properties properties,
-            final ConfigParseOptions options) {
+    public static Config parseProperties(Properties properties,
+            ConfigParseOptions options) {
         return Parseable.newProperties(properties, options).parse().toConfig();
     }
 
-    public static Config parseProperties(final Properties properties) {
+    public static Config parseProperties(Properties properties) {
         return parseProperties(properties, ConfigParseOptions.defaults());
     }
 
-    public static Config parseReader(final Reader reader, final ConfigParseOptions options) {
+    public static Config parseReader(Reader reader, ConfigParseOptions options) {
         return Parseable.newReader(reader, options).parse().toConfig();
     }
 
-    public static Config parseReader(final Reader reader) {
+    public static Config parseReader(Reader reader) {
         return parseReader(reader, ConfigParseOptions.defaults());
     }
 
-    public static Config parseURL(final URL url, final ConfigParseOptions options) {
+    public static Config parseURL(URL url, ConfigParseOptions options) {
         return Parseable.newURL(url, options).parse().toConfig();
     }
 
-    public static Config parseURL(final URL url) {
+    public static Config parseURL(URL url) {
         return parseURL(url, ConfigParseOptions.defaults());
     }
 
-    public static Config parseFile(final File file, final ConfigParseOptions options) {
+    public static Config parseFile(File file, ConfigParseOptions options) {
         return Parseable.newFile(file, options).parse().toConfig();
     }
 
-    public static Config parseFile(final File file) {
+    public static Config parseFile(File file) {
         return parseFile(file, ConfigParseOptions.defaults());
     }
 
@@ -580,12 +587,12 @@ public final class ConfigFactory {
      *            parse options
      * @return the parsed configuration
      */
-    public static Config parseFileAnySyntax(final File fileBasename,
-            final ConfigParseOptions options) {
+    public static Config parseFileAnySyntax(File fileBasename,
+            ConfigParseOptions options) {
         return ConfigImpl.parseFileAnySyntax(fileBasename, options).toConfig();
     }
 
-    public static Config parseFileAnySyntax(final File fileBasename) {
+    public static Config parseFileAnySyntax(File fileBasename) {
         return parseFileAnySyntax(fileBasename, ConfigParseOptions.defaults());
     }
 
@@ -618,13 +625,13 @@ public final class ConfigFactory {
      *            parse options
      * @return the parsed configuration
      */
-    public static Config parseResources(final Class<?> klass, final String resource,
-            final ConfigParseOptions options) {
+    public static Config parseResources(Class<?> klass, String resource,
+            ConfigParseOptions options) {
         return Parseable.newResources(klass, resource, options).parse()
                 .toConfig();
     }
 
-    public static Config parseResources(final Class<?> klass, final String resource) {
+    public static Config parseResources(Class<?> klass, String resource) {
         return parseResources(klass, resource, ConfigParseOptions.defaults());
     }
 
@@ -658,13 +665,13 @@ public final class ConfigFactory {
      *            from klass)
      * @return the parsed configuration
      */
-    public static Config parseResourcesAnySyntax(final Class<?> klass, final String resourceBasename,
-            final ConfigParseOptions options) {
+    public static Config parseResourcesAnySyntax(Class<?> klass, String resourceBasename,
+            ConfigParseOptions options) {
         return ConfigImpl.parseResourcesAnySyntax(klass, resourceBasename,
                 options).toConfig();
     }
 
-    public static Config parseResourcesAnySyntax(final Class<?> klass, final String resourceBasename) {
+    public static Config parseResourcesAnySyntax(Class<?> klass, String resourceBasename) {
         return parseResourcesAnySyntax(klass, resourceBasename, ConfigParseOptions.defaults());
     }
 
@@ -690,12 +697,12 @@ public final class ConfigFactory {
      *            parse options (class loader is ignored)
      * @return the parsed configuration
      */
-    public static Config parseResources(final ClassLoader loader, final String resource,
-            final ConfigParseOptions options) {
+    public static Config parseResources(ClassLoader loader, String resource,
+            ConfigParseOptions options) {
         return Parseable.newResources(resource, options.setClassLoader(loader)).parse().toConfig();
     }
 
-    public static Config parseResources(final ClassLoader loader, final String resource) {
+    public static Config parseResources(ClassLoader loader, String resource) {
         return parseResources(loader, resource, ConfigParseOptions.defaults());
     }
 
@@ -722,13 +729,13 @@ public final class ConfigFactory {
      *            parse options (class loader ignored)
      * @return the parsed configuration
      */
-    public static Config parseResourcesAnySyntax(final ClassLoader loader, final String resourceBasename,
-            final ConfigParseOptions options) {
+    public static Config parseResourcesAnySyntax(ClassLoader loader, String resourceBasename,
+            ConfigParseOptions options) {
         return ConfigImpl.parseResourcesAnySyntax(resourceBasename, options.setClassLoader(loader))
                 .toConfig();
     }
 
-    public static Config parseResourcesAnySyntax(final ClassLoader loader, final String resourceBasename) {
+    public static Config parseResourcesAnySyntax(ClassLoader loader, String resourceBasename) {
         return parseResourcesAnySyntax(loader, resourceBasename, ConfigParseOptions.defaults());
     }
 
@@ -736,7 +743,7 @@ public final class ConfigFactory {
      * Like {@link #parseResources(ClassLoader,String,ConfigParseOptions)} but
      * uses thread's current context class loader.
      */
-    public static Config parseResources(final String resource, final ConfigParseOptions options) {
+    public static Config parseResources(String resource, ConfigParseOptions options) {
         return Parseable.newResources(resource, options)
                 .parse().toConfig();
     }
@@ -745,7 +752,7 @@ public final class ConfigFactory {
      * Like {@link #parseResources(ClassLoader,String)} but uses thread's
      * current context class loader.
      */
-    public static Config parseResources(final String resource) {
+    public static Config parseResources(String resource) {
         return parseResources(resource, ConfigParseOptions.defaults());
     }
 
@@ -754,7 +761,7 @@ public final class ConfigFactory {
      * {@link #parseResourcesAnySyntax(ClassLoader,String,ConfigParseOptions)}
      * but uses thread's current context class loader.
      */
-    public static Config parseResourcesAnySyntax(final String resourceBasename, final ConfigParseOptions options) {
+    public static Config parseResourcesAnySyntax(String resourceBasename, ConfigParseOptions options) {
         return ConfigImpl.parseResourcesAnySyntax(resourceBasename, options).toConfig();
     }
 
@@ -762,15 +769,15 @@ public final class ConfigFactory {
      * Like {@link #parseResourcesAnySyntax(ClassLoader,String)} but uses
      * thread's current context class loader.
      */
-    public static Config parseResourcesAnySyntax(final String resourceBasename) {
+    public static Config parseResourcesAnySyntax(String resourceBasename) {
         return parseResourcesAnySyntax(resourceBasename, ConfigParseOptions.defaults());
     }
 
-    public static Config parseString(final String s, final ConfigParseOptions options) {
+    public static Config parseString(String s, ConfigParseOptions options) {
         return Parseable.newString(s, options).parse().toConfig();
     }
 
-    public static Config parseString(final String s) {
+    public static Config parseString(String s) {
         return parseString(s, ConfigParseOptions.defaults());
     }
 
@@ -797,8 +804,8 @@ public final class ConfigFactory {
      *            messages)
      * @return the map converted to a {@code Config}
      */
-    public static Config parseMap(final Map<String, ? extends Object> values,
-            final String originDescription) {
+    public static Config parseMap(Map<String, ? extends Object> values,
+            String originDescription) {
         return ConfigImpl.fromPathMap(values, originDescription).toConfig();
     }
 
@@ -809,7 +816,7 @@ public final class ConfigFactory {
      * @param values
      * @return the map converted to a {@code Config}
      */
-    public static Config parseMap(final Map<String, ? extends Object> values) {
+    public static Config parseMap(Map<String, ? extends Object> values) {
         return parseMap(values, null);
     }
 }

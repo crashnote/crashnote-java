@@ -26,7 +26,7 @@ package com.crashnote.external.config;
 public final class ConfigResolveOptions {
     private final boolean useSystemEnvironment;
 
-    private ConfigResolveOptions(final boolean useSystemEnvironment) {
+    private ConfigResolveOptions(boolean useSystemEnvironment) {
         this.useSystemEnvironment = useSystemEnvironment;
     }
 
@@ -58,7 +58,7 @@ public final class ConfigResolveOptions {
      * @return options with requested setting for use of environment variables
      */
     @SuppressWarnings("static-method")
-    public ConfigResolveOptions setUseSystemEnvironment(final boolean value) {
+    public ConfigResolveOptions setUseSystemEnvironment(boolean value) {
         return new ConfigResolveOptions(value);
     }
 

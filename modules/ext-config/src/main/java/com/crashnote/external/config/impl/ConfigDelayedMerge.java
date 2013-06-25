@@ -27,14 +27,14 @@ final class ConfigDelayedMerge extends AbstractConfigValue implements Unmergeabl
     // earlier items in the stack win
     final private List<AbstractConfigValue> stack;
 
-    ConfigDelayedMerge(final ConfigOrigin origin, final List<AbstractConfigValue> stack) {
+    ConfigDelayedMerge(ConfigOrigin origin, List<AbstractConfigValue> stack) {
         super(origin);
         this.stack = stack;
         if (stack.isEmpty())
             throw new ConfigException.BugOrBroken(
                     "creating empty delayed merge value");
 
-        for (final AbstractConfigValue v : stack) {
+        for (AbstractConfigValue v : stack) {
             if (v instanceof ConfigDelayedMerge || v instanceof ConfigDelayedMergeObject)
                 throw new ConfigException.BugOrBroken(
                         "placed nested DelayedMerge in a ConfigDelayedMerge, should have consolidated stack");
@@ -54,14 +54,14 @@ final class ConfigDelayedMerge extends AbstractConfigValue implements Unmergeabl
     }
 
     @Override
-    AbstractConfigValue resolveSubstitutions(final ResolveContext context)
+    AbstractConfigValue resolveSubstitutions(ResolveContext context)
             throws NotPossibleToResolve {
         return resolveSubstitutions(this, stack, context);
     }
 
     // static method also used by ConfigDelayedMergeObject
-    static AbstractConfigValue resolveSubstitutions(final ReplaceableMergeStack replaceable,
-            final List<AbstractConfigValue> stack, final ResolveContext context) throws NotPossibleToResolve {
+    static AbstractConfigValue resolveSubstitutions(ReplaceableMergeStack replaceable,
+            List<AbstractConfigValue> stack, ResolveContext context) throws NotPossibleToResolve {
         // to resolve substitutions, we need to recursively resolve
         // the stack of stuff to merge, and merge the stack so
         // we won't be a delayed merge anymore. If restrictToChildOrNull
@@ -69,7 +69,7 @@ final class ConfigDelayedMerge extends AbstractConfigValue implements Unmergeabl
 
         int count = 0;
         AbstractConfigValue merged = null;
-        for (final AbstractConfigValue v : stack) {
+        for (AbstractConfigValue v : stack) {
             if (v instanceof ReplaceableMergeStack)
                 throw new ConfigException.BugOrBroken(
                         "A delayed merge should not contain another one: " + replaceable);
@@ -115,7 +115,7 @@ final class ConfigDelayedMerge extends AbstractConfigValue implements Unmergeabl
     public ResolveReplacer makeReplacer(final int skipping) {
         return new ResolveReplacer() {
             @Override
-            protected AbstractConfigValue makeReplacement(final ResolveContext context)
+            protected AbstractConfigValue makeReplacement(ResolveContext context)
                     throws NotPossibleToResolve {
                 return ConfigDelayedMerge.makeReplacement(context, stack, skipping);
             }
@@ -123,17 +123,17 @@ final class ConfigDelayedMerge extends AbstractConfigValue implements Unmergeabl
     }
 
     // static method also used by ConfigDelayedMergeObject
-    static AbstractConfigValue makeReplacement(final ResolveContext context,
-            final List<AbstractConfigValue> stack, final int skipping) throws NotPossibleToResolve {
+    static AbstractConfigValue makeReplacement(ResolveContext context,
+            List<AbstractConfigValue> stack, int skipping) throws NotPossibleToResolve {
 
-        final List<AbstractConfigValue> subStack = stack.subList(skipping, stack.size());
+        List<AbstractConfigValue> subStack = stack.subList(skipping, stack.size());
 
         if (subStack.isEmpty()) {
             throw new NotPossibleToResolve(context);
         } else {
             // generate a new merge stack from only the remaining items
             AbstractConfigValue merged = null;
-            for (final AbstractConfigValue v : subStack) {
+            for (AbstractConfigValue v : subStack) {
                 if (merged == null)
                     merged = v;
                 else
@@ -149,17 +149,17 @@ final class ConfigDelayedMerge extends AbstractConfigValue implements Unmergeabl
     }
 
     @Override
-    ConfigDelayedMerge relativized(final Path prefix) {
-        final List<AbstractConfigValue> newStack = new ArrayList<AbstractConfigValue>();
-        for (final AbstractConfigValue o : stack) {
+    ConfigDelayedMerge relativized(Path prefix) {
+        List<AbstractConfigValue> newStack = new ArrayList<AbstractConfigValue>();
+        for (AbstractConfigValue o : stack) {
             newStack.add(o.relativized(prefix));
         }
         return new ConfigDelayedMerge(origin(), newStack);
     }
 
     // static utility shared with ConfigDelayedMergeObject
-    static boolean stackIgnoresFallbacks(final List<AbstractConfigValue> stack) {
-        final AbstractConfigValue last = stack.get(stack.size() - 1);
+    static boolean stackIgnoresFallbacks(List<AbstractConfigValue> stack) {
+        AbstractConfigValue last = stack.get(stack.size() - 1);
         return last.ignoresFallbacks();
     }
 
@@ -169,22 +169,22 @@ final class ConfigDelayedMerge extends AbstractConfigValue implements Unmergeabl
     }
 
     @Override
-    protected AbstractConfigValue newCopy(final ConfigOrigin newOrigin) {
+    protected AbstractConfigValue newCopy(ConfigOrigin newOrigin) {
         return new ConfigDelayedMerge(newOrigin, stack);
     }
 
     @Override
-    protected final ConfigDelayedMerge mergedWithTheUnmergeable(final Unmergeable fallback) {
+    protected final ConfigDelayedMerge mergedWithTheUnmergeable(Unmergeable fallback) {
         return (ConfigDelayedMerge) mergedWithTheUnmergeable(stack, fallback);
     }
 
     @Override
-    protected final ConfigDelayedMerge mergedWithObject(final AbstractConfigObject fallback) {
+    protected final ConfigDelayedMerge mergedWithObject(AbstractConfigObject fallback) {
         return (ConfigDelayedMerge) mergedWithObject(stack, fallback);
     }
 
     @Override
-    protected ConfigDelayedMerge mergedWithNonObject(final AbstractConfigValue fallback) {
+    protected ConfigDelayedMerge mergedWithNonObject(AbstractConfigValue fallback) {
         return (ConfigDelayedMerge) mergedWithNonObject(stack, fallback);
     }
 
@@ -194,12 +194,12 @@ final class ConfigDelayedMerge extends AbstractConfigValue implements Unmergeabl
     }
 
     @Override
-    protected boolean canEqual(final Object other) {
+    protected boolean canEqual(Object other) {
         return other instanceof ConfigDelayedMerge;
     }
 
     @Override
-    public boolean equals(final Object other) {
+    public boolean equals(Object other) {
         // note that "origin" is deliberately NOT part of equality
         if (other instanceof ConfigDelayedMerge) {
             return canEqual(other)
@@ -216,14 +216,14 @@ final class ConfigDelayedMerge extends AbstractConfigValue implements Unmergeabl
     }
 
     @Override
-    protected void render(final StringBuilder sb, final int indent, final String atKey, final ConfigRenderOptions options) {
+    protected void render(StringBuilder sb, int indent, String atKey, ConfigRenderOptions options) {
         render(stack, sb, indent, atKey, options);
     }
 
     // static method also used by ConfigDelayedMergeObject.
-    static void render(final List<AbstractConfigValue> stack, final StringBuilder sb, final int indent, final String atKey,
-            final ConfigRenderOptions options) {
-        final boolean commentMerge = options.getComments();
+    static void render(List<AbstractConfigValue> stack, StringBuilder sb, int indent, String atKey,
+            ConfigRenderOptions options) {
+        boolean commentMerge = options.getComments();
         if (commentMerge) {
             sb.append("# unresolved merge of " + stack.size() + " values follows (\n");
             if (atKey == null) {
@@ -234,12 +234,12 @@ final class ConfigDelayedMerge extends AbstractConfigValue implements Unmergeabl
             }
         }
 
-        final List<AbstractConfigValue> reversed = new ArrayList<AbstractConfigValue>();
+        List<AbstractConfigValue> reversed = new ArrayList<AbstractConfigValue>();
         reversed.addAll(stack);
         Collections.reverse(reversed);
 
         int i = 0;
-        for (final AbstractConfigValue v : reversed) {
+        for (AbstractConfigValue v : reversed) {
             if (commentMerge) {
                 indent(sb, indent, options);
                 if (atKey != null) {
@@ -252,7 +252,7 @@ final class ConfigDelayedMerge extends AbstractConfigValue implements Unmergeabl
                 sb.append(v.origin().description());
                 sb.append("\n");
 
-                for (final String comment : v.origin().comments()) {
+                for (String comment : v.origin().comments()) {
                     indent(sb, indent, options);
                     sb.append("# ");
                     sb.append(comment);

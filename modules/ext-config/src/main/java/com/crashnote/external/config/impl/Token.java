@@ -11,18 +11,18 @@ class Token {
     final private String debugString;
     final private ConfigOrigin origin;
 
-    Token(final TokenType tokenType, final ConfigOrigin origin) {
+    Token(TokenType tokenType, ConfigOrigin origin) {
         this(tokenType, origin, null);
     }
 
-    Token(final TokenType tokenType, final ConfigOrigin origin, final String debugString) {
+    Token(TokenType tokenType, ConfigOrigin origin, String debugString) {
         this.tokenType = tokenType;
         this.origin = origin;
         this.debugString = debugString;
     }
 
     // this is used for singleton tokens like COMMA or OPEN_CURLY
-    static Token newWithoutOrigin(final TokenType tokenType, final String debugString) {
+    static Token newWithoutOrigin(TokenType tokenType, String debugString) {
         return new Token(tokenType, null, debugString);
     }
 
@@ -56,12 +56,12 @@ class Token {
             return tokenType.name();
     }
 
-    protected boolean canEqual(final Object other) {
+    protected boolean canEqual(Object other) {
         return other instanceof Token;
     }
 
     @Override
-    public boolean equals(final Object other) {
+    public boolean equals(Object other) {
         if (other instanceof Token) {
             // origin is deliberately left out
             return canEqual(other)

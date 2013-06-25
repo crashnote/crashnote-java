@@ -1,18 +1,3 @@
-/**
- * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.crashnote.external.config.impl;
 
 import java.util.ArrayList;
@@ -41,7 +26,7 @@ final class ConfigConcatenation extends AbstractConfigValue implements Unmergeab
 
     final private List<AbstractConfigValue> pieces;
 
-    ConfigConcatenation(final ConfigOrigin origin, final List<AbstractConfigValue> pieces) {
+    ConfigConcatenation(ConfigOrigin origin, List<AbstractConfigValue> pieces) {
         super(origin);
         this.pieces = pieces;
 
@@ -50,7 +35,7 @@ final class ConfigConcatenation extends AbstractConfigValue implements Unmergeab
                     + this);
 
         boolean hadUnmergeable = false;
-        for (final AbstractConfigValue p : pieces) {
+        for (AbstractConfigValue p : pieces) {
             if (p instanceof ConfigConcatenation)
                 throw new ConfigException.BugOrBroken(
                         "ConfigConcatenation should never be nested: " + this);
@@ -79,7 +64,7 @@ final class ConfigConcatenation extends AbstractConfigValue implements Unmergeab
     }
 
     @Override
-    protected ConfigConcatenation newCopy(final ConfigOrigin newOrigin) {
+    protected ConfigConcatenation newCopy(ConfigOrigin newOrigin) {
         return new ConfigConcatenation(newOrigin, pieces);
     }
 
@@ -99,9 +84,18 @@ final class ConfigConcatenation extends AbstractConfigValue implements Unmergeab
     /**
      * Add left and right, or their merger, to builder.
      */
-    private static void join(final ArrayList<AbstractConfigValue> builder,
-            final AbstractConfigValue right) {
-        final AbstractConfigValue left = builder.get(builder.size() - 1);
+    private static void join(ArrayList<AbstractConfigValue> builder, AbstractConfigValue origRight) {
+        AbstractConfigValue left = builder.get(builder.size() - 1);
+        AbstractConfigValue right = origRight;
+
+        // check for an object which can be converted to a list
+        // (this will be an object with numeric keys, like foo.0, foo.1)
+        if (left instanceof ConfigObject && right instanceof SimpleConfigList) {
+            left = DefaultTransformer.transform(left, ConfigValueType.LIST);
+        } else if (left instanceof SimpleConfigList && right instanceof ConfigObject) {
+            right = DefaultTransformer.transform(right, ConfigValueType.LIST);
+        }
+
         // Since this depends on the type of two instances, I couldn't think
         // of much alternative to an instanceof chain. Visitors are sometimes
         // used for multiple dispatch but seems like overkill.
@@ -116,14 +110,14 @@ final class ConfigConcatenation extends AbstractConfigValue implements Unmergeab
             // leave joined=null, cannot join
         } else {
             // handle primitive type or primitive type mixed with object or list
-            final String s1 = left.transformToString();
-            final String s2 = right.transformToString();
+            String s1 = left.transformToString();
+            String s2 = right.transformToString();
             if (s1 == null || s2 == null) {
                 throw new ConfigException.WrongType(left.origin(),
                         "Cannot concatenate object or list with a non-object-or-list, " + left
                                 + " and " + right + " are not compatible");
             } else {
-                final ConfigOrigin joinedOrigin = SimpleConfigOrigin.mergeOrigins(left.origin(),
+                ConfigOrigin joinedOrigin = SimpleConfigOrigin.mergeOrigins(left.origin(),
                         right.origin());
                 joined = new ConfigString(joinedOrigin, s1 + s2);
             }
@@ -137,12 +131,12 @@ final class ConfigConcatenation extends AbstractConfigValue implements Unmergeab
         }
     }
 
-    static List<AbstractConfigValue> consolidate(final List<AbstractConfigValue> pieces) {
+    static List<AbstractConfigValue> consolidate(List<AbstractConfigValue> pieces) {
         if (pieces.size() < 2) {
             return pieces;
         } else {
-            final List<AbstractConfigValue> flattened = new ArrayList<AbstractConfigValue>(pieces.size());
-            for (final AbstractConfigValue v : pieces) {
+            List<AbstractConfigValue> flattened = new ArrayList<AbstractConfigValue>(pieces.size());
+            for (AbstractConfigValue v : pieces) {
                 if (v instanceof ConfigConcatenation) {
                     flattened.addAll(((ConfigConcatenation) v).pieces);
                 } else {
@@ -150,9 +144,9 @@ final class ConfigConcatenation extends AbstractConfigValue implements Unmergeab
                 }
             }
 
-            final ArrayList<AbstractConfigValue> consolidated = new ArrayList<AbstractConfigValue>(
+            ArrayList<AbstractConfigValue> consolidated = new ArrayList<AbstractConfigValue>(
                     flattened.size());
-            for (final AbstractConfigValue v : flattened) {
+            for (AbstractConfigValue v : flattened) {
                 if (consolidated.isEmpty())
                     consolidated.add(v);
                 else
@@ -163,25 +157,25 @@ final class ConfigConcatenation extends AbstractConfigValue implements Unmergeab
         }
     }
 
-    static AbstractConfigValue concatenate(final List<AbstractConfigValue> pieces) {
-        final List<AbstractConfigValue> consolidated = consolidate(pieces);
+    static AbstractConfigValue concatenate(List<AbstractConfigValue> pieces) {
+        List<AbstractConfigValue> consolidated = consolidate(pieces);
         if (consolidated.isEmpty()) {
             return null;
         } else if (consolidated.size() == 1) {
             return consolidated.get(0);
         } else {
-            final ConfigOrigin mergedOrigin = SimpleConfigOrigin.mergeOrigins(consolidated);
+            ConfigOrigin mergedOrigin = SimpleConfigOrigin.mergeOrigins(consolidated);
             return new ConfigConcatenation(mergedOrigin, consolidated);
         }
     }
 
     @Override
-    AbstractConfigValue resolveSubstitutions(final ResolveContext context) throws NotPossibleToResolve {
-        final List<AbstractConfigValue> resolved = new ArrayList<AbstractConfigValue>(pieces.size());
-        for (final AbstractConfigValue p : pieces) {
+    AbstractConfigValue resolveSubstitutions(ResolveContext context) throws NotPossibleToResolve {
+        List<AbstractConfigValue> resolved = new ArrayList<AbstractConfigValue>(pieces.size());
+        for (AbstractConfigValue p : pieces) {
             // to concat into a string we have to do a full resolve,
             // so unrestrict the context
-            final AbstractConfigValue r = context.unrestricted().resolve(p);
+            AbstractConfigValue r = context.unrestricted().resolve(p);
             if (r == null) {
                 // it was optional... omit
             } else {
@@ -190,7 +184,7 @@ final class ConfigConcatenation extends AbstractConfigValue implements Unmergeab
         }
 
         // now need to concat everything
-        final List<AbstractConfigValue> joined = consolidate(resolved);
+        List<AbstractConfigValue> joined = consolidate(resolved);
         if (joined.size() != 1)
             throw new ConfigException.BugOrBroken(
                     "Resolved list should always join to exactly one value, not " + joined);
@@ -208,21 +202,21 @@ final class ConfigConcatenation extends AbstractConfigValue implements Unmergeab
     // system property and env variable lookups don't get
     // broken.
     @Override
-    ConfigConcatenation relativized(final Path prefix) {
-        final List<AbstractConfigValue> newPieces = new ArrayList<AbstractConfigValue>();
-        for (final AbstractConfigValue p : pieces) {
+    ConfigConcatenation relativized(Path prefix) {
+        List<AbstractConfigValue> newPieces = new ArrayList<AbstractConfigValue>();
+        for (AbstractConfigValue p : pieces) {
             newPieces.add(p.relativized(prefix));
         }
         return new ConfigConcatenation(origin(), newPieces);
     }
 
     @Override
-    protected boolean canEqual(final Object other) {
+    protected boolean canEqual(Object other) {
         return other instanceof ConfigConcatenation;
     }
 
     @Override
-    public boolean equals(final Object other) {
+    public boolean equals(Object other) {
         // note that "origin" is deliberately NOT part of equality
         if (other instanceof ConfigConcatenation) {
             return canEqual(other) && this.pieces.equals(((ConfigConcatenation) other).pieces);
@@ -238,15 +232,15 @@ final class ConfigConcatenation extends AbstractConfigValue implements Unmergeab
     }
 
     @Override
-    protected void render(final StringBuilder sb, final int indent, final ConfigRenderOptions options) {
-        for (final AbstractConfigValue p : pieces) {
+    protected void render(StringBuilder sb, int indent, ConfigRenderOptions options) {
+        for (AbstractConfigValue p : pieces) {
             p.render(sb, indent, options);
         }
     }
 
-    static List<AbstractConfigValue> valuesFromPieces(final ConfigOrigin origin, final List<Object> pieces) {
-        final List<AbstractConfigValue> values = new ArrayList<AbstractConfigValue>(pieces.size());
-        for (final Object p : pieces) {
+    static List<AbstractConfigValue> valuesFromPieces(ConfigOrigin origin, List<Object> pieces) {
+        List<AbstractConfigValue> values = new ArrayList<AbstractConfigValue>(pieces.size());
+        for (Object p : pieces) {
             if (p instanceof SubstitutionExpression) {
                 values.add(new ConfigReference(origin, (SubstitutionExpression) p));
             } else if (p instanceof String) {

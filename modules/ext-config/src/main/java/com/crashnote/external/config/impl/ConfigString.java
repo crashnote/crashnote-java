@@ -12,11 +12,11 @@ import com.crashnote.external.config.ConfigValueType;
 
 final class ConfigString extends AbstractConfigValue implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     final private String value;
 
-    ConfigString(final ConfigOrigin origin, final String value) {
+    ConfigString(ConfigOrigin origin, String value) {
         super(origin);
         this.value = value;
     }
@@ -37,8 +37,8 @@ final class ConfigString extends AbstractConfigValue implements Serializable {
     }
 
     @Override
-    protected void render(final StringBuilder sb, final int indent, final ConfigRenderOptions options) {
-        final String rendered;
+    protected void render(StringBuilder sb, int indent, ConfigRenderOptions options) {
+        String rendered;
         if (options.getJson())
             rendered = ConfigImplUtil.renderJsonString(value);
         else
@@ -47,7 +47,7 @@ final class ConfigString extends AbstractConfigValue implements Serializable {
     }
 
     @Override
-    protected ConfigString newCopy(final ConfigOrigin origin) {
+    protected ConfigString newCopy(ConfigOrigin origin) {
         return new ConfigString(origin, value);
     }
 

@@ -18,22 +18,22 @@ public abstract class ConfigException extends RuntimeException implements Serial
 
     final private transient ConfigOrigin origin;
 
-    protected ConfigException(final ConfigOrigin origin, final String message,
-            final Throwable cause) {
+    protected ConfigException(ConfigOrigin origin, String message,
+            Throwable cause) {
         super(origin.description() + ": " + message, cause);
         this.origin = origin;
     }
 
-    protected ConfigException(final ConfigOrigin origin, final String message) {
+    protected ConfigException(ConfigOrigin origin, String message) {
         this(origin.description() + ": " + message, null);
     }
 
-    protected ConfigException(final String message, final Throwable cause) {
+    protected ConfigException(String message, Throwable cause) {
         super(message, cause);
         this.origin = null;
     }
 
-    protected ConfigException(final String message) {
+    protected ConfigException(String message) {
         this(message, null);
     }
 
@@ -53,17 +53,17 @@ public abstract class ConfigException extends RuntimeException implements Serial
     // we customize serialization because ConfigOrigin isn't
     // serializable and we don't want it to be (don't want to
     // support it)
-    private void writeObject(final java.io.ObjectOutputStream out) throws IOException {
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         ConfigImplUtil.writeOrigin(out, origin);
     }
 
-    private void readObject(final java.io.ObjectInputStream in) throws IOException,
+    private void readObject(java.io.ObjectInputStream in) throws IOException,
             ClassNotFoundException {
         in.defaultReadObject();
-        final ConfigOrigin origin = ConfigImplUtil.readOrigin(in);
+        ConfigOrigin origin = ConfigImplUtil.readOrigin(in);
         // circumvent "final"
-        final Field f;
+        Field f;
         try {
             f = ConfigException.class.getDeclaredField("origin");
         } catch (NoSuchFieldException e) {
@@ -89,20 +89,20 @@ public abstract class ConfigException extends RuntimeException implements Serial
     public static class WrongType extends ConfigException {
         private static final long serialVersionUID = 1L;
 
-        public WrongType(final ConfigOrigin origin, final String path, final String expected, final String actual,
-                final Throwable cause) {
+        public WrongType(ConfigOrigin origin, String path, String expected, String actual,
+                Throwable cause) {
             super(origin, path + " has type " + actual + " rather than " + expected, cause);
         }
 
-        public WrongType(final ConfigOrigin origin, final String path, final String expected, final String actual) {
+        public WrongType(ConfigOrigin origin, String path, String expected, String actual) {
             this(origin, path, expected, actual, null);
         }
 
-        public WrongType(final ConfigOrigin origin, final String message, final Throwable cause) {
+        public WrongType(ConfigOrigin origin, String message, Throwable cause) {
             super(origin, message, cause);
         }
 
-        public WrongType(final ConfigOrigin origin, final String message) {
+        public WrongType(ConfigOrigin origin, String message) {
             super(origin, message, null);
         }
     }
@@ -114,20 +114,20 @@ public abstract class ConfigException extends RuntimeException implements Serial
     public static class Missing extends ConfigException {
         private static final long serialVersionUID = 1L;
 
-        public Missing(final String path, final Throwable cause) {
+        public Missing(String path, Throwable cause) {
             super("No configuration setting found for key '" + path + "'",
                     cause);
         }
 
-        public Missing(final String path) {
+        public Missing(String path) {
             this(path, null);
         }
 
-        protected Missing(final ConfigOrigin origin, final String message, final Throwable cause) {
+        protected Missing(ConfigOrigin origin, String message, Throwable cause) {
             super(origin, message, cause);
         }
 
-        protected Missing(final ConfigOrigin origin, final String message) {
+        protected Missing(ConfigOrigin origin, String message) {
             this(origin, message, null);
         }
     }
@@ -139,7 +139,7 @@ public abstract class ConfigException extends RuntimeException implements Serial
     public static class Null extends Missing {
         private static final long serialVersionUID = 1L;
 
-        private static String makeMessage(final String path, final String expected) {
+        private static String makeMessage(String path, String expected) {
             if (expected != null) {
                 return "Configuration key '" + path
                         + "' is set to null but expected " + expected;
@@ -148,12 +148,12 @@ public abstract class ConfigException extends RuntimeException implements Serial
             }
         }
 
-        public Null(final ConfigOrigin origin, final String path, final String expected,
-                final Throwable cause) {
+        public Null(ConfigOrigin origin, String path, String expected,
+                Throwable cause) {
             super(origin, makeMessage(path, expected), cause);
         }
 
-        public Null(final ConfigOrigin origin, final String path, final String expected) {
+        public Null(ConfigOrigin origin, String path, String expected) {
             this(origin, path, expected, null);
         }
     }
@@ -167,20 +167,20 @@ public abstract class ConfigException extends RuntimeException implements Serial
     public static class BadValue extends ConfigException {
         private static final long serialVersionUID = 1L;
 
-        public BadValue(final ConfigOrigin origin, final String path, final String message,
-                final Throwable cause) {
+        public BadValue(ConfigOrigin origin, String path, String message,
+                Throwable cause) {
             super(origin, "Invalid value at '" + path + "': " + message, cause);
         }
 
-        public BadValue(final ConfigOrigin origin, final String path, final String message) {
+        public BadValue(ConfigOrigin origin, String path, String message) {
             this(origin, path, message, null);
         }
 
-        public BadValue(final String path, final String message, final Throwable cause) {
+        public BadValue(String path, String message, Throwable cause) {
             super("Invalid value at '" + path + "': " + message, cause);
         }
 
-        public BadValue(final String path, final String message) {
+        public BadValue(String path, String message) {
             this(path, message, null);
         }
     }
@@ -193,27 +193,27 @@ public abstract class ConfigException extends RuntimeException implements Serial
     public static class BadPath extends ConfigException {
         private static final long serialVersionUID = 1L;
 
-        public BadPath(final ConfigOrigin origin, final String path, final String message,
-                final Throwable cause) {
+        public BadPath(ConfigOrigin origin, String path, String message,
+                Throwable cause) {
             super(origin,
                     path != null ? ("Invalid path '" + path + "': " + message)
                             : message, cause);
         }
 
-        public BadPath(final ConfigOrigin origin, final String path, final String message) {
+        public BadPath(ConfigOrigin origin, String path, String message) {
             this(origin, path, message, null);
         }
 
-        public BadPath(final String path, final String message, final Throwable cause) {
+        public BadPath(String path, String message, Throwable cause) {
             super(path != null ? ("Invalid path '" + path + "': " + message)
                     : message, cause);
         }
 
-        public BadPath(final String path, final String message) {
+        public BadPath(String path, String message) {
             this(path, message, null);
         }
 
-        public BadPath(final ConfigOrigin origin, final String message) {
+        public BadPath(ConfigOrigin origin, String message) {
             this(origin, null, message);
         }
     }
@@ -228,11 +228,11 @@ public abstract class ConfigException extends RuntimeException implements Serial
     public static class BugOrBroken extends ConfigException {
         private static final long serialVersionUID = 1L;
 
-        public BugOrBroken(final String message, final Throwable cause) {
+        public BugOrBroken(String message, Throwable cause) {
             super(message, cause);
         }
 
-        public BugOrBroken(final String message) {
+        public BugOrBroken(String message) {
             this(message, null);
         }
     }
@@ -244,11 +244,11 @@ public abstract class ConfigException extends RuntimeException implements Serial
     public static class IO extends ConfigException {
         private static final long serialVersionUID = 1L;
 
-        public IO(final ConfigOrigin origin, final String message, final Throwable cause) {
+        public IO(ConfigOrigin origin, String message, Throwable cause) {
             super(origin, message, cause);
         }
 
-        public IO(final ConfigOrigin origin, final String message) {
+        public IO(ConfigOrigin origin, String message) {
             this(origin, message, null);
         }
     }
@@ -260,11 +260,11 @@ public abstract class ConfigException extends RuntimeException implements Serial
     public static class Parse extends ConfigException {
         private static final long serialVersionUID = 1L;
 
-        public Parse(final ConfigOrigin origin, final String message, final Throwable cause) {
+        public Parse(ConfigOrigin origin, String message, Throwable cause) {
             super(origin, message, cause);
         }
 
-        public Parse(final ConfigOrigin origin, final String message) {
+        public Parse(ConfigOrigin origin, String message) {
             this(origin, message, null);
         }
     }
@@ -276,11 +276,11 @@ public abstract class ConfigException extends RuntimeException implements Serial
     public static class UnresolvedSubstitution extends Parse {
         private static final long serialVersionUID = 1L;
 
-        public UnresolvedSubstitution(final ConfigOrigin origin, final String detail, final Throwable cause) {
+        public UnresolvedSubstitution(ConfigOrigin origin, String detail, Throwable cause) {
             super(origin, "Could not resolve substitution to a value: " + detail, cause);
         }
 
-        public UnresolvedSubstitution(final ConfigOrigin origin, final String detail) {
+        public UnresolvedSubstitution(ConfigOrigin origin, String detail) {
             this(origin, detail, null);
         }
     }
@@ -296,11 +296,11 @@ public abstract class ConfigException extends RuntimeException implements Serial
     public static class NotResolved extends BugOrBroken {
         private static final long serialVersionUID = 1L;
 
-        public NotResolved(final String message, final Throwable cause) {
+        public NotResolved(String message, Throwable cause) {
             super(message, cause);
         }
 
-        public NotResolved(final String message) {
+        public NotResolved(String message) {
             this(message, null);
         }
     }
@@ -316,7 +316,7 @@ public abstract class ConfigException extends RuntimeException implements Serial
         final private ConfigOrigin origin;
         final private String problem;
 
-        public ValidationProblem(final String path, final ConfigOrigin origin, final String problem) {
+        public ValidationProblem(String path, ConfigOrigin origin, String problem) {
             this.path = path;
             this.origin = origin;
             this.problem = problem;
@@ -352,7 +352,7 @@ public abstract class ConfigException extends RuntimeException implements Serial
 
         final private Iterable<ValidationProblem> problems;
 
-        public ValidationFailed(final Iterable<ValidationProblem> problems) {
+        public ValidationFailed(Iterable<ValidationProblem> problems) {
             super(makeMessage(problems), null);
             this.problems = problems;
         }
@@ -361,9 +361,9 @@ public abstract class ConfigException extends RuntimeException implements Serial
             return problems;
         }
 
-        private static String makeMessage(final Iterable<ValidationProblem> problems) {
-            final StringBuilder sb = new StringBuilder();
-            for (final ValidationProblem p : problems) {
+        private static String makeMessage(Iterable<ValidationProblem> problems) {
+            StringBuilder sb = new StringBuilder();
+            for (ValidationProblem p : problems) {
                 sb.append(p.origin().description());
                 sb.append(": ");
                 sb.append(p.path());
@@ -386,11 +386,11 @@ public abstract class ConfigException extends RuntimeException implements Serial
     public static class Generic extends ConfigException {
         private static final long serialVersionUID = 1L;
 
-        public Generic(final String message, final Throwable cause) {
+        public Generic(String message, Throwable cause) {
             super(message, cause);
         }
 
-        public Generic(final String message) {
+        public Generic(String message) {
             this(message, null);
         }
     }

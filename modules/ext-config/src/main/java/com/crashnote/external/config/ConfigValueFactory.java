@@ -57,7 +57,7 @@ public final class ConfigValueFactory {
      *            name of origin file or brief description of what the value is
      * @return a new value
      */
-    public static ConfigValue fromAnyRef(final Object object, final String originDescription) {
+    public static ConfigValue fromAnyRef(Object object, String originDescription) {
         return ConfigImpl.fromAnyRef(object, originDescription);
     }
 
@@ -83,22 +83,22 @@ public final class ConfigValueFactory {
      * @param originDescription
      * @return a new {@link ConfigObject} value
      */
-    public static ConfigObject fromMap(final Map<String, ? extends Object> values,
-            final String originDescription) {
+    public static ConfigObject fromMap(Map<String, ? extends Object> values,
+            String originDescription) {
         return (ConfigObject) fromAnyRef(values, originDescription);
     }
 
     /**
      * See the fromAnyRef() documentation for details. This is a typesafe
-     * wrapper that only works on {@link java.util.Iterable} and returns
+     * wrapper that only works on {@link java.lang.Iterable} and returns
      * {@link ConfigList} rather than {@link ConfigValue}.
      *
      * @param values
      * @param originDescription
      * @return a new {@link ConfigList} value
      */
-    public static ConfigList fromIterable(final Iterable<? extends Object> values,
-            final String originDescription) {
+    public static ConfigList fromIterable(Iterable<? extends Object> values,
+            String originDescription) {
         return (ConfigList) fromAnyRef(values, originDescription);
     }
 
@@ -109,7 +109,7 @@ public final class ConfigValueFactory {
      * @param object
      * @return a new {@link ConfigValue}
      */
-    public static ConfigValue fromAnyRef(final Object object) {
+    public static ConfigValue fromAnyRef(Object object) {
         return fromAnyRef(object, null);
     }
 
@@ -124,7 +124,7 @@ public final class ConfigValueFactory {
      * @param values
      * @return a new {@link ConfigObject}
      */
-    public static ConfigObject fromMap(final Map<String, ? extends Object> values) {
+    public static ConfigObject fromMap(Map<String, ? extends Object> values) {
         return fromMap(values, null);
     }
 
@@ -135,7 +135,7 @@ public final class ConfigValueFactory {
      * @param values
      * @return a new {@link ConfigList}
      */
-    public static ConfigList fromIterable(final Iterable<? extends Object> values) {
+    public static ConfigList fromIterable(Iterable<? extends Object> values) {
         return fromIterable(values, null);
     }
 }

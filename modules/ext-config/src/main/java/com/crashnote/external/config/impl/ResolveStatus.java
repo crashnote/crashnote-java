@@ -12,15 +12,15 @@ enum ResolveStatus {
     UNRESOLVED, RESOLVED;
 
     final static ResolveStatus fromValues(
-            final Collection<? extends AbstractConfigValue> values) {
-        for (final AbstractConfigValue v : values) {
+            Collection<? extends AbstractConfigValue> values) {
+        for (AbstractConfigValue v : values) {
             if (v.resolveStatus() == ResolveStatus.UNRESOLVED)
                 return ResolveStatus.UNRESOLVED;
         }
         return ResolveStatus.RESOLVED;
     }
 
-    final static ResolveStatus fromBoolean(final boolean resolved) {
+    final static ResolveStatus fromBoolean(boolean resolved) {
         return resolved ? ResolveStatus.RESOLVED : ResolveStatus.UNRESOLVED;
     }
 }

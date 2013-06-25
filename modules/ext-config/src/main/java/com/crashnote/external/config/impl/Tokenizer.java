@@ -22,7 +22,7 @@ final class Tokenizer {
 
         final private Token problem;
 
-        ProblemException(final Token problem) {
+        ProblemException(Token problem) {
             this.problem = problem;
         }
 
@@ -31,7 +31,7 @@ final class Tokenizer {
         }
     }
 
-    private static String asString(final int codepoint) {
+    private static String asString(int codepoint) {
         if (codepoint == '\n')
             return "newline";
         else if (codepoint == '\t')
@@ -48,7 +48,7 @@ final class Tokenizer {
      * Tokenizes a Reader. Does not close the reader; you have to arrange to do
      * that after you're done with the returned iterator.
      */
-    static Iterator<Token> tokenize(final ConfigOrigin origin, final Reader input, final ConfigSyntax flavor) {
+    static Iterator<Token> tokenize(ConfigOrigin origin, Reader input, ConfigSyntax flavor) {
         return new TokenIterator(origin, input, flavor != ConfigSyntax.JSON);
     }
 
@@ -56,7 +56,7 @@ final class Tokenizer {
 
         private static class WhitespaceSaver {
             // has to be saved inside value concatenations
-            private final StringBuilder whitespace;
+            private StringBuilder whitespace;
             // may need to value-concat with next value
             private boolean lastTokenWasSimpleValue;
 
@@ -65,12 +65,12 @@ final class Tokenizer {
                 lastTokenWasSimpleValue = false;
             }
 
-            void add(final int c) {
+            void add(int c) {
                 if (lastTokenWasSimpleValue)
                     whitespace.appendCodePoint(c);
             }
 
-            Token check(final Token t, final ConfigOrigin baseOrigin, final int lineNumber) {
+            Token check(Token t, ConfigOrigin baseOrigin, int lineNumber) {
                 if (isSimpleValue(t)) {
                     return nextIsASimpleValue(baseOrigin, lineNumber);
                 } else {
@@ -90,13 +90,13 @@ final class Tokenizer {
             // called if the next token IS a simple value,
             // so creates a whitespace token if the previous
             // token also was.
-            private Token nextIsASimpleValue(final ConfigOrigin baseOrigin,
-                    final int lineNumber) {
+            private Token nextIsASimpleValue(ConfigOrigin baseOrigin,
+                    int lineNumber) {
                 if (lastTokenWasSimpleValue) {
                     // need to save whitespace between the two so
                     // the parser has the option to concatenate it.
                     if (whitespace.length() > 0) {
-                        final Token t = Tokens.newUnquotedText(
+                        Token t = Tokens.newUnquotedText(
                                 lineOrigin(baseOrigin, lineNumber),
                                 whitespace.toString());
                         whitespace.setLength(0); // reset
@@ -122,7 +122,7 @@ final class Tokenizer {
         final private WhitespaceSaver whitespaceSaver;
         final private boolean allowComments;
 
-        TokenIterator(final ConfigOrigin origin, final Reader input, final boolean allowComments) {
+        TokenIterator(ConfigOrigin origin, Reader input, boolean allowComments) {
             this.origin = (SimpleConfigOrigin) origin;
             this.input = input;
             this.allowComments = allowComments;
@@ -148,12 +148,12 @@ final class Tokenizer {
                             + e.getMessage(), e);
                 }
             } else {
-                final int c = buffer.pop();
+                int c = buffer.pop();
                 return c;
             }
         }
 
-        private void putBack(final int c) {
+        private void putBack(int c) {
             if (buffer.size() > 2) {
                 throw new ConfigException.BugOrBroken(
                         "bug: putBack() three times, undesirable look-ahead");
@@ -161,15 +161,15 @@ final class Tokenizer {
             buffer.push(c);
         }
 
-        static boolean isWhitespace(final int c) {
+        static boolean isWhitespace(int c) {
             return ConfigImplUtil.isWhitespace(c);
         }
 
-        static boolean isWhitespaceNotNewline(final int c) {
+        static boolean isWhitespaceNotNewline(int c) {
             return c != '\n' && ConfigImplUtil.isWhitespace(c);
         }
 
-        private boolean startOfComment(final int c) {
+        private boolean startOfComment(int c) {
             if (c == -1) {
                 return false;
             } else {
@@ -177,7 +177,7 @@ final class Tokenizer {
                     if (c == '#') {
                         return true;
                     } else if (c == '/') {
-                        final int maybeSecondSlash = nextCharRaw();
+                        int maybeSecondSlash = nextCharRaw();
                         // we want to predictably NOT consume any chars
                         putBack(maybeSecondSlash);
                         if (maybeSecondSlash == '/') {
@@ -195,9 +195,9 @@ final class Tokenizer {
         }
 
         // get next char, skipping non-newline whitespace
-        private int nextCharAfterWhitespace(final WhitespaceSaver saver) {
+        private int nextCharAfterWhitespace(WhitespaceSaver saver) {
             for (;;) {
-                final int c = nextCharRaw();
+                int c = nextCharRaw();
 
                 if (c == -1) {
                     return -1;
@@ -212,35 +212,35 @@ final class Tokenizer {
             }
         }
 
-        private ProblemException problem(final String message) {
+        private ProblemException problem(String message) {
             return problem("", message, null);
         }
 
-        private ProblemException problem(final String what, final String message) {
+        private ProblemException problem(String what, String message) {
             return problem(what, message, null);
         }
 
-        private ProblemException problem(final String what, final String message, final boolean suggestQuotes) {
+        private ProblemException problem(String what, String message, boolean suggestQuotes) {
             return problem(what, message, suggestQuotes, null);
         }
 
-        private ProblemException problem(final String what, final String message, final Throwable cause) {
+        private ProblemException problem(String what, String message, Throwable cause) {
             return problem(lineOrigin, what, message, cause);
         }
 
-        private ProblemException problem(final String what, final String message, final boolean suggestQuotes,
-                final Throwable cause) {
+        private ProblemException problem(String what, String message, boolean suggestQuotes,
+                Throwable cause) {
             return problem(lineOrigin, what, message, suggestQuotes, cause);
         }
 
-        private static ProblemException problem(final ConfigOrigin origin, final String what,
-                final String message,
-                final Throwable cause) {
+        private static ProblemException problem(ConfigOrigin origin, String what,
+                String message,
+                Throwable cause) {
             return problem(origin, what, message, false, cause);
         }
 
-        private static ProblemException problem(final ConfigOrigin origin, final String what, final String message,
-                final boolean suggestQuotes, final Throwable cause) {
+        private static ProblemException problem(ConfigOrigin origin, String what, String message,
+                boolean suggestQuotes, Throwable cause) {
             if (what == null || message == null)
                 throw new ConfigException.BugOrBroken(
                         "internal error, creating bad ProblemException");
@@ -248,27 +248,27 @@ final class Tokenizer {
                     cause));
         }
 
-        private static ProblemException problem(final ConfigOrigin origin, final String message) {
+        private static ProblemException problem(ConfigOrigin origin, String message) {
             return problem(origin, "", message, null);
         }
 
-        private static ConfigOrigin lineOrigin(final ConfigOrigin baseOrigin,
-                final int lineNumber) {
+        private static ConfigOrigin lineOrigin(ConfigOrigin baseOrigin,
+                int lineNumber) {
             return ((SimpleConfigOrigin) baseOrigin).setLineNumber(lineNumber);
         }
 
         // ONE char has always been consumed, either the # or the first /, but
         // not both slashes
-        private Token pullComment(final int firstChar) {
+        private Token pullComment(int firstChar) {
             if (firstChar == '/') {
-                final int discard = nextCharRaw();
+                int discard = nextCharRaw();
                 if (discard != '/')
                     throw new ConfigException.BugOrBroken("called pullComment but // not seen");
             }
 
-            final StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             for (;;) {
-                final int c = nextCharRaw();
+                int c = nextCharRaw();
                 if (c == -1 || c == '\n') {
                     putBack(c);
                     return Tokens.newComment(lineOrigin, sb.toString());
@@ -290,8 +290,8 @@ final class Tokenizer {
         // that parses as JSON is treated the JSON way and otherwise
         // we assume it's a string and let the parser sort it out.
         private Token pullUnquotedText() {
-            final ConfigOrigin origin = lineOrigin;
-            final StringBuilder sb = new StringBuilder();
+            ConfigOrigin origin = lineOrigin;
+            StringBuilder sb = new StringBuilder();
             int c = nextCharRaw();
             while (true) {
                 if (c == -1) {
@@ -310,13 +310,13 @@ final class Tokenizer {
                 // what is after them, as long as they are at the
                 // start of the unquoted token.
                 if (sb.length() == 4) {
-                    final String s = sb.toString();
+                    String s = sb.toString();
                     if (s.equals("true"))
                         return Tokens.newBoolean(origin, true);
                     else if (s.equals("null"))
                         return Tokens.newNull(origin);
                 } else if (sb.length() == 5) {
-                    final String s = sb.toString();
+                    String s = sb.toString();
                     if (s.equals("false"))
                         return Tokens.newBoolean(origin, false);
                 }
@@ -327,12 +327,12 @@ final class Tokenizer {
             // put back the char that ended the unquoted text
             putBack(c);
 
-            final String s = sb.toString();
+            String s = sb.toString();
             return Tokens.newUnquotedText(origin, s);
         }
 
-        private Token pullNumber(final int firstChar) throws ProblemException {
-            final StringBuilder sb = new StringBuilder();
+        private Token pullNumber(int firstChar) throws ProblemException {
+            StringBuilder sb = new StringBuilder();
             sb.appendCodePoint(firstChar);
             boolean containedDecimalOrE = false;
             int c = nextCharRaw();
@@ -345,7 +345,7 @@ final class Tokenizer {
             // the last character we looked at wasn't part of the number, put it
             // back
             putBack(c);
-            final String s = sb.toString();
+            String s = sb.toString();
             try {
                 if (containedDecimalOrE) {
                     // force floating point representation
@@ -359,8 +359,8 @@ final class Tokenizer {
             }
         }
 
-        private void pullEscapeSequence(final StringBuilder sb) throws ProblemException {
-            final int escaped = nextCharRaw();
+        private void pullEscapeSequence(StringBuilder sb) throws ProblemException {
+            int escaped = nextCharRaw();
             if (escaped == -1)
                 throw problem("End of input but backslash in string had nothing after it");
 
@@ -391,14 +391,14 @@ final class Tokenizer {
                 break;
             case 'u': {
                 // kind of absurdly slow, but screw it for now
-                final char[] a = new char[4];
+                char[] a = new char[4];
                 for (int i = 0; i < 4; ++i) {
-                    final int c = nextCharRaw();
+                    int c = nextCharRaw();
                     if (c == -1)
                         throw problem("End of input but expecting 4 hex digits for \\uXXXX escape");
                     a[i] = (char) c;
                 }
-                final String digits = new String(a);
+                String digits = new String(a);
                 try {
                     sb.appendCodePoint(Integer.parseInt(digits, 16));
                 } catch (NumberFormatException e) {
@@ -416,12 +416,12 @@ final class Tokenizer {
             }
         }
 
-        private void appendTripleQuotedString(final StringBuilder sb) throws ProblemException {
+        private void appendTripleQuotedString(StringBuilder sb) throws ProblemException {
             // we are after the opening triple quote and need to consume the
             // close triple
             int consecutiveQuotes = 0;
             for (;;) {
-                final int c = nextCharRaw();
+                int c = nextCharRaw();
 
                 if (c == '"') {
                     consecutiveQuotes += 1;
@@ -435,6 +435,11 @@ final class Tokenizer {
                     consecutiveQuotes = 0;
                     if (c == -1)
                         throw problem("End of input but triple-quoted string was still open");
+                    else if (c == '\n') {
+                        // keep the line number accurate
+                        lineNumber += 1;
+                        lineOrigin = origin.setLineNumber(lineNumber);
+                    }
                 }
 
                 sb.appendCodePoint(c);
@@ -443,7 +448,7 @@ final class Tokenizer {
 
         private Token pullQuotedString() throws ProblemException {
             // the open quote has already been consumed
-            final StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             int c = '\0'; // value doesn't get used
             do {
                 c = nextCharRaw();
@@ -464,7 +469,7 @@ final class Tokenizer {
 
             // maybe switch to triple-quoted string, sort of hacky...
             if (sb.length() == 0) {
-                final int third = nextCharRaw();
+                int third = nextCharRaw();
                 if (third == '"') {
                     appendTripleQuotedString(sb);
                 } else {
@@ -477,7 +482,7 @@ final class Tokenizer {
 
         private Token pullPlusEquals() throws ProblemException {
             // the initial '+' has already been consumed
-            final int c = nextCharRaw();
+            int c = nextCharRaw();
             if (c != '=') {
                 throw problem(asString(c), "'+' not followed by =, '" + asString(c)
                         + "' not allowed after '+'", true /* suggestQuotes */);
@@ -487,7 +492,7 @@ final class Tokenizer {
 
         private Token pullSubstitution() throws ProblemException {
             // the initial '$' has already been consumed
-            final ConfigOrigin origin = lineOrigin;
+            ConfigOrigin origin = lineOrigin;
             int c = nextCharRaw();
             if (c != '{') {
                 throw problem(asString(c), "'$' not followed by {, '" + asString(c)
@@ -502,8 +507,8 @@ final class Tokenizer {
                 putBack(c);
             }
 
-            final WhitespaceSaver saver = new WhitespaceSaver();
-            final List<Token> expression = new ArrayList<Token>();
+            WhitespaceSaver saver = new WhitespaceSaver();
+            List<Token> expression = new ArrayList<Token>();
 
             Token t;
             do {
@@ -519,7 +524,7 @@ final class Tokenizer {
                     throw problem(origin,
                             "Substitution ${ was not closed with a }");
                 } else {
-                    final Token whitespace = saver.check(t, origin, lineNumber);
+                    Token whitespace = saver.check(t, origin, lineNumber);
                     if (whitespace != null)
                         expression.add(whitespace);
                     expression.add(t);
@@ -529,13 +534,13 @@ final class Tokenizer {
             return Tokens.newSubstitution(origin, optional, expression);
         }
 
-        private Token pullNextToken(final WhitespaceSaver saver) throws ProblemException {
-            final int c = nextCharAfterWhitespace(saver);
+        private Token pullNextToken(WhitespaceSaver saver) throws ProblemException {
+            int c = nextCharAfterWhitespace(saver);
             if (c == -1) {
                 return Tokens.END;
             } else if (c == '\n') {
                 // newline tokens have the just-ended line number
-                final Token line = Tokens.newLine(lineOrigin);
+                Token line = Tokens.newLine(lineOrigin);
                 lineNumber += 1;
                 lineOrigin = origin.setLineNumber(lineNumber);
                 return line;
@@ -601,7 +606,7 @@ final class Tokenizer {
             }
         }
 
-        private static boolean isSimpleValue(final Token t) {
+        private static boolean isSimpleValue(Token t) {
             if (Tokens.isSubstitution(t) || Tokens.isUnquotedText(t)
                     || Tokens.isValue(t)) {
                 return true;
@@ -611,8 +616,8 @@ final class Tokenizer {
         }
 
         private void queueNextToken() throws ProblemException {
-            final Token t = pullNextToken(whitespaceSaver);
-            final Token whitespace = whitespaceSaver.check(t, origin, lineNumber);
+            Token t = pullNextToken(whitespaceSaver);
+            Token whitespace = whitespaceSaver.check(t, origin, lineNumber);
             if (whitespace != null)
                 tokens.add(whitespace);
 
@@ -626,7 +631,7 @@ final class Tokenizer {
 
         @Override
         public Token next() {
-            final Token t = tokens.remove();
+            Token t = tokens.remove();
             if (tokens.isEmpty() && t != Tokens.END) {
                 try {
                     queueNextToken();

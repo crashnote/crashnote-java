@@ -11,11 +11,11 @@ import com.crashnote.external.config.ConfigValueType;
 
 final class ConfigLong extends ConfigNumber implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     final private long value;
 
-    ConfigLong(final ConfigOrigin origin, final long value, final String originalText) {
+    ConfigLong(ConfigOrigin origin, long value, String originalText) {
         super(origin, originalText);
         this.value = value;
     }
@@ -32,7 +32,7 @@ final class ConfigLong extends ConfigNumber implements Serializable {
 
     @Override
     String transformToString() {
-        final String s = super.transformToString();
+        String s = super.transformToString();
         if (s == null)
             return Long.toString(value);
         else
@@ -50,7 +50,7 @@ final class ConfigLong extends ConfigNumber implements Serializable {
     }
 
     @Override
-    protected ConfigLong newCopy(final ConfigOrigin origin) {
+    protected ConfigLong newCopy(ConfigOrigin origin) {
         return new ConfigLong(origin, value, originalText);
     }
 

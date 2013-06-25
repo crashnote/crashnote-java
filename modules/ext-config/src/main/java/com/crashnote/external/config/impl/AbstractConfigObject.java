@@ -21,7 +21,7 @@ abstract class AbstractConfigObject extends AbstractConfigValue implements Confi
 
     final private SimpleConfig config;
 
-    protected AbstractConfigObject(final ConfigOrigin origin) {
+    protected AbstractConfigObject(ConfigOrigin origin) {
         super(origin);
         this.config = new SimpleConfig(this);
     }
@@ -61,7 +61,7 @@ abstract class AbstractConfigObject extends AbstractConfigValue implements Confi
      * @param key
      * @return the unmodified raw value or null
      */
-    protected final AbstractConfigValue peekAssumingResolved(final String key, final Path originalPath) {
+    protected final AbstractConfigValue peekAssumingResolved(String key, Path originalPath) {
         try {
             return attemptPeekWithPartialResolve(key);
         } catch (ConfigException.NotResolved e) {
@@ -91,7 +91,7 @@ abstract class AbstractConfigObject extends AbstractConfigValue implements Confi
      * @throws NotPossibleToResolve
      *             if context is not null and resolution fails
      */
-    protected AbstractConfigValue peekPath(final Path path, final ResolveContext context) throws NotPossibleToResolve {
+    protected AbstractConfigValue peekPath(Path path, ResolveContext context) throws NotPossibleToResolve {
         return peekPath(this, path, context);
     }
 
@@ -99,7 +99,7 @@ abstract class AbstractConfigObject extends AbstractConfigValue implements Confi
      * Looks up the path. Doesn't do any resolution, will throw if any is
      * needed.
      */
-    AbstractConfigValue peekPath(final Path path) {
+    AbstractConfigValue peekPath(Path path) {
         try {
             return peekPath(this, path, null);
         } catch (NotPossibleToResolve e) {
@@ -111,14 +111,14 @@ abstract class AbstractConfigObject extends AbstractConfigValue implements Confi
     // as a side effect, peekPath() will have to resolve all parents of the
     // child being peeked, but NOT the child itself. Caller has to resolve
     // the child itself if needed.
-    private static AbstractConfigValue peekPath(final AbstractConfigObject self, final Path path,
-            final ResolveContext context) throws NotPossibleToResolve {
+    private static AbstractConfigValue peekPath(AbstractConfigObject self, Path path,
+            ResolveContext context) throws NotPossibleToResolve {
         try {
             if (context != null) {
                 // walk down through the path resolving only things along that
                 // path, and then recursively call ourselves with no resolve
                 // context.
-                final AbstractConfigValue partiallyResolved = context.restrict(path).resolve(self);
+                AbstractConfigValue partiallyResolved = context.restrict(path).resolve(self);
                 if (partiallyResolved instanceof AbstractConfigObject) {
                     return peekPath((AbstractConfigObject) partiallyResolved, path, null);
                 } else {
@@ -128,8 +128,8 @@ abstract class AbstractConfigObject extends AbstractConfigValue implements Confi
             } else {
                 // with no resolver, we'll fail if anything along the path can't
                 // be looked at without resolving.
-                final Path next = path.remainder();
-                final AbstractConfigValue v = self.attemptPeekWithPartialResolve(path.first());
+                Path next = path.remainder();
+                AbstractConfigValue v = self.attemptPeekWithPartialResolve(path.first());
 
                 if (next == null) {
                     return v;
@@ -154,13 +154,13 @@ abstract class AbstractConfigObject extends AbstractConfigValue implements Confi
     protected abstract AbstractConfigObject newCopy(ResolveStatus status, ConfigOrigin origin);
 
     @Override
-    protected AbstractConfigObject newCopy(final ConfigOrigin origin) {
+    protected AbstractConfigObject newCopy(ConfigOrigin origin) {
         return newCopy(resolveStatus(), origin);
     }
 
     @Override
-    protected AbstractConfigObject constructDelayedMerge(final ConfigOrigin origin,
-            final List<AbstractConfigValue> stack) {
+    protected AbstractConfigObject constructDelayedMerge(ConfigOrigin origin,
+            List<AbstractConfigValue> stack) {
         return new ConfigDelayedMergeObject(origin, stack);
     }
 
@@ -168,19 +168,19 @@ abstract class AbstractConfigObject extends AbstractConfigValue implements Confi
     protected abstract AbstractConfigObject mergedWithObject(AbstractConfigObject fallback);
 
     @Override
-    public AbstractConfigObject withFallback(final ConfigMergeable mergeable) {
+    public AbstractConfigObject withFallback(ConfigMergeable mergeable) {
         return (AbstractConfigObject) super.withFallback(mergeable);
     }
 
     static ConfigOrigin mergeOrigins(
-            final Collection<? extends AbstractConfigValue> stack) {
+            Collection<? extends AbstractConfigValue> stack) {
         if (stack.isEmpty())
             throw new ConfigException.BugOrBroken(
                     "can't merge origins on empty list");
-        final List<ConfigOrigin> origins = new ArrayList<ConfigOrigin>();
+        List<ConfigOrigin> origins = new ArrayList<ConfigOrigin>();
         ConfigOrigin firstOrigin = null;
         int numMerged = 0;
-        for (final AbstractConfigValue v : stack) {
+        for (AbstractConfigValue v : stack) {
             if (firstOrigin == null)
                 firstOrigin = v.origin();
 
@@ -204,7 +204,7 @@ abstract class AbstractConfigObject extends AbstractConfigValue implements Confi
         return SimpleConfigOrigin.mergeOrigins(origins);
     }
 
-    static ConfigOrigin mergeOrigins(final AbstractConfigObject... stack) {
+    static ConfigOrigin mergeOrigins(AbstractConfigObject... stack) {
         return mergeOrigins(Arrays.asList(stack));
     }
 
@@ -220,7 +220,7 @@ abstract class AbstractConfigObject extends AbstractConfigValue implements Confi
     @Override
     protected abstract void render(StringBuilder sb, int indent, ConfigRenderOptions options);
 
-    private static UnsupportedOperationException weAreImmutable(final String method) {
+    private static UnsupportedOperationException weAreImmutable(String method) {
         return new UnsupportedOperationException("ConfigObject is immutable, you can't call Map."
                 + method);
     }
@@ -231,17 +231,17 @@ abstract class AbstractConfigObject extends AbstractConfigValue implements Confi
     }
 
     @Override
-    public ConfigValue put(final String arg0, final ConfigValue arg1) {
+    public ConfigValue put(String arg0, ConfigValue arg1) {
         throw weAreImmutable("put");
     }
 
     @Override
-    public void putAll(final Map<? extends String, ? extends ConfigValue> arg0) {
+    public void putAll(Map<? extends String, ? extends ConfigValue> arg0) {
         throw weAreImmutable("putAll");
     }
 
     @Override
-    public ConfigValue remove(final Object arg0) {
+    public ConfigValue remove(Object arg0) {
         throw weAreImmutable("remove");
     }
 }

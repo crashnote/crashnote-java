@@ -27,8 +27,8 @@ public final class ConfigParseOptions {
     final ConfigIncluder includer;
     final ClassLoader classLoader;
 
-    private ConfigParseOptions(final ConfigSyntax syntax, final String originDescription, final boolean allowMissing,
-            final ConfigIncluder includer, final ClassLoader classLoader) {
+    private ConfigParseOptions(ConfigSyntax syntax, String originDescription, boolean allowMissing,
+            ConfigIncluder includer, ClassLoader classLoader) {
         this.syntax = syntax;
         this.originDescription = originDescription;
         this.allowMissing = allowMissing;
@@ -48,7 +48,7 @@ public final class ConfigParseOptions {
      *            a syntax or {@code null} for best guess
      * @return options with the syntax set
      */
-    public ConfigParseOptions setSyntax(final ConfigSyntax syntax) {
+    public ConfigParseOptions setSyntax(ConfigSyntax syntax) {
         if (this.syntax == syntax)
             return this;
         else
@@ -70,7 +70,7 @@ public final class ConfigParseOptions {
      * @param originDescription
      * @return options with the origin description set
      */
-    public ConfigParseOptions setOriginDescription(final String originDescription) {
+    public ConfigParseOptions setOriginDescription(String originDescription) {
         // findbugs complains about == here but is wrong, do not "fix"
         if (this.originDescription == originDescription)
             return this;
@@ -87,7 +87,7 @@ public final class ConfigParseOptions {
     }
 
     /** this is package-private, not public API */
-    ConfigParseOptions withFallbackOriginDescription(final String originDescription) {
+    ConfigParseOptions withFallbackOriginDescription(String originDescription) {
         if (this.originDescription == null)
             return setOriginDescription(originDescription);
         else
@@ -102,7 +102,7 @@ public final class ConfigParseOptions {
      * @param allowMissing
      * @return options with the "allow missing" flag set
      */
-    public ConfigParseOptions setAllowMissing(final boolean allowMissing) {
+    public ConfigParseOptions setAllowMissing(boolean allowMissing) {
         if (this.allowMissing == allowMissing)
             return this;
         else
@@ -120,7 +120,7 @@ public final class ConfigParseOptions {
      * @param includer
      * @return new version of the parse options with different includer
      */
-    public ConfigParseOptions setIncluder(final ConfigIncluder includer) {
+    public ConfigParseOptions setIncluder(ConfigIncluder includer) {
         if (this.includer == includer)
             return this;
         else
@@ -128,7 +128,7 @@ public final class ConfigParseOptions {
                     includer, this.classLoader);
     }
 
-    public ConfigParseOptions prependIncluder(final ConfigIncluder includer) {
+    public ConfigParseOptions prependIncluder(ConfigIncluder includer) {
         if (this.includer == includer)
             return this;
         else if (this.includer != null)
@@ -137,7 +137,7 @@ public final class ConfigParseOptions {
             return setIncluder(includer);
     }
 
-    public ConfigParseOptions appendIncluder(final ConfigIncluder includer) {
+    public ConfigParseOptions appendIncluder(ConfigIncluder includer) {
         if (this.includer == includer)
             return this;
         else if (this.includer != null)
@@ -159,7 +159,7 @@ public final class ConfigParseOptions {
      *            loader
      * @return options with the class loader set
      */
-    public ConfigParseOptions setClassLoader(final ClassLoader loader) {
+    public ConfigParseOptions setClassLoader(ClassLoader loader) {
         if (this.classLoader == loader)
             return this;
         else

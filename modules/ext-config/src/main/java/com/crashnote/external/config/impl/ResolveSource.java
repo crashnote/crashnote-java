@@ -1,18 +1,3 @@
-/**
- * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.crashnote.external.config.impl;
 
 import java.util.IdentityHashMap;
@@ -33,19 +18,19 @@ final class ResolveSource {
     // mechanism instead of actually transforming the tree.
     final private Map<AbstractConfigValue, ResolveReplacer> replacements;
 
-    ResolveSource(final AbstractConfigObject root) {
+    ResolveSource(AbstractConfigObject root) {
         this.root = root;
         this.replacements = new IdentityHashMap<AbstractConfigValue, ResolveReplacer>();
     }
 
-    static private AbstractConfigValue findInObject(final AbstractConfigObject obj,
-            final ResolveContext context, final SubstitutionExpression subst)
+    static private AbstractConfigValue findInObject(AbstractConfigObject obj,
+            ResolveContext context, SubstitutionExpression subst)
             throws NotPossibleToResolve {
         return obj.peekPath(subst.path(), context);
     }
 
-    AbstractConfigValue lookupSubst(final ResolveContext context, final SubstitutionExpression subst,
-            final int prefixLength) throws NotPossibleToResolve {
+    AbstractConfigValue lookupSubst(ResolveContext context, SubstitutionExpression subst,
+            int prefixLength) throws NotPossibleToResolve {
         context.trace(subst);
         try {
             // First we look up the full path, which means relative to the
@@ -56,7 +41,7 @@ final class ResolveSource {
                 // Then we want to check relative to the root file. We don't
                 // want the prefix we were included at to be used when looking
                 // up env variables either.
-                final SubstitutionExpression unprefixed = subst.changePath(subst.path().subPath(
+                SubstitutionExpression unprefixed = subst.changePath(subst.path().subPath(
                         prefixLength));
 
                 // replace the debug trace path
@@ -83,22 +68,22 @@ final class ResolveSource {
         }
     }
 
-    void replace(final AbstractConfigValue value, final ResolveReplacer replacer) {
-        final ResolveReplacer old = replacements.put(value, replacer);
+    void replace(AbstractConfigValue value, ResolveReplacer replacer) {
+        ResolveReplacer old = replacements.put(value, replacer);
         if (old != null)
             throw new ConfigException.BugOrBroken("should not have replaced the same value twice: "
                     + value);
     }
 
-    void unreplace(final AbstractConfigValue value) {
-        final ResolveReplacer replacer = replacements.remove(value);
+    void unreplace(AbstractConfigValue value) {
+        ResolveReplacer replacer = replacements.remove(value);
         if (replacer == null)
             throw new ConfigException.BugOrBroken("unreplace() without replace(): " + value);
     }
 
-    private AbstractConfigValue replacement(final ResolveContext context, final AbstractConfigValue value)
+    private AbstractConfigValue replacement(ResolveContext context, AbstractConfigValue value)
             throws NotPossibleToResolve {
-        final ResolveReplacer replacer = replacements.get(value);
+        ResolveReplacer replacer = replacements.get(value);
         if (replacer == null) {
             return value;
         } else {
@@ -110,9 +95,9 @@ final class ResolveSource {
      * Conceptually, this is key.value().resolveSubstitutions() but using the
      * replacement for key.value() if any.
      */
-    AbstractConfigValue resolveCheckingReplacement(final ResolveContext context,
-            final AbstractConfigValue original) throws NotPossibleToResolve {
-        final AbstractConfigValue replacement;
+    AbstractConfigValue resolveCheckingReplacement(ResolveContext context,
+            AbstractConfigValue original) throws NotPossibleToResolve {
+        AbstractConfigValue replacement;
 
         replacement = replacement(context, original);
 
@@ -120,7 +105,7 @@ final class ResolveSource {
             // start over, checking if replacement was memoized
             return context.resolve(replacement);
         } else {
-            final AbstractConfigValue resolved;
+            AbstractConfigValue resolved;
 
             resolved = original.resolveSubstitutions(context);
 

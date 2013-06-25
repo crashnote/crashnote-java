@@ -11,11 +11,11 @@ class SimpleIncludeContext implements ConfigIncludeContext {
 
     private final Parseable parseable;
 
-    SimpleIncludeContext(final Parseable parseable) {
+    SimpleIncludeContext(Parseable parseable) {
         this.parseable = parseable;
     }
 
-    SimpleIncludeContext withParseable(final Parseable parseable) {
+    SimpleIncludeContext withParseable(Parseable parseable) {
         if (parseable == this.parseable)
             return this;
         else
@@ -23,7 +23,7 @@ class SimpleIncludeContext implements ConfigIncludeContext {
     }
 
     @Override
-    public ConfigParseable relativeTo(final String filename) {
+    public ConfigParseable relativeTo(String filename) {
         if (parseable != null)
             return parseable.relativeTo(filename);
         else

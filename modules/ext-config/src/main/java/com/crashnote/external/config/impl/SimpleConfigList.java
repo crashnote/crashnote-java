@@ -20,18 +20,18 @@ import com.crashnote.external.config.ConfigValueType;
 
 final class SimpleConfigList extends AbstractConfigValue implements ConfigList, Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     final private List<AbstractConfigValue> value;
     final private boolean resolved;
 
-    SimpleConfigList(final ConfigOrigin origin, final List<AbstractConfigValue> value) {
+    SimpleConfigList(ConfigOrigin origin, List<AbstractConfigValue> value) {
         this(origin, value, ResolveStatus
                 .fromValues(value));
     }
 
-    SimpleConfigList(final ConfigOrigin origin, final List<AbstractConfigValue> value,
-            final ResolveStatus status) {
+    SimpleConfigList(ConfigOrigin origin, List<AbstractConfigValue> value,
+            ResolveStatus status) {
         super(origin);
         this.value = value;
         this.resolved = status == ResolveStatus.RESOLVED;
@@ -49,8 +49,8 @@ final class SimpleConfigList extends AbstractConfigValue implements ConfigList, 
 
     @Override
     public List<Object> unwrapped() {
-        final List<Object> list = new ArrayList<Object>();
-        for (final AbstractConfigValue v : value) {
+        List<Object> list = new ArrayList<Object>();
+        for (AbstractConfigValue v : value) {
             list.add(v.unwrapped());
         }
         return list;
@@ -61,7 +61,7 @@ final class SimpleConfigList extends AbstractConfigValue implements ConfigList, 
         return ResolveStatus.fromBoolean(resolved);
     }
 
-    private SimpleConfigList modify(final NoExceptionsModifier modifier, final ResolveStatus newResolveStatus) {
+    private SimpleConfigList modify(NoExceptionsModifier modifier, ResolveStatus newResolveStatus) {
         try {
             return modifyMayThrow(modifier, newResolveStatus);
         } catch (RuntimeException e) {
@@ -71,13 +71,13 @@ final class SimpleConfigList extends AbstractConfigValue implements ConfigList, 
         }
     }
 
-    private SimpleConfigList modifyMayThrow(final Modifier modifier, final ResolveStatus newResolveStatus)
+    private SimpleConfigList modifyMayThrow(Modifier modifier, ResolveStatus newResolveStatus)
             throws Exception {
         // lazy-create for optimization
         List<AbstractConfigValue> changed = null;
         int i = 0;
-        for (final AbstractConfigValue v : value) {
-            final AbstractConfigValue modified = modifier.modifyChildMayThrow(null /* key */, v);
+        for (AbstractConfigValue v : value) {
+            AbstractConfigValue modified = modifier.modifyChildMayThrow(null /* key */, v);
 
             // lazy-create the new list if required
             if (changed == null && modified != v) {
@@ -117,7 +117,7 @@ final class SimpleConfigList extends AbstractConfigValue implements ConfigList, 
             try {
                 return modifyMayThrow(new Modifier() {
                     @Override
-                    public AbstractConfigValue modifyChildMayThrow(final String key, final AbstractConfigValue v)
+                    public AbstractConfigValue modifyChildMayThrow(String key, AbstractConfigValue v)
                             throws NotPossibleToResolve {
                         return context.resolve(v);
                     }
@@ -137,7 +137,7 @@ final class SimpleConfigList extends AbstractConfigValue implements ConfigList, 
     SimpleConfigList relativized(final Path prefix) {
         return modify(new NoExceptionsModifier() {
             @Override
-            public AbstractConfigValue modifyChild(final String key, final AbstractConfigValue v) {
+            public AbstractConfigValue modifyChild(String key, AbstractConfigValue v) {
                 return v.relativized(prefix);
             }
 
@@ -145,12 +145,12 @@ final class SimpleConfigList extends AbstractConfigValue implements ConfigList, 
     }
 
     @Override
-    protected boolean canEqual(final Object other) {
+    protected boolean canEqual(Object other) {
         return other instanceof SimpleConfigList;
     }
 
     @Override
-    public boolean equals(final Object other) {
+    public boolean equals(Object other) {
         // note that "origin" is deliberately NOT part of equality
         if (other instanceof SimpleConfigList) {
             // optimization to avoid unwrapped() for two ConfigList
@@ -167,14 +167,14 @@ final class SimpleConfigList extends AbstractConfigValue implements ConfigList, 
     }
 
     @Override
-    protected void render(final StringBuilder sb, final int indent, final ConfigRenderOptions options) {
+    protected void render(StringBuilder sb, int indent, ConfigRenderOptions options) {
         if (value.isEmpty()) {
             sb.append("[]");
         } else {
             sb.append("[");
             if (options.getFormatted())
                 sb.append('\n');
-            for (final AbstractConfigValue v : value) {
+            for (AbstractConfigValue v : value) {
                 if (options.getOriginComments()) {
                     indent(sb, indent + 1, options);
                     sb.append("# ");
@@ -182,7 +182,7 @@ final class SimpleConfigList extends AbstractConfigValue implements ConfigList, 
                     sb.append("\n");
                 }
                 if (options.getComments()) {
-                    for (final String comment : v.origin().comments()) {
+                    for (String comment : v.origin().comments()) {
                         indent(sb, indent + 1, options);
                         sb.append("# ");
                         sb.append(comment);
@@ -207,22 +207,22 @@ final class SimpleConfigList extends AbstractConfigValue implements ConfigList, 
     }
 
     @Override
-    public boolean contains(final Object o) {
+    public boolean contains(Object o) {
         return value.contains(o);
     }
 
     @Override
-    public boolean containsAll(final Collection<?> c) {
+    public boolean containsAll(Collection<?> c) {
         return value.containsAll(c);
     }
 
     @Override
-    public AbstractConfigValue get(final int index) {
+    public AbstractConfigValue get(int index) {
         return value.get(index);
     }
 
     @Override
-    public int indexOf(final Object o) {
+    public int indexOf(Object o) {
         return value.indexOf(o);
     }
 
@@ -254,7 +254,7 @@ final class SimpleConfigList extends AbstractConfigValue implements ConfigList, 
     }
 
     @Override
-    public int lastIndexOf(final Object o) {
+    public int lastIndexOf(Object o) {
         return value.lastIndexOf(o);
     }
 
@@ -277,7 +277,7 @@ final class SimpleConfigList extends AbstractConfigValue implements ConfigList, 
             }
 
             @Override
-            public void add(final ConfigValue arg0) {
+            public void add(ConfigValue arg0) {
                 throw weAreImmutable("listIterator().add");
             }
 
@@ -302,7 +302,7 @@ final class SimpleConfigList extends AbstractConfigValue implements ConfigList, 
             }
 
             @Override
-            public void set(final ConfigValue arg0) {
+            public void set(ConfigValue arg0) {
                 throw weAreImmutable("listIterator().set");
             }
         };
@@ -314,7 +314,7 @@ final class SimpleConfigList extends AbstractConfigValue implements ConfigList, 
     }
 
     @Override
-    public ListIterator<ConfigValue> listIterator(final int index) {
+    public ListIterator<ConfigValue> listIterator(int index) {
         return wrapListIterator(value.listIterator(index));
     }
 
@@ -324,10 +324,10 @@ final class SimpleConfigList extends AbstractConfigValue implements ConfigList, 
     }
 
     @Override
-    public List<ConfigValue> subList(final int fromIndex, final int toIndex) {
-        final List<ConfigValue> list = new ArrayList<ConfigValue>();
+    public List<ConfigValue> subList(int fromIndex, int toIndex) {
+        List<ConfigValue> list = new ArrayList<ConfigValue>();
         // yay bloat caused by lack of type variance
-        for (final AbstractConfigValue v : value.subList(fromIndex, toIndex)) {
+        for (AbstractConfigValue v : value.subList(fromIndex, toIndex)) {
             list.add(v);
         }
         return list;
@@ -339,32 +339,32 @@ final class SimpleConfigList extends AbstractConfigValue implements ConfigList, 
     }
 
     @Override
-    public <T> T[] toArray(final T[] a) {
+    public <T> T[] toArray(T[] a) {
         return value.toArray(a);
     }
 
-    private static UnsupportedOperationException weAreImmutable(final String method) {
+    private static UnsupportedOperationException weAreImmutable(String method) {
         return new UnsupportedOperationException(
                 "ConfigList is immutable, you can't call List.'" + method + "'");
     }
 
     @Override
-    public boolean add(final ConfigValue e) {
+    public boolean add(ConfigValue e) {
         throw weAreImmutable("add");
     }
 
     @Override
-    public void add(final int index, final ConfigValue element) {
+    public void add(int index, ConfigValue element) {
         throw weAreImmutable("add");
     }
 
     @Override
-    public boolean addAll(final Collection<? extends ConfigValue> c) {
+    public boolean addAll(Collection<? extends ConfigValue> c) {
         throw weAreImmutable("addAll");
     }
 
     @Override
-    public boolean addAll(final int index, final Collection<? extends ConfigValue> c) {
+    public boolean addAll(int index, Collection<? extends ConfigValue> c) {
         throw weAreImmutable("addAll");
     }
 
@@ -374,38 +374,38 @@ final class SimpleConfigList extends AbstractConfigValue implements ConfigList, 
     }
 
     @Override
-    public boolean remove(final Object o) {
+    public boolean remove(Object o) {
         throw weAreImmutable("remove");
     }
 
     @Override
-    public ConfigValue remove(final int index) {
+    public ConfigValue remove(int index) {
         throw weAreImmutable("remove");
     }
 
     @Override
-    public boolean removeAll(final Collection<?> c) {
+    public boolean removeAll(Collection<?> c) {
         throw weAreImmutable("removeAll");
     }
 
     @Override
-    public boolean retainAll(final Collection<?> c) {
+    public boolean retainAll(Collection<?> c) {
         throw weAreImmutable("retainAll");
     }
 
     @Override
-    public ConfigValue set(final int index, final ConfigValue element) {
+    public ConfigValue set(int index, ConfigValue element) {
         throw weAreImmutable("set");
     }
 
     @Override
-    protected SimpleConfigList newCopy(final ConfigOrigin newOrigin) {
+    protected SimpleConfigList newCopy(ConfigOrigin newOrigin) {
         return new SimpleConfigList(newOrigin, value);
     }
 
-    final SimpleConfigList concatenate(final SimpleConfigList other) {
-        final ConfigOrigin combinedOrigin = SimpleConfigOrigin.mergeOrigins(origin(), other.origin());
-        final List<AbstractConfigValue> combined = new ArrayList<AbstractConfigValue>(value.size()
+    final SimpleConfigList concatenate(SimpleConfigList other) {
+        ConfigOrigin combinedOrigin = SimpleConfigOrigin.mergeOrigins(origin(), other.origin());
+        List<AbstractConfigValue> combined = new ArrayList<AbstractConfigValue>(value.size()
                 + other.value.size());
         combined.addAll(value);
         combined.addAll(other.value);

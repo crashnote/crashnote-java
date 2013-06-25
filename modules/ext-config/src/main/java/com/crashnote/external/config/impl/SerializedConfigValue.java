@@ -66,7 +66,7 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
         ORIGIN_NULL_URL,
         ORIGIN_NULL_COMMENTS;
 
-        static SerializedField forInt(final int b) {
+        static SerializedField forInt(int b) {
             if (b < values().length)
                 return values()[b];
             else
@@ -87,19 +87,19 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
 
         ConfigValueType configType;
 
-        SerializedValueType(final ConfigValueType configType) {
+        SerializedValueType(ConfigValueType configType) {
             this.configType = configType;
         }
 
-        static SerializedValueType forInt(final int b) {
+        static SerializedValueType forInt(int b) {
             if (b < values().length)
                 return values()[b];
             else
                 return null;
         }
 
-        static SerializedValueType forValue(final ConfigValue value) {
-            final ConfigValueType t = value.valueType();
+        static SerializedValueType forValue(ConfigValue value) {
+            ConfigValueType t = value.valueType();
             if (t == ConfigValueType.NUMBER) {
                 if (value instanceof ConfigInt)
                     return INT;
@@ -108,7 +108,7 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
                 else if (value instanceof ConfigDouble)
                     return DOUBLE;
             } else {
-                for (final SerializedValueType st : values()) {
+                for (SerializedValueType st : values()) {
                     if (st.configType == t)
                         return st;
                 }
@@ -126,13 +126,13 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
         super(null);
     }
 
-    SerializedConfigValue(final ConfigValue value) {
+    SerializedConfigValue(ConfigValue value) {
         this();
         this.value = value;
         this.wasConfig = false;
     }
 
-    SerializedConfigValue(final Config conf) {
+    SerializedConfigValue(Config conf) {
         this(conf.root());
         this.wasConfig = true;
     }
@@ -151,7 +151,7 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
         final ByteArrayOutputStream bytes;
         final DataOutput data;
 
-        FieldOut(final SerializedField code) {
+        FieldOut(SerializedField code) {
             this.code = code;
             this.bytes = new ByteArrayOutputStream();
             this.data = new DataOutputStream(bytes);
@@ -160,7 +160,7 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
 
     // this is a separate function to prevent bugs writing to the
     // outer stream instead of field.data
-    private static void writeOriginField(final DataOutput out, final SerializedField code, final Object v)
+    private static void writeOriginField(DataOutput out, SerializedField code, Object v)
             throws IOException {
         switch (code) {
         case ORIGIN_DESCRIPTION:
@@ -179,11 +179,11 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
             out.writeUTF((String) v);
             break;
         case ORIGIN_COMMENTS:
-            @SuppressWarnings("unchecked") final
+            @SuppressWarnings("unchecked")
             List<String> list = (List<String>) v;
-            final int size = list.size();
+            int size = list.size();
             out.writeInt(size);
-            for (final String s : list) {
+            for (String s : list) {
                 out.writeUTF(s);
             }
             break;
@@ -197,12 +197,12 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
     }
 
     // not private because we use it to serialize ConfigException
-    static void writeOrigin(final DataOutput out, final SimpleConfigOrigin origin,
-            final SimpleConfigOrigin baseOrigin) throws IOException {
-        final Map<SerializedField, Object> m = origin.toFieldsDelta(baseOrigin);
-        for (final Map.Entry<SerializedField, Object> e : m.entrySet()) {
-            final FieldOut field = new FieldOut(e.getKey());
-            final Object v = e.getValue();
+    static void writeOrigin(DataOutput out, SimpleConfigOrigin origin,
+            SimpleConfigOrigin baseOrigin) throws IOException {
+        Map<SerializedField, Object> m = origin.toFieldsDelta(baseOrigin);
+        for (Map.Entry<SerializedField, Object> e : m.entrySet()) {
+            FieldOut field = new FieldOut(e.getKey());
+            Object v = e.getValue();
             writeOriginField(field.data, field.code, v);
             writeField(out, field);
         }
@@ -210,12 +210,12 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
     }
 
     // not private because we use it to deserialize ConfigException
-    static SimpleConfigOrigin readOrigin(final DataInput in, final SimpleConfigOrigin baseOrigin)
+    static SimpleConfigOrigin readOrigin(DataInput in, SimpleConfigOrigin baseOrigin)
             throws IOException {
-        final Map<SerializedField, Object> m = new EnumMap<SerializedField, Object>(SerializedField.class);
+        Map<SerializedField, Object> m = new EnumMap<SerializedField, Object>(SerializedField.class);
         while (true) {
             Object v = null;
-            final SerializedField field = readCode(in);
+            SerializedField field = readCode(in);
             switch (field) {
             case END_MARKER:
                 return SimpleConfigOrigin.fromBase(baseOrigin, m);
@@ -241,8 +241,8 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
                 break;
             case ORIGIN_COMMENTS:
                 in.readInt(); // discard length
-                final int size = in.readInt();
-                final List<String> list = new ArrayList<String>(size);
+                int size = in.readInt();
+                List<String> list = new ArrayList<String>(size);
                 for (int i = 0; i < size; ++i) {
                     list.add(in.readUTF());
                 }
@@ -269,8 +269,8 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
         }
     }
 
-    private static void writeValueData(final DataOutput out, final ConfigValue value) throws IOException {
-        final SerializedValueType st = SerializedValueType.forValue(value);
+    private static void writeValueData(DataOutput out, ConfigValue value) throws IOException {
+        SerializedValueType st = SerializedValueType.forValue(value);
         out.writeByte(st.ordinal());
         switch (st) {
         case BOOLEAN:
@@ -295,16 +295,16 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
             out.writeUTF(((ConfigString) value).unwrapped());
             break;
         case LIST:
-            final ConfigList list = (ConfigList) value;
+            ConfigList list = (ConfigList) value;
             out.writeInt(list.size());
-            for (final ConfigValue v : list) {
+            for (ConfigValue v : list) {
                 writeValue(out, v, (SimpleConfigOrigin) list.origin());
             }
             break;
         case OBJECT:
-            final ConfigObject obj = (ConfigObject) value;
+            ConfigObject obj = (ConfigObject) value;
             out.writeInt(obj.size());
-            for (final Map.Entry<String, ConfigValue> e : obj.entrySet()) {
+            for (Map.Entry<String, ConfigValue> e : obj.entrySet()) {
                 out.writeUTF(e.getKey());
                 writeValue(out, e.getValue(), (SimpleConfigOrigin) obj.origin());
             }
@@ -312,10 +312,10 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
         }
     }
 
-    private static AbstractConfigValue readValueData(final DataInput in, final SimpleConfigOrigin origin)
+    private static AbstractConfigValue readValueData(DataInput in, SimpleConfigOrigin origin)
             throws IOException {
-        final int stb = in.readUnsignedByte();
-        final SerializedValueType st = SerializedValueType.forInt(stb);
+        int stb = in.readUnsignedByte();
+        SerializedValueType st = SerializedValueType.forInt(stb);
         if (st == null)
             throw new IOException("Unknown serialized value type: " + stb);
         switch (st) {
@@ -324,33 +324,33 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
         case NULL:
             return new ConfigNull(origin);
         case INT:
-            final int vi = in.readInt();
-            final String si = in.readUTF();
+            int vi = in.readInt();
+            String si = in.readUTF();
             return new ConfigInt(origin, vi, si);
         case LONG:
-            final long vl = in.readLong();
-            final String sl = in.readUTF();
+            long vl = in.readLong();
+            String sl = in.readUTF();
             return new ConfigLong(origin, vl, sl);
         case DOUBLE:
-            final double vd = in.readDouble();
-            final String sd = in.readUTF();
+            double vd = in.readDouble();
+            String sd = in.readUTF();
             return new ConfigDouble(origin, vd, sd);
         case STRING:
             return new ConfigString(origin, in.readUTF());
         case LIST:
-            final int listSize = in.readInt();
-            final List<AbstractConfigValue> list = new ArrayList<AbstractConfigValue>(listSize);
+            int listSize = in.readInt();
+            List<AbstractConfigValue> list = new ArrayList<AbstractConfigValue>(listSize);
             for (int i = 0; i < listSize; ++i) {
-                final AbstractConfigValue v = readValue(in, origin);
+                AbstractConfigValue v = readValue(in, origin);
                 list.add(v);
             }
             return new SimpleConfigList(origin, list);
         case OBJECT:
-            final int mapSize = in.readInt();
-            final Map<String, AbstractConfigValue> map = new HashMap<String, AbstractConfigValue>(mapSize);
+            int mapSize = in.readInt();
+            Map<String, AbstractConfigValue> map = new HashMap<String, AbstractConfigValue>(mapSize);
             for (int i = 0; i < mapSize; ++i) {
-                final String key = in.readUTF();
-                final AbstractConfigValue v = readValue(in, origin);
+                String key = in.readUTF();
+                AbstractConfigValue v = readValue(in, origin);
                 map.put(key, v);
             }
             return new SimpleConfigObject(origin, map);
@@ -358,26 +358,26 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
         throw new IOException("Unhandled serialized value type: " + st);
     }
 
-    private static void writeValue(final DataOutput out, final ConfigValue value, final SimpleConfigOrigin baseOrigin)
+    private static void writeValue(DataOutput out, ConfigValue value, SimpleConfigOrigin baseOrigin)
             throws IOException {
-        final FieldOut origin = new FieldOut(SerializedField.VALUE_ORIGIN);
+        FieldOut origin = new FieldOut(SerializedField.VALUE_ORIGIN);
         writeOrigin(origin.data, (SimpleConfigOrigin) value.origin(),
                 baseOrigin);
         writeField(out, origin);
 
-        final FieldOut data = new FieldOut(SerializedField.VALUE_DATA);
+        FieldOut data = new FieldOut(SerializedField.VALUE_DATA);
         writeValueData(data.data, value);
         writeField(out, data);
 
         writeEndMarker(out);
     }
 
-    private static AbstractConfigValue readValue(final DataInput in, final SimpleConfigOrigin baseOrigin)
+    private static AbstractConfigValue readValue(DataInput in, SimpleConfigOrigin baseOrigin)
             throws IOException {
         AbstractConfigValue value = null;
         SimpleConfigOrigin origin = null;
         while (true) {
-            final SerializedField code = readCode(in);
+            SerializedField code = readCode(in);
             if (code == SerializedField.END_MARKER) {
                 if (value == null)
                     throw new IOException("No value data found in serialization of value");
@@ -397,37 +397,37 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
         }
     }
 
-    private static void writeField(final DataOutput out, final FieldOut field) throws IOException {
-        final byte[] bytes = field.bytes.toByteArray();
+    private static void writeField(DataOutput out, FieldOut field) throws IOException {
+        byte[] bytes = field.bytes.toByteArray();
         out.writeByte(field.code.ordinal());
         out.writeInt(bytes.length);
         out.write(bytes);
     }
 
-    private static void writeEndMarker(final DataOutput out) throws IOException {
+    private static void writeEndMarker(DataOutput out) throws IOException {
         out.writeByte(SerializedField.END_MARKER.ordinal());
     }
 
-    private static SerializedField readCode(final DataInput in) throws IOException {
-        final int c = in.readUnsignedByte();
+    private static SerializedField readCode(DataInput in) throws IOException {
+        int c = in.readUnsignedByte();
         if (c == SerializedField.UNKNOWN.ordinal())
             throw new IOException("field code " + c + " is not supposed to be on the wire");
         return SerializedField.forInt(c);
     }
 
-    private static void skipField(final DataInput in) throws IOException {
-        final int len = in.readInt();
+    private static void skipField(DataInput in) throws IOException {
+        int len = in.readInt();
         // skipBytes doesn't have to block
-        final int skipped = in.skipBytes(len);
+        int skipped = in.skipBytes(len);
         if (skipped < len) {
             // wastefully use readFully() if skipBytes didn't work
-            final byte[] bytes = new byte[(len - skipped)];
+            byte[] bytes = new byte[(len - skipped)];
             in.readFully(bytes);
         }
     }
 
     @Override
-    public void writeExternal(final ObjectOutput out) throws IOException {
+    public void writeExternal(ObjectOutput out) throws IOException {
         if (((AbstractConfigValue) value).resolveStatus() != ResolveStatus.RESOLVED)
             throw new NotSerializableException(
                     "tried to serialize a value with unresolved substitutions, need to Config#resolve() first, see API docs");
@@ -443,9 +443,9 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
     }
 
     @Override
-    public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         while (true) {
-            final SerializedField code = readCode(in);
+            SerializedField code = readCode(in);
             if (code == SerializedField.END_MARKER) {
                 return;
             } else if (code == SerializedField.ROOT_VALUE) {
@@ -477,7 +477,7 @@ class SerializedConfigValue extends AbstractConfigValue implements Externalizabl
     }
 
     @Override
-    protected SerializedConfigValue newCopy(final ConfigOrigin origin) {
+    protected SerializedConfigValue newCopy(ConfigOrigin origin) {
         throw shouldNotBeUsed();
     }
 }

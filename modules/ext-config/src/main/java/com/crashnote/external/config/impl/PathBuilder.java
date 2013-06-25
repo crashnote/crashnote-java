@@ -22,13 +22,13 @@ final class PathBuilder {
                     "Adding to PathBuilder after getting result");
     }
 
-    void appendKey(final String key) {
+    void appendKey(String key) {
         checkCanAppend();
 
         keys.push(key);
     }
 
-    void appendPath(final Path path) {
+    void appendPath(Path path) {
         checkCanAppend();
 
         String first = path.first();
@@ -50,7 +50,7 @@ final class PathBuilder {
         if (result == null) {
             Path remainder = null;
             while (!keys.isEmpty()) {
-                final String key = keys.pop();
+                String key = keys.pop();
                 remainder = new Path(key, remainder);
             }
             result = remainder;

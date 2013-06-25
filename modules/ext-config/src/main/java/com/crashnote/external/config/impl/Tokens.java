@@ -15,7 +15,7 @@ final class Tokens {
 
         final private AbstractConfigValue value;
 
-        Value(final AbstractConfigValue value) {
+        Value(AbstractConfigValue value) {
             super(TokenType.VALUE, value.origin());
             this.value = value;
         }
@@ -30,12 +30,12 @@ final class Tokens {
         }
 
         @Override
-        protected boolean canEqual(final Object other) {
+        protected boolean canEqual(Object other) {
             return other instanceof Value;
         }
 
         @Override
-        public boolean equals(final Object other) {
+        public boolean equals(Object other) {
             return super.equals(other) && ((Value) other).value.equals(value);
         }
 
@@ -46,7 +46,7 @@ final class Tokens {
     }
 
     static private class Line extends Token {
-        Line(final ConfigOrigin origin) {
+        Line(ConfigOrigin origin) {
             super(TokenType.NEWLINE, origin);
         }
 
@@ -56,12 +56,12 @@ final class Tokens {
         }
 
         @Override
-        protected boolean canEqual(final Object other) {
+        protected boolean canEqual(Object other) {
             return other instanceof Line;
         }
 
         @Override
-        public boolean equals(final Object other) {
+        public boolean equals(Object other) {
             return super.equals(other) && ((Line) other).lineNumber() == lineNumber();
         }
 
@@ -75,7 +75,7 @@ final class Tokens {
     static private class UnquotedText extends Token {
         final private String value;
 
-        UnquotedText(final ConfigOrigin origin, final String s) {
+        UnquotedText(ConfigOrigin origin, String s) {
             super(TokenType.UNQUOTED_TEXT, origin);
             this.value = s;
         }
@@ -90,12 +90,12 @@ final class Tokens {
         }
 
         @Override
-        protected boolean canEqual(final Object other) {
+        protected boolean canEqual(Object other) {
             return other instanceof UnquotedText;
         }
 
         @Override
-        public boolean equals(final Object other) {
+        public boolean equals(Object other) {
             return super.equals(other)
                     && ((UnquotedText) other).value.equals(value);
         }
@@ -112,8 +112,8 @@ final class Tokens {
         final private boolean suggestQuotes;
         final private Throwable cause;
 
-        Problem(final ConfigOrigin origin, final String what, final String message, final boolean suggestQuotes,
-                final Throwable cause) {
+        Problem(ConfigOrigin origin, String what, String message, boolean suggestQuotes,
+                Throwable cause) {
             super(TokenType.PROBLEM, origin);
             this.what = what;
             this.message = message;
@@ -139,7 +139,7 @@ final class Tokens {
 
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             sb.append('\'');
             sb.append(what);
             sb.append('\'');
@@ -150,12 +150,12 @@ final class Tokens {
         }
 
         @Override
-        protected boolean canEqual(final Object other) {
+        protected boolean canEqual(Object other) {
             return other instanceof Problem;
         }
 
         @Override
-        public boolean equals(final Object other) {
+        public boolean equals(Object other) {
             return super.equals(other) && ((Problem) other).what.equals(what)
                     && ((Problem) other).message.equals(message)
                     && ((Problem) other).suggestQuotes == suggestQuotes
@@ -177,7 +177,7 @@ final class Tokens {
     static private class Comment extends Token {
         final private String text;
 
-        Comment(final ConfigOrigin origin, final String text) {
+        Comment(ConfigOrigin origin, String text) {
             super(TokenType.COMMENT, origin);
             this.text = text;
         }
@@ -188,7 +188,7 @@ final class Tokens {
 
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             sb.append("'#");
             sb.append(text);
             sb.append("' (COMMENT)");
@@ -196,12 +196,12 @@ final class Tokens {
         }
 
         @Override
-        protected boolean canEqual(final Object other) {
+        protected boolean canEqual(Object other) {
             return other instanceof Comment;
         }
 
         @Override
-        public boolean equals(final Object other) {
+        public boolean equals(Object other) {
             return super.equals(other) && ((Comment) other).text.equals(text);
         }
 
@@ -218,7 +218,7 @@ final class Tokens {
         final private boolean optional;
         final private List<Token> value;
 
-        Substitution(final ConfigOrigin origin, final boolean optional, final List<Token> expression) {
+        Substitution(ConfigOrigin origin, boolean optional, List<Token> expression) {
             super(TokenType.SUBSTITUTION, origin);
             this.optional = optional;
             this.value = expression;
@@ -234,20 +234,20 @@ final class Tokens {
 
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder();
-            for (final Token t : value) {
+            StringBuilder sb = new StringBuilder();
+            for (Token t : value) {
                 sb.append(t.toString());
             }
             return "'${" + sb.toString() + "}'";
         }
 
         @Override
-        protected boolean canEqual(final Object other) {
+        protected boolean canEqual(Object other) {
             return other instanceof Substitution;
         }
 
         @Override
-        public boolean equals(final Object other) {
+        public boolean equals(Object other) {
             return super.equals(other)
                     && ((Substitution) other).value.equals(value);
         }
@@ -258,11 +258,11 @@ final class Tokens {
         }
     }
 
-    static boolean isValue(final Token token) {
+    static boolean isValue(Token token) {
         return token instanceof Value;
     }
 
-    static AbstractConfigValue getValue(final Token token) {
+    static AbstractConfigValue getValue(Token token) {
         if (token instanceof Value) {
             return ((Value) token).value();
         } else {
@@ -271,19 +271,19 @@ final class Tokens {
         }
     }
 
-    static boolean isValueWithType(final Token t, final ConfigValueType valueType) {
+    static boolean isValueWithType(Token t, ConfigValueType valueType) {
         return isValue(t) && getValue(t).valueType() == valueType;
     }
 
-    static boolean isNewline(final Token token) {
+    static boolean isNewline(Token token) {
         return token instanceof Line;
     }
 
-    static boolean isProblem(final Token token) {
+    static boolean isProblem(Token token) {
         return token instanceof Problem;
     }
 
-    static String getProblemWhat(final Token token) {
+    static String getProblemWhat(Token token) {
         if (token instanceof Problem) {
             return ((Problem) token).what();
         } else {
@@ -291,7 +291,7 @@ final class Tokens {
         }
     }
 
-    static String getProblemMessage(final Token token) {
+    static String getProblemMessage(Token token) {
         if (token instanceof Problem) {
             return ((Problem) token).message();
         } else {
@@ -299,7 +299,7 @@ final class Tokens {
         }
     }
 
-    static boolean getProblemSuggestQuotes(final Token token) {
+    static boolean getProblemSuggestQuotes(Token token) {
         if (token instanceof Problem) {
             return ((Problem) token).suggestQuotes();
         } else {
@@ -308,7 +308,7 @@ final class Tokens {
         }
     }
 
-    static Throwable getProblemCause(final Token token) {
+    static Throwable getProblemCause(Token token) {
         if (token instanceof Problem) {
             return ((Problem) token).cause();
         } else {
@@ -316,11 +316,11 @@ final class Tokens {
         }
     }
 
-    static boolean isComment(final Token token) {
+    static boolean isComment(Token token) {
         return token instanceof Comment;
     }
 
-    static String getCommentText(final Token token) {
+    static String getCommentText(Token token) {
         if (token instanceof Comment) {
             return ((Comment) token).text();
         } else {
@@ -328,11 +328,11 @@ final class Tokens {
         }
     }
 
-    static boolean isUnquotedText(final Token token) {
+    static boolean isUnquotedText(Token token) {
         return token instanceof UnquotedText;
     }
 
-    static String getUnquotedText(final Token token) {
+    static String getUnquotedText(Token token) {
         if (token instanceof UnquotedText) {
             return ((UnquotedText) token).value();
         } else {
@@ -341,11 +341,11 @@ final class Tokens {
         }
     }
 
-    static boolean isSubstitution(final Token token) {
+    static boolean isSubstitution(Token token) {
         return token instanceof Substitution;
     }
 
-    static List<Token> getSubstitutionPathExpression(final Token token) {
+    static List<Token> getSubstitutionPathExpression(Token token) {
         if (token instanceof Substitution) {
             return ((Substitution) token).value();
         } else {
@@ -354,7 +354,7 @@ final class Tokens {
         }
     }
 
-    static boolean getSubstitutionOptional(final Token token) {
+    static boolean getSubstitutionOptional(Token token) {
         if (token instanceof Substitution) {
             return ((Substitution) token).optional();
         } else {
@@ -374,56 +374,56 @@ final class Tokens {
     final static Token CLOSE_SQUARE = Token.newWithoutOrigin(TokenType.CLOSE_SQUARE, "']'");
     final static Token PLUS_EQUALS = Token.newWithoutOrigin(TokenType.PLUS_EQUALS, "'+='");
 
-    static Token newLine(final ConfigOrigin origin) {
+    static Token newLine(ConfigOrigin origin) {
         return new Line(origin);
     }
 
-    static Token newProblem(final ConfigOrigin origin, final String what, final String message,
-            final boolean suggestQuotes, final Throwable cause) {
+    static Token newProblem(ConfigOrigin origin, String what, String message,
+            boolean suggestQuotes, Throwable cause) {
         return new Problem(origin, what, message, suggestQuotes, cause);
     }
 
-    static Token newComment(final ConfigOrigin origin, final String text) {
+    static Token newComment(ConfigOrigin origin, String text) {
         return new Comment(origin, text);
     }
 
-    static Token newUnquotedText(final ConfigOrigin origin, final String s) {
+    static Token newUnquotedText(ConfigOrigin origin, String s) {
         return new UnquotedText(origin, s);
     }
 
-    static Token newSubstitution(final ConfigOrigin origin, final boolean optional, final List<Token> expression) {
+    static Token newSubstitution(ConfigOrigin origin, boolean optional, List<Token> expression) {
         return new Substitution(origin, optional, expression);
     }
 
-    static Token newValue(final AbstractConfigValue value) {
+    static Token newValue(AbstractConfigValue value) {
         return new Value(value);
     }
 
-    static Token newString(final ConfigOrigin origin, final String value) {
+    static Token newString(ConfigOrigin origin, String value) {
         return newValue(new ConfigString(origin, value));
     }
 
-    static Token newInt(final ConfigOrigin origin, final int value, final String originalText) {
+    static Token newInt(ConfigOrigin origin, int value, String originalText) {
         return newValue(ConfigNumber.newNumber(origin, value,
                 originalText));
     }
 
-    static Token newDouble(final ConfigOrigin origin, final double value,
-            final String originalText) {
+    static Token newDouble(ConfigOrigin origin, double value,
+            String originalText) {
         return newValue(ConfigNumber.newNumber(origin, value,
                 originalText));
     }
 
-    static Token newLong(final ConfigOrigin origin, final long value, final String originalText) {
+    static Token newLong(ConfigOrigin origin, long value, String originalText) {
         return newValue(ConfigNumber.newNumber(origin, value,
                 originalText));
     }
 
-    static Token newNull(final ConfigOrigin origin) {
+    static Token newNull(ConfigOrigin origin) {
         return newValue(new ConfigNull(origin));
     }
 
-    static Token newBoolean(final ConfigOrigin origin, final boolean value) {
+    static Token newBoolean(ConfigOrigin origin, boolean value) {
         return newValue(new ConfigBoolean(origin, value));
     }
 }

@@ -20,9 +20,9 @@ import com.crashnote.external.config.ConfigValueType;
  */
 final class ConfigNull extends AbstractConfigValue implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
-    ConfigNull(final ConfigOrigin origin) {
+    ConfigNull(ConfigOrigin origin) {
         super(origin);
     }
 
@@ -42,12 +42,12 @@ final class ConfigNull extends AbstractConfigValue implements Serializable {
     }
 
     @Override
-    protected void render(final StringBuilder sb, final int indent, final ConfigRenderOptions options) {
+    protected void render(StringBuilder sb, int indent, ConfigRenderOptions options) {
         sb.append("null");
     }
 
     @Override
-    protected ConfigNull newCopy(final ConfigOrigin origin) {
+    protected ConfigNull newCopy(ConfigOrigin origin) {
         return new ConfigNull(origin);
     }
 

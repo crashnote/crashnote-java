@@ -23,7 +23,7 @@ final class ConfigDelayedMergeObject extends AbstractConfigObject implements Unm
 
     final private List<AbstractConfigValue> stack;
 
-    ConfigDelayedMergeObject(final ConfigOrigin origin, final List<AbstractConfigValue> stack) {
+    ConfigDelayedMergeObject(ConfigOrigin origin, List<AbstractConfigValue> stack) {
         super(origin);
         this.stack = stack;
 
@@ -34,7 +34,7 @@ final class ConfigDelayedMergeObject extends AbstractConfigObject implements Unm
             throw new ConfigException.BugOrBroken(
                     "created a delayed merge object not guaranteed to be an object");
 
-        for (final AbstractConfigValue v : stack) {
+        for (AbstractConfigValue v : stack) {
             if (v instanceof ConfigDelayedMerge || v instanceof ConfigDelayedMergeObject)
                 throw new ConfigException.BugOrBroken(
                         "placed nested DelayedMerge in a ConfigDelayedMergeObject, should have consolidated stack");
@@ -42,7 +42,7 @@ final class ConfigDelayedMergeObject extends AbstractConfigObject implements Unm
     }
 
     @Override
-    protected ConfigDelayedMergeObject newCopy(final ResolveStatus status, final ConfigOrigin origin) {
+    protected ConfigDelayedMergeObject newCopy(ResolveStatus status, ConfigOrigin origin) {
         if (status != resolveStatus())
             throw new ConfigException.BugOrBroken(
                     "attempt to create resolved ConfigDelayedMergeObject");
@@ -50,9 +50,9 @@ final class ConfigDelayedMergeObject extends AbstractConfigObject implements Unm
     }
 
     @Override
-    AbstractConfigObject resolveSubstitutions(final ResolveContext context)
+    AbstractConfigObject resolveSubstitutions(ResolveContext context)
             throws NotPossibleToResolve {
-        final AbstractConfigValue merged = ConfigDelayedMerge.resolveSubstitutions(this, stack, context);
+        AbstractConfigValue merged = ConfigDelayedMerge.resolveSubstitutions(this, stack, context);
         if (merged instanceof AbstractConfigObject) {
             return (AbstractConfigObject) merged;
         } else {
@@ -65,7 +65,7 @@ final class ConfigDelayedMergeObject extends AbstractConfigObject implements Unm
     public ResolveReplacer makeReplacer(final int skipping) {
         return new ResolveReplacer() {
             @Override
-            protected AbstractConfigValue makeReplacement(final ResolveContext context)
+            protected AbstractConfigValue makeReplacement(ResolveContext context)
                     throws NotPossibleToResolve {
                 return ConfigDelayedMerge.makeReplacement(context, stack, skipping);
             }
@@ -78,9 +78,9 @@ final class ConfigDelayedMergeObject extends AbstractConfigObject implements Unm
     }
 
     @Override
-    ConfigDelayedMergeObject relativized(final Path prefix) {
-        final List<AbstractConfigValue> newStack = new ArrayList<AbstractConfigValue>();
-        for (final AbstractConfigValue o : stack) {
+    ConfigDelayedMergeObject relativized(Path prefix) {
+        List<AbstractConfigValue> newStack = new ArrayList<AbstractConfigValue>();
+        for (AbstractConfigValue o : stack) {
             newStack.add(o.relativized(prefix));
         }
         return new ConfigDelayedMergeObject(origin(), newStack);
@@ -92,61 +92,61 @@ final class ConfigDelayedMergeObject extends AbstractConfigObject implements Unm
     }
 
     @Override
-    protected final ConfigDelayedMergeObject mergedWithTheUnmergeable(final Unmergeable fallback) {
+    protected final ConfigDelayedMergeObject mergedWithTheUnmergeable(Unmergeable fallback) {
         requireNotIgnoringFallbacks();
 
         return (ConfigDelayedMergeObject) mergedWithTheUnmergeable(stack, fallback);
     }
 
     @Override
-    protected final ConfigDelayedMergeObject mergedWithObject(final AbstractConfigObject fallback) {
+    protected final ConfigDelayedMergeObject mergedWithObject(AbstractConfigObject fallback) {
         return mergedWithNonObject(fallback);
     }
 
     @Override
-    protected final ConfigDelayedMergeObject mergedWithNonObject(final AbstractConfigValue fallback) {
+    protected final ConfigDelayedMergeObject mergedWithNonObject(AbstractConfigValue fallback) {
         requireNotIgnoringFallbacks();
 
         return (ConfigDelayedMergeObject) mergedWithNonObject(stack, fallback);
     }
 
     @Override
-    public ConfigDelayedMergeObject withFallback(final ConfigMergeable mergeable) {
+    public ConfigDelayedMergeObject withFallback(ConfigMergeable mergeable) {
         return (ConfigDelayedMergeObject) super.withFallback(mergeable);
     }
 
     @Override
-    public ConfigDelayedMergeObject withOnlyKey(final String key) {
+    public ConfigDelayedMergeObject withOnlyKey(String key) {
         throw notResolved();
     }
 
     @Override
-    public ConfigDelayedMergeObject withoutKey(final String key) {
+    public ConfigDelayedMergeObject withoutKey(String key) {
         throw notResolved();
     }
 
     @Override
-    protected AbstractConfigObject withOnlyPathOrNull(final Path path) {
+    protected AbstractConfigObject withOnlyPathOrNull(Path path) {
         throw notResolved();
     }
 
     @Override
-    AbstractConfigObject withOnlyPath(final Path path) {
+    AbstractConfigObject withOnlyPath(Path path) {
         throw notResolved();
     }
 
     @Override
-    AbstractConfigObject withoutPath(final Path path) {
+    AbstractConfigObject withoutPath(Path path) {
         throw notResolved();
     }
 
     @Override
-    public ConfigDelayedMergeObject withValue(final String key, final ConfigValue value) {
+    public ConfigDelayedMergeObject withValue(String key, ConfigValue value) {
         throw notResolved();
     }
 
     @Override
-    ConfigDelayedMergeObject withValue(final Path path, final ConfigValue value) {
+    ConfigDelayedMergeObject withValue(Path path, ConfigValue value) {
         throw notResolved();
     }
 
@@ -156,12 +156,12 @@ final class ConfigDelayedMergeObject extends AbstractConfigObject implements Unm
     }
 
     @Override
-    protected boolean canEqual(final Object other) {
+    protected boolean canEqual(Object other) {
         return other instanceof ConfigDelayedMergeObject;
     }
 
     @Override
-    public boolean equals(final Object other) {
+    public boolean equals(Object other) {
         // note that "origin" is deliberately NOT part of equality
         if (other instanceof ConfigDelayedMergeObject) {
             return canEqual(other)
@@ -179,12 +179,12 @@ final class ConfigDelayedMergeObject extends AbstractConfigObject implements Unm
     }
 
     @Override
-    protected void render(final StringBuilder sb, final int indent, final String atKey, final ConfigRenderOptions options) {
+    protected void render(StringBuilder sb, int indent, String atKey, ConfigRenderOptions options) {
         ConfigDelayedMerge.render(stack, sb, indent, atKey, options);
     }
 
     @Override
-    protected void render(final StringBuilder sb, final int indent, final ConfigRenderOptions options) {
+    protected void render(StringBuilder sb, int indent, ConfigRenderOptions options) {
         render(sb, indent, null, options);
     }
 
@@ -199,17 +199,17 @@ final class ConfigDelayedMergeObject extends AbstractConfigObject implements Unm
     }
 
     @Override
-    public AbstractConfigValue get(final Object key) {
+    public AbstractConfigValue get(Object key) {
         throw notResolved();
     }
 
     @Override
-    public boolean containsKey(final Object key) {
+    public boolean containsKey(Object key) {
         throw notResolved();
     }
 
     @Override
-    public boolean containsValue(final Object value) {
+    public boolean containsValue(Object value) {
         throw notResolved();
     }
 
@@ -239,7 +239,7 @@ final class ConfigDelayedMergeObject extends AbstractConfigObject implements Unm
     }
 
     @Override
-    protected AbstractConfigValue attemptPeekWithPartialResolve(final String key) {
+    protected AbstractConfigValue attemptPeekWithPartialResolve(String key) {
         // a partial resolve of a ConfigDelayedMergeObject always results in a
         // SimpleConfigObject because all the substitutions in the stack get
         // resolved in order to look up the partial.
@@ -252,10 +252,10 @@ final class ConfigDelayedMergeObject extends AbstractConfigObject implements Unm
 
         // we'll be able to return a key if we have a value that ignores
         // fallbacks, prior to any unmergeable values.
-        for (final AbstractConfigValue layer : stack) {
+        for (AbstractConfigValue layer : stack) {
             if (layer instanceof AbstractConfigObject) {
-                final AbstractConfigObject objectLayer = (AbstractConfigObject) layer;
-                final AbstractConfigValue v = objectLayer.attemptPeekWithPartialResolve(key);
+                AbstractConfigObject objectLayer = (AbstractConfigObject) layer;
+                AbstractConfigValue v = objectLayer.attemptPeekWithPartialResolve(key);
                 if (v != null) {
                     if (v.ignoresFallbacks()) {
                         // we know we won't need to merge anything in to this

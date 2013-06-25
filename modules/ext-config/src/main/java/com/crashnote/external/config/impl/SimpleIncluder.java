@@ -23,14 +23,14 @@ import com.crashnote.external.config.ConfigSyntax;
 
 class SimpleIncluder implements FullIncluder {
 
-    private final ConfigIncluder fallback;
+    private ConfigIncluder fallback;
 
-    SimpleIncluder(final ConfigIncluder fallback) {
+    SimpleIncluder(ConfigIncluder fallback) {
         this.fallback = fallback;
     }
 
     // ConfigIncludeContext does this for us on its options
-    static ConfigParseOptions clearForInclude(final ConfigParseOptions options) {
+    static ConfigParseOptions clearForInclude(ConfigParseOptions options) {
         // the class loader and includer are inherited, but not this other
         // stuff.
         return options.setSyntax(null).setOriginDescription(null).setAllowMissing(true);
@@ -38,8 +38,8 @@ class SimpleIncluder implements FullIncluder {
 
     // this is the heuristic includer
     @Override
-    public ConfigObject include(final ConfigIncludeContext context, final String name) {
-        final ConfigObject obj = includeWithoutFallback(context, name);
+    public ConfigObject include(final ConfigIncludeContext context, String name) {
+        ConfigObject obj = includeWithoutFallback(context, name);
 
         // now use the fallback includer if any and merge
         // its result.
@@ -51,7 +51,7 @@ class SimpleIncluder implements FullIncluder {
     }
 
     // the heuristic includer in static form
-    static ConfigObject includeWithoutFallback(final ConfigIncludeContext context, final String name) {
+    static ConfigObject includeWithoutFallback(final ConfigIncludeContext context, String name) {
         // the heuristic is valid URL then URL, else relative to including file;
         // relativeTo in a file falls back to classpath inside relativeTo().
 
@@ -65,14 +65,14 @@ class SimpleIncluder implements FullIncluder {
         if (url != null) {
             return includeURLWithoutFallback(context, url);
         } else {
-            final NameSource source = new RelativeNameSource(context);
+            NameSource source = new RelativeNameSource(context);
             return fromBasename(source, name, context.parseOptions());
         }
     }
 
     @Override
-    public ConfigObject includeURL(final ConfigIncludeContext context, final URL url) {
-        final ConfigObject obj = includeURLWithoutFallback(context, url);
+    public ConfigObject includeURL(ConfigIncludeContext context, URL url) {
+        ConfigObject obj = includeURLWithoutFallback(context, url);
 
         // now use the fallback includer if any and merge
         // its result.
@@ -83,13 +83,13 @@ class SimpleIncluder implements FullIncluder {
         }
     }
 
-    static ConfigObject includeURLWithoutFallback(final ConfigIncludeContext context, final URL url) {
+    static ConfigObject includeURLWithoutFallback(final ConfigIncludeContext context, URL url) {
         return ConfigFactory.parseURL(url, context.parseOptions()).root();
     }
 
     @Override
-    public ConfigObject includeFile(final ConfigIncludeContext context, final File file) {
-        final ConfigObject obj = includeFileWithoutFallback(context, file);
+    public ConfigObject includeFile(ConfigIncludeContext context, File file) {
+        ConfigObject obj = includeFileWithoutFallback(context, file);
 
         // now use the fallback includer if any and merge
         // its result.
@@ -100,13 +100,13 @@ class SimpleIncluder implements FullIncluder {
         }
     }
 
-    static ConfigObject includeFileWithoutFallback(final ConfigIncludeContext context, final File file) {
+    static ConfigObject includeFileWithoutFallback(final ConfigIncludeContext context, File file) {
         return ConfigFactory.parseFileAnySyntax(file, context.parseOptions()).root();
     }
 
     @Override
-    public ConfigObject includeResources(final ConfigIncludeContext context, final String resource) {
-        final ConfigObject obj = includeResourceWithoutFallback(context, resource);
+    public ConfigObject includeResources(ConfigIncludeContext context, String resource) {
+        ConfigObject obj = includeResourceWithoutFallback(context, resource);
 
         // now use the fallback includer if any and merge
         // its result.
@@ -119,12 +119,12 @@ class SimpleIncluder implements FullIncluder {
     }
 
     static ConfigObject includeResourceWithoutFallback(final ConfigIncludeContext context,
-            final String resource) {
+            String resource) {
         return ConfigFactory.parseResourcesAnySyntax(resource, context.parseOptions()).root();
     }
 
     @Override
-    public ConfigIncluder withFallback(final ConfigIncluder fallback) {
+    public ConfigIncluder withFallback(ConfigIncluder fallback) {
         if (this == fallback) {
             throw new ConfigException.BugOrBroken("trying to create includer cycle");
         } else if (this.fallback == fallback) {
@@ -143,13 +143,13 @@ class SimpleIncluder implements FullIncluder {
     static private class RelativeNameSource implements NameSource {
         final private ConfigIncludeContext context;
 
-        RelativeNameSource(final ConfigIncludeContext context) {
+        RelativeNameSource(ConfigIncludeContext context) {
             this.context = context;
         }
 
         @Override
-        public ConfigParseable nameToParseable(final String name, final ConfigParseOptions options) {
-            final ConfigParseable p = context.relativeTo(name);
+        public ConfigParseable nameToParseable(String name, ConfigParseOptions options) {
+            ConfigParseable p = context.relativeTo(name);
             if (p == null) {
                 // avoid returning null
                 return Parseable
@@ -164,20 +164,20 @@ class SimpleIncluder implements FullIncluder {
     // trying to use it; for 'include "basename"' in a .conf file, for
     // loading app.{conf,json,properties} from classpath, and for
     // loading app.{conf,json,properties} from the filesystem.
-    static ConfigObject fromBasename(final NameSource source, final String name, final ConfigParseOptions options) {
+    static ConfigObject fromBasename(NameSource source, String name, ConfigParseOptions options) {
         ConfigObject obj;
         if (name.endsWith(".conf") || name.endsWith(".json") || name.endsWith(".properties")) {
-            final ConfigParseable p = source.nameToParseable(name, options);
+            ConfigParseable p = source.nameToParseable(name, options);
 
             obj = p.parse(p.options().setAllowMissing(options.getAllowMissing()));
         } else {
-            final ConfigParseable confHandle = source.nameToParseable(name + ".conf", options);
-            final ConfigParseable jsonHandle = source.nameToParseable(name + ".json", options);
-            final ConfigParseable propsHandle = source.nameToParseable(name + ".properties", options);
+            ConfigParseable confHandle = source.nameToParseable(name + ".conf", options);
+            ConfigParseable jsonHandle = source.nameToParseable(name + ".json", options);
+            ConfigParseable propsHandle = source.nameToParseable(name + ".properties", options);
             boolean gotSomething = false;
-            final List<String> failMessages = new ArrayList<String>();
+            List<String> failMessages = new ArrayList<String>();
 
-            final ConfigSyntax syntax = options.getSyntax();
+            ConfigSyntax syntax = options.getSyntax();
 
             obj = SimpleConfigObject.empty(SimpleConfigOrigin.newSimple(name));
             if (syntax == null || syntax == ConfigSyntax.CONF) {
@@ -192,7 +192,7 @@ class SimpleIncluder implements FullIncluder {
 
             if (syntax == null || syntax == ConfigSyntax.JSON) {
                 try {
-                    final ConfigObject parsed = jsonHandle.parse(jsonHandle.options()
+                    ConfigObject parsed = jsonHandle.parse(jsonHandle.options()
                             .setAllowMissing(false).setSyntax(ConfigSyntax.JSON));
                     obj = obj.withFallback(parsed);
                     gotSomething = true;
@@ -203,7 +203,7 @@ class SimpleIncluder implements FullIncluder {
 
             if (syntax == null || syntax == ConfigSyntax.PROPERTIES) {
                 try {
-                    final ConfigObject parsed = propsHandle.parse(propsHandle.options()
+                    ConfigObject parsed = propsHandle.parse(propsHandle.options()
                             .setAllowMissing(false).setSyntax(ConfigSyntax.PROPERTIES));
                     obj = obj.withFallback(parsed);
                     gotSomething = true;
@@ -213,14 +213,14 @@ class SimpleIncluder implements FullIncluder {
             }
 
             if (!options.getAllowMissing() && !gotSomething) {
-                final String failMessage;
+                String failMessage;
                 if (failMessages.isEmpty()) {
                     // this should not happen
                     throw new ConfigException.BugOrBroken(
                             "should not be reached: nothing found but no exceptions thrown");
                 } else {
-                    final StringBuilder sb = new StringBuilder();
-                    for (final String msg : failMessages) {
+                    StringBuilder sb = new StringBuilder();
+                    for (String msg : failMessages) {
                         sb.append(msg);
                         sb.append(", ");
                     }
@@ -240,23 +240,23 @@ class SimpleIncluder implements FullIncluder {
     static private class Proxy implements FullIncluder {
         final ConfigIncluder delegate;
 
-        Proxy(final ConfigIncluder delegate) {
+        Proxy(ConfigIncluder delegate) {
             this.delegate = delegate;
         }
 
         @Override
-        public ConfigIncluder withFallback(final ConfigIncluder fallback) {
+        public ConfigIncluder withFallback(ConfigIncluder fallback) {
             // we never fall back
             return this;
         }
 
         @Override
-        public ConfigObject include(final ConfigIncludeContext context, final String what) {
+        public ConfigObject include(ConfigIncludeContext context, String what) {
             return delegate.include(context, what);
         }
 
         @Override
-        public ConfigObject includeResources(final ConfigIncludeContext context, final String what) {
+        public ConfigObject includeResources(ConfigIncludeContext context, String what) {
             if (delegate instanceof ConfigIncluderClasspath)
                 return ((ConfigIncluderClasspath) delegate).includeResources(context, what);
             else
@@ -264,7 +264,7 @@ class SimpleIncluder implements FullIncluder {
         }
 
         @Override
-        public ConfigObject includeURL(final ConfigIncludeContext context, final URL what) {
+        public ConfigObject includeURL(ConfigIncludeContext context, URL what) {
             if (delegate instanceof ConfigIncluderURL)
                 return ((ConfigIncluderURL) delegate).includeURL(context, what);
             else
@@ -272,7 +272,7 @@ class SimpleIncluder implements FullIncluder {
         }
 
         @Override
-        public ConfigObject includeFile(final ConfigIncludeContext context, final File what) {
+        public ConfigObject includeFile(ConfigIncludeContext context, File what) {
             if (delegate instanceof ConfigIncluderFile)
                 return ((ConfigIncluderFile) delegate).includeFile(context, what);
             else
@@ -280,7 +280,7 @@ class SimpleIncluder implements FullIncluder {
         }
     }
 
-    static FullIncluder makeFull(final ConfigIncluder includer) {
+    static FullIncluder makeFull(ConfigIncluder includer) {
         if (includer instanceof FullIncluder)
             return (FullIncluder) includer;
         else

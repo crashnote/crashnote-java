@@ -27,7 +27,7 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
 
     final private SimpleConfigOrigin origin;
 
-    AbstractConfigValue(final ConfigOrigin origin) {
+    AbstractConfigValue(ConfigOrigin origin) {
         this.origin = (SimpleConfigOrigin) origin;
     }
 
@@ -53,7 +53,7 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
 
         final private String traceString;
 
-        NotPossibleToResolve(final ResolveContext context) {
+        NotPossibleToResolve(ResolveContext context) {
             super("was not possible to resolve");
             this.traceString = context.traceString();
         }
@@ -70,7 +70,7 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
      *            state of the current resolve
      * @return a new value if there were changes, or this if no changes
      */
-    AbstractConfigValue resolveSubstitutions(final ResolveContext context)
+    AbstractConfigValue resolveSubstitutions(ResolveContext context)
             throws NotPossibleToResolve {
         return this;
     }
@@ -91,7 +91,7 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
      * @return value relativized to the given path or the same value if nothing
      *         to do
      */
-    AbstractConfigValue relativized(final Path prefix) {
+    AbstractConfigValue relativized(Path prefix) {
         return this;
     }
 
@@ -103,7 +103,7 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
 
     protected abstract class NoExceptionsModifier implements Modifier {
         @Override
-        public final AbstractConfigValue modifyChildMayThrow(final String keyOrNull, final AbstractConfigValue v)
+        public final AbstractConfigValue modifyChildMayThrow(String keyOrNull, AbstractConfigValue v)
                 throws Exception {
             try {
                 return modifyChild(keyOrNull, v);
@@ -150,37 +150,37 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
                             + getClass().getSimpleName());
     }
 
-    protected AbstractConfigValue constructDelayedMerge(final ConfigOrigin origin,
-            final List<AbstractConfigValue> stack) {
+    protected AbstractConfigValue constructDelayedMerge(ConfigOrigin origin,
+            List<AbstractConfigValue> stack) {
         return new ConfigDelayedMerge(origin, stack);
     }
 
     protected final AbstractConfigValue mergedWithTheUnmergeable(
-            final Collection<AbstractConfigValue> stack, final Unmergeable fallback) {
+            Collection<AbstractConfigValue> stack, Unmergeable fallback) {
         requireNotIgnoringFallbacks();
 
         // if we turn out to be an object, and the fallback also does,
         // then a merge may be required; delay until we resolve.
-        final List<AbstractConfigValue> newStack = new ArrayList<AbstractConfigValue>();
+        List<AbstractConfigValue> newStack = new ArrayList<AbstractConfigValue>();
         newStack.addAll(stack);
         newStack.addAll(fallback.unmergedValues());
         return constructDelayedMerge(AbstractConfigObject.mergeOrigins(newStack), newStack);
     }
 
-    private final AbstractConfigValue delayMerge(final Collection<AbstractConfigValue> stack,
-            final AbstractConfigValue fallback) {
+    private final AbstractConfigValue delayMerge(Collection<AbstractConfigValue> stack,
+            AbstractConfigValue fallback) {
         // if we turn out to be an object, and the fallback also does,
         // then a merge may be required.
         // if we contain a substitution, resolving it may need to look
         // back to the fallback.
-        final List<AbstractConfigValue> newStack = new ArrayList<AbstractConfigValue>();
+        List<AbstractConfigValue> newStack = new ArrayList<AbstractConfigValue>();
         newStack.addAll(stack);
         newStack.add(fallback);
         return constructDelayedMerge(AbstractConfigObject.mergeOrigins(newStack), newStack);
     }
 
-    protected final AbstractConfigValue mergedWithObject(final Collection<AbstractConfigValue> stack,
-            final AbstractConfigObject fallback) {
+    protected final AbstractConfigValue mergedWithObject(Collection<AbstractConfigValue> stack,
+            AbstractConfigObject fallback) {
         requireNotIgnoringFallbacks();
 
         if (this instanceof AbstractConfigObject)
@@ -189,8 +189,8 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
         return mergedWithNonObject(stack, fallback);
     }
 
-    protected final AbstractConfigValue mergedWithNonObject(final Collection<AbstractConfigValue> stack,
-            final AbstractConfigValue fallback) {
+    protected final AbstractConfigValue mergedWithNonObject(Collection<AbstractConfigValue> stack,
+            AbstractConfigValue fallback) {
         requireNotIgnoringFallbacks();
 
         if (resolveStatus() == ResolveStatus.RESOLVED) {
@@ -205,25 +205,25 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
         }
     }
 
-    protected AbstractConfigValue mergedWithTheUnmergeable(final Unmergeable fallback) {
+    protected AbstractConfigValue mergedWithTheUnmergeable(Unmergeable fallback) {
         requireNotIgnoringFallbacks();
 
         return mergedWithTheUnmergeable(Collections.singletonList(this), fallback);
     }
 
-    protected AbstractConfigValue mergedWithObject(final AbstractConfigObject fallback) {
+    protected AbstractConfigValue mergedWithObject(AbstractConfigObject fallback) {
         requireNotIgnoringFallbacks();
 
         return mergedWithObject(Collections.singletonList(this), fallback);
     }
 
-    protected AbstractConfigValue mergedWithNonObject(final AbstractConfigValue fallback) {
+    protected AbstractConfigValue mergedWithNonObject(AbstractConfigValue fallback) {
         requireNotIgnoringFallbacks();
 
         return mergedWithNonObject(Collections.singletonList(this), fallback);
     }
 
-    public AbstractConfigValue withOrigin(final ConfigOrigin origin) {
+    public AbstractConfigValue withOrigin(ConfigOrigin origin) {
         if (this.origin == origin)
             return this;
         else
@@ -232,11 +232,11 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
 
     // this is only overridden to change the return type
     @Override
-    public AbstractConfigValue withFallback(final ConfigMergeable mergeable) {
+    public AbstractConfigValue withFallback(ConfigMergeable mergeable) {
         if (ignoresFallbacks()) {
             return this;
         } else {
-            final ConfigValue other = ((MergeableValue) mergeable).toFallbackValue();
+            ConfigValue other = ((MergeableValue) mergeable).toFallbackValue();
 
             if (other instanceof Unmergeable) {
                 return mergedWithTheUnmergeable((Unmergeable) other);
@@ -248,12 +248,12 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
         }
     }
 
-    protected boolean canEqual(final Object other) {
+    protected boolean canEqual(Object other) {
         return other instanceof ConfigValue;
     }
 
     @Override
-    public boolean equals(final Object other) {
+    public boolean equals(Object other) {
         // note that "origin" is deliberately NOT part of equality
         if (other instanceof ConfigValue) {
             return canEqual(other)
@@ -269,7 +269,7 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
     @Override
     public int hashCode() {
         // note that "origin" is deliberately NOT part of equality
-        final Object o = this.unwrapped();
+        Object o = this.unwrapped();
         if (o == null)
             return 0;
         else
@@ -278,12 +278,12 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
 
     @Override
     public final String toString() {
-        final StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         render(sb, 0, null /* atKey */, ConfigRenderOptions.concise());
         return getClass().getSimpleName() + "(" + sb.toString() + ")";
     }
 
-    protected static void indent(final StringBuilder sb, final int indent, final ConfigRenderOptions options) {
+    protected static void indent(StringBuilder sb, int indent, ConfigRenderOptions options) {
         if (options.getFormatted()) {
             int remaining = indent;
             while (remaining > 0) {
@@ -293,9 +293,9 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
         }
     }
 
-    protected void render(final StringBuilder sb, final int indent, final String atKey, final ConfigRenderOptions options) {
+    protected void render(StringBuilder sb, int indent, String atKey, ConfigRenderOptions options) {
         if (atKey != null) {
-            final String renderedKey;
+            String renderedKey;
             if (options.getJson())
                 renderedKey = ConfigImplUtil.renderJsonString(atKey);
             else
@@ -321,8 +321,8 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
         render(sb, indent, options);
     }
 
-    protected void render(final StringBuilder sb, final int indent, final ConfigRenderOptions options) {
-        final Object u = unwrapped();
+    protected void render(StringBuilder sb, int indent, ConfigRenderOptions options) {
+        Object u = unwrapped();
         sb.append(u.toString());
     }
 
@@ -332,8 +332,8 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
     }
 
     @Override
-    public final String render(final ConfigRenderOptions options) {
-        final StringBuilder sb = new StringBuilder();
+    public final String render(ConfigRenderOptions options) {
+        StringBuilder sb = new StringBuilder();
         render(sb, 0, null, options);
         return sb.toString();
     }
@@ -347,21 +347,21 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
         return null;
     }
 
-    SimpleConfig atKey(final ConfigOrigin origin, final String key) {
-        final Map<String, AbstractConfigValue> m = Collections.singletonMap(key, this);
+    SimpleConfig atKey(ConfigOrigin origin, String key) {
+        Map<String, AbstractConfigValue> m = Collections.singletonMap(key, this);
         return (new SimpleConfigObject(origin, m)).toConfig();
     }
 
     @Override
-    public SimpleConfig atKey(final String key) {
+    public SimpleConfig atKey(String key) {
         return atKey(SimpleConfigOrigin.newSimple("atKey(" + key + ")"), key);
     }
 
-    SimpleConfig atPath(final ConfigOrigin origin, final Path path) {
+    SimpleConfig atPath(ConfigOrigin origin, Path path) {
         Path parent = path.parent();
         SimpleConfig result = atKey(origin, path.last());
         while (parent != null) {
-            final String key = parent.last();
+            String key = parent.last();
             result = result.atKey(origin, key);
             parent = parent.parent();
         }
@@ -369,8 +369,8 @@ abstract class AbstractConfigValue implements ConfigValue, MergeableValue {
     }
 
     @Override
-    public SimpleConfig atPath(final String pathExpression) {
-        final SimpleConfigOrigin origin = SimpleConfigOrigin.newSimple("atPath(" + pathExpression + ")");
+    public SimpleConfig atPath(String pathExpression) {
+        SimpleConfigOrigin origin = SimpleConfigOrigin.newSimple("atPath(" + pathExpression + ")");
         return atPath(origin, Path.newPath(pathExpression));
     }
 }

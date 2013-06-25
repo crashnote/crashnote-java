@@ -1,18 +1,3 @@
-/**
- * Copyright (C) 2012 - 101loops.com <dev@101loops.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.crashnote.external.config.impl;
 
 import java.util.Collection;
@@ -34,11 +19,11 @@ final class ConfigReference extends AbstractConfigValue implements Unmergeable {
     // the length of any prefixes added with relativized()
     final private int prefixLength;
 
-    ConfigReference(final ConfigOrigin origin, final SubstitutionExpression expr) {
+    ConfigReference(ConfigOrigin origin, SubstitutionExpression expr) {
         this(origin, expr, 0);
     }
 
-    private ConfigReference(final ConfigOrigin origin, final SubstitutionExpression expr, final int prefixLength) {
+    private ConfigReference(ConfigOrigin origin, SubstitutionExpression expr, int prefixLength) {
         super(origin);
         this.expr = expr;
         this.prefixLength = prefixLength;
@@ -61,7 +46,7 @@ final class ConfigReference extends AbstractConfigValue implements Unmergeable {
     }
 
     @Override
-    protected ConfigReference newCopy(final ConfigOrigin newOrigin) {
+    protected ConfigReference newCopy(ConfigOrigin newOrigin) {
         return new ConfigReference(newOrigin, expr, prefixLength);
     }
 
@@ -80,7 +65,7 @@ final class ConfigReference extends AbstractConfigValue implements Unmergeable {
     // This way it's impossible for NotPossibleToResolve to "escape" since
     // any failure to resolve has to start with a ConfigReference.
     @Override
-    AbstractConfigValue resolveSubstitutions(final ResolveContext context) {
+    AbstractConfigValue resolveSubstitutions(ResolveContext context) {
         context.source().replace(this, ResolveReplacer.cycleResolveReplacer);
         try {
             AbstractConfigValue v;
@@ -115,18 +100,18 @@ final class ConfigReference extends AbstractConfigValue implements Unmergeable {
     // system property and env variable lookups don't get
     // broken.
     @Override
-    ConfigReference relativized(final Path prefix) {
-        final SubstitutionExpression newExpr = expr.changePath(expr.path().prepend(prefix));
+    ConfigReference relativized(Path prefix) {
+        SubstitutionExpression newExpr = expr.changePath(expr.path().prepend(prefix));
         return new ConfigReference(origin(), newExpr, prefixLength + prefix.length());
     }
 
     @Override
-    protected boolean canEqual(final Object other) {
+    protected boolean canEqual(Object other) {
         return other instanceof ConfigReference;
     }
 
     @Override
-    public boolean equals(final Object other) {
+    public boolean equals(Object other) {
         // note that "origin" is deliberately NOT part of equality
         if (other instanceof ConfigReference) {
             return canEqual(other) && this.expr.equals(((ConfigReference) other).expr);
@@ -142,7 +127,7 @@ final class ConfigReference extends AbstractConfigValue implements Unmergeable {
     }
 
     @Override
-    protected void render(final StringBuilder sb, final int indent, final ConfigRenderOptions options) {
+    protected void render(StringBuilder sb, int indent, ConfigRenderOptions options) {
         sb.append(expr.toString());
     }
 

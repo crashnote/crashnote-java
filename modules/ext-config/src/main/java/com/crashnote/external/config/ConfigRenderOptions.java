@@ -22,8 +22,8 @@ public final class ConfigRenderOptions {
     private final boolean formatted;
     private final boolean json;
 
-    private ConfigRenderOptions(final boolean originComments, final boolean comments, final boolean formatted,
-            final boolean json) {
+    private ConfigRenderOptions(boolean originComments, boolean comments, boolean formatted,
+            boolean json) {
         this.originComments = originComments;
         this.comments = comments;
         this.formatted = formatted;
@@ -60,7 +60,7 @@ public final class ConfigRenderOptions {
      *            true to include comments in the render
      * @return options with requested setting for comments
      */
-    public ConfigRenderOptions setComments(final boolean value) {
+    public ConfigRenderOptions setComments(boolean value) {
         if (value == comments)
             return this;
         else
@@ -93,7 +93,7 @@ public final class ConfigRenderOptions {
      *            render
      * @return options with origin comments toggled
      */
-    public ConfigRenderOptions setOriginComments(final boolean value) {
+    public ConfigRenderOptions setOriginComments(boolean value) {
         if (value == originComments)
             return this;
         else
@@ -118,7 +118,7 @@ public final class ConfigRenderOptions {
      *            true to include comments in the render
      * @return options with requested setting for formatting
      */
-    public ConfigRenderOptions setFormatted(final boolean value) {
+    public ConfigRenderOptions setFormatted(boolean value) {
         if (value == formatted)
             return this;
         else
@@ -146,7 +146,7 @@ public final class ConfigRenderOptions {
      *            true to include non-JSON extensions in the render
      * @return options with requested setting for JSON
      */
-    public ConfigRenderOptions setJson(final boolean value) {
+    public ConfigRenderOptions setJson(boolean value) {
         if (value == json)
             return this;
         else
@@ -165,7 +165,7 @@ public final class ConfigRenderOptions {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("ConfigRenderOptions(");
+        StringBuilder sb = new StringBuilder("ConfigRenderOptions(");
         if (originComments)
             sb.append("originComments,");
         if (comments)
