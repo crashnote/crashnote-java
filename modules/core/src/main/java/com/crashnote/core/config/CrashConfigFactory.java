@@ -87,15 +87,15 @@ public class CrashConfigFactory<C extends CrashConfig> {
      * create a configuration based on system and files
      */
     protected final Config readConf() {
-        return readSysConf()                        // #1 system props
-            .withFallback(readCustomFileConf())     // #2 custom props
-            .withFallback(readDefaultFileConf());   // #3 default props
+        return readSysConf()                      // #1 system props
+            .withFallback(readUserFileConf())     // #2 user props
+            .withFallback(readDefaultFileConf()); // #3 default props
     }
 
     /**
      * create a configuration based on user's config
      */
-    protected Config readCustomFileConf() {
+    protected Config readUserFileConf() {
         return loader.fromFile("crashnote");
     }
 

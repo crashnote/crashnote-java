@@ -17,7 +17,6 @@ package com.crashnote.servlet.config;
 
 import com.crashnote.core.config.ConfigLoader;
 import com.crashnote.external.config.Config;
-import com.crashnote.logger.config.LoggerConfigFactory;
 import com.crashnote.web.config.WebConfigFactory;
 
 import javax.servlet.FilterConfig;
@@ -57,7 +56,7 @@ public class ServletConfigFactory<C extends ServletConfig>
      * add additional configuration to initialization chain
      */
     @Override
-    protected Config readCustomFileConf() {
+    protected Config readUserFileConf() {
 
         // extract properties of servlet configuration (from web.xml)
         final Properties props = new Properties();
@@ -74,6 +73,6 @@ public class ServletConfigFactory<C extends ServletConfig>
 
         return
             loader.fromProps(props, "servlet filter")       // #1 filter props
-                .withFallback(super.readCustomFileConf());  // #2 other custom props
+                .withFallback(super.readUserFileConf());  // #2 other custom props
     }
 }
