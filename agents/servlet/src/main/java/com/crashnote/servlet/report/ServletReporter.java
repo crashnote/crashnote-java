@@ -27,13 +27,13 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Customized implementation of the core {@link WebReporter}. Adds servlet-specific functionality.
  */
-public class ServletReporter<C extends ServletConfig>
-        extends WebReporter<C, HttpServletRequest> {
+public class ServletReporter
+        extends WebReporter<ServletConfig, HttpServletRequest> {
 
 
     // SETUP ======================================================================================
 
-    public ServletReporter(final C config) {
+    public ServletReporter(final ServletConfig config) {
         super(config);
     }
 
@@ -52,12 +52,12 @@ public class ServletReporter<C extends ServletConfig>
     }
 
     @Override
-    protected RequestCollector<HttpServletRequest> getRequestCollector(final C config) {
+    protected RequestCollector<HttpServletRequest> getRequestCollector(final ServletConfig config) {
         return new ServletRequestCollector(config);
     }
 
     @Override
-    protected SessionCollector<HttpServletRequest> getSessionCollector(final C config) {
+    protected SessionCollector<HttpServletRequest> getSessionCollector(final ServletConfig config) {
         return new ServletSessionCollector(config);
     }
 }

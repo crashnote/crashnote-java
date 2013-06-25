@@ -34,7 +34,7 @@ class ServletConfigSpec
 
     "act as factory" >> {
       "for servlet reporter" >> {
-        c.getReporter must haveClass[ServletReporter[ServletConfig]]
+        c.getReporter must haveClass[ServletReporter]
       }
     }
   }
@@ -54,7 +54,7 @@ class ServletConfigSpec
 
     val m_filterConf = filterConfDefaultMock()
 
-    val c = (new ServletConfigFactory[ServletConfig](m_filterConf, m_loader)).get
+    val c = new ServletConfigFactory[ServletConfig](m_filterConf, m_loader).get
     c
   }
 }

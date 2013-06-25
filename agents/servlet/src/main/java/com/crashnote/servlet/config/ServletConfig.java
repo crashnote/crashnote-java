@@ -35,8 +35,8 @@ public class ServletConfig
     // INTERFACE ==================================================================================
 
     @Override
-    public ServletReporter<ServletConfig> getReporter() {
-        return new ServletReporter<ServletConfig>(this);
+    public ServletReporter getReporter() {
+        return new ServletReporter(this);
     }
 
 }

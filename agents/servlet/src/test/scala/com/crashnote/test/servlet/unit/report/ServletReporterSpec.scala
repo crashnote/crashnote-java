@@ -16,15 +16,13 @@
 package com.crashnote.test.servlet.unit.report
 
 import javax.servlet.http.HttpServletRequest
-
 import com.crashnote.core.report.impl.processor.Processor
 import com.crashnote.core.model.log.ILogSession
 import com.crashnote.test.servlet.defs.TargetMockSpec
 import com.crashnote.servlet.report.ServletReporter
-import com.crashnote.servlet.config.ServletConfig
 
 class ServletReporterSpec
-  extends TargetMockSpec[ServletReporter[ServletConfig]] {
+  extends TargetMockSpec[ServletReporter] {
 
   "Servlet Reporter" should {
 
