@@ -14,7 +14,6 @@ gradle.properties
 Procfile
 target
 generated
-play2
 example
 maven.xml
 sandbox

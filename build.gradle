@@ -26,6 +26,7 @@ allprojects {
         logbackVersion = "1.0.0"
 
         servletVersion = "2.5"
+        play2Version = "2.1.0"
         gaeVersion = "1.5.0"
 
         specsVersion = "1.14"
@@ -248,6 +249,37 @@ project(":agents:appengine") {
         main {
             java {
                 srcDirs = ["src/main/java", "../servlet/src/main/java"] + moduleDirs.collect { it + "java" }
+            }
+            resources {
+                srcDirs = ["src/main/resources"] + moduleDirs.collect { it + "resources" }
+            }
+        }
+    }
+}
+
+project(":agents:play2") {
+    displayName = "Crashnote Play2 Agent"
+    description = "Reports exceptions from Java/Scala Play2 apps to crashnote.com"
+
+    repositories {
+        maven {
+            url "http://repo.typesafe.com/typesafe/releases/"
+        }
+    }
+
+    dependencies {
+        compile libraries.loggers
+        compile libraries.servlet
+        compile project(":modules:web")
+        compile "play:play_2.10:$play2Version"
+
+        testCompile project(":modules:test")
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDirs = ["src/main/java"] + moduleDirs.collect { it + "java" }
             }
             resources {
                 srcDirs = ["src/main/resources"] + moduleDirs.collect { it + "resources" }

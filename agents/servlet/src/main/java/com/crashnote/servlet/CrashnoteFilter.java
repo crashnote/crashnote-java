@@ -15,9 +15,9 @@
  */
 package com.crashnote.servlet;
 
-import com.crashnote.logger.helper.AutoLogConnector;
 import com.crashnote.servlet.config.ServletConfigFactory;
 import com.crashnote.servlet.report.ServletReporter;
+import com.crashnote.web.CrashSystem;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -28,9 +28,7 @@ public class CrashnoteFilter
 
     // VARS =======================================================================================
 
-    private ServletReporter<com.crashnote.servlet.config.ServletConfig> reporter;
-
-    private AutoLogConnector connector;
+    private CrashSystem<com.crashnote.servlet.config.ServletConfig, ServletReporter> system;
 
 
     // INTERFACE ==================================================================================
@@ -41,20 +39,9 @@ public class CrashnoteFilter
         // make sure this is not being used on AppEngine (there is a separate library for that)
         checkForAppengine();
 
-        // at first, parse filter configuration
-        final com.crashnote.servlet.config.ServletConfig config = getConfig(filterConfig);
-
-        // if the configuration enables the filter ...
-        if (config.isEnabled()) {
-
-            // ... based on config, create the central reporter service
-            reporter = config.getReporter();
-            reporter.start();
-
-            // ... finally install the appender(s)
-            connector = config.getLogConnector(reporter);
-            connector.start();
-        }
+        // parse filter configuration and initialize
+        system = new CrashSystem<com.crashnote.servlet.config.ServletConfig, ServletReporter>();
+        system.start(getConfig(filterConfig));
     }
 
     /**
@@ -67,6 +54,8 @@ public class CrashnoteFilter
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response,
                          final FilterChain chain) throws IOException, ServletException {
+
+        final ServletReporter reporter = system.getReporter();
 
         if (reporter == null) {
 
@@ -99,12 +88,7 @@ public class CrashnoteFilter
 
     @Override
     public void destroy() {
-
-        // disconnect the appenders
-        if (connector != null) connector.stop();
-
-        // close the reporter (and let it quickly flush cached data)
-        if (reporter != null) reporter.stop();
+        if (system != null) system.stop();
     }
 
 

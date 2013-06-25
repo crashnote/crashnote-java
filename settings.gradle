@@ -23,3 +23,6 @@ project(":agents:servlet").projectDir = new File(settingsDir, "agents/servlet")
 
 include "agents:appengine"
 project(":agents:appengine").projectDir = new File(settingsDir, "agents/appengine")
+
+include "agents:play2"
+project(":agents:play2").projectDir = new File(settingsDir, "agents/play2")
