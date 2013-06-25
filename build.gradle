@@ -162,7 +162,9 @@ subprojects { subproject ->
     // ### PUBLISH --------------------------------------------------------------------------------
 
     if (subproject.path.startsWith(":agents:")) {
-        apply from: "${rootProject.projectDir}/publish.gradle"
+        if (hasProperty("sonatypeUsername") && hasProperty("sonatypePassword")) {
+            apply from: "${rootProject.projectDir}/publish.gradle"
+        }
     }
 }
 
