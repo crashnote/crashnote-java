@@ -1,0 +1,25 @@
+rootProject.name = "crashnote-java"
+
+include "modules:test"
+project(":modules:test").projectDir = new File(settingsDir, "modules/test")
+
+include "modules:ext-json"
+project(":modules:ext-json").projectDir = new File(settingsDir, "modules/ext-json")
+
+include "modules:ext-config"
+project(":modules:ext-config").projectDir = new File(settingsDir, "modules/ext-config")
+
+include "modules:core"
+project(":modules:core").projectDir = new File(settingsDir, "modules/core")
+
+include "modules:logger"
+project(":modules:logger").projectDir = new File(settingsDir, "modules/logger")
+
+include "modules:web"
+project(":modules:web").projectDir = new File(settingsDir, "modules/web")
+
+include "agents:servlet"
+project(":agents:servlet").projectDir = new File(settingsDir, "agents/servlet")
+
+include "agents:appengine"
+project(":agents:appengine").projectDir = new File(settingsDir, "agents/appengine")

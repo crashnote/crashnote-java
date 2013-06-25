@@ -4,14 +4,12 @@
 *.tmp
 *.temp
 *.iml
-*.gpg*
 *.sh
+gpg.*
 *-plugin.xml
+gradle.properties
 
-.idea
-.idea_modules
 Procfile
-
 target
 generated
 play2

@@ -1,0 +1,135 @@
+// ### ARTIFACTS --------------------------------------------------------------------------
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives jar
+    archives sourcesJar
+    archives javadocJar
+}
+
+// ### MAVEN --------------------------------------------------------------------------------------
+
+apply plugin: "maven"
+
+if (hasProperty("snapshot")) {
+    if (!version.contains("-SNAPSHOT")) version += "-SNAPSHOT"
+} else {
+    version = version.replace("-SNAPSHOT", "")
+}
+
+install {
+    repositories.mavenInstaller {
+        customizePom(pom, project)
+    }
+}
+
+// ### SIGNING ------------------------------------------------------------------------------------
+
+apply plugin: "signing"
+signing {
+    required { isReleaseVersion }
+    sign configurations.archives
+}
+
+// ### UPLOAD -------------------------------------------------------------------------------------
+
+uploadArchives {
+    repositories {
+
+        mavenDeployer {
+            customizePom(pom, project)
+
+            // sign POM as well
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+        }
+    }
+}
+
+// ### ABOUT --------------------------------------------------------------------------------------
+
+task genAbout << {
+    new File(file("$buildDir"), "classes/main/crashnote.about.properties").write("""
+       |crashnote.about.name = cn-${project.name}
+       |crashnote.about.version = $version
+    """.stripMargin("|").trim())
+}
+
+jar {
+    it.dependsOn genAbout // hook into "jar" task
+}
+
+// ### POM ----------------------------------------------------------------------------------------
+
+def customizePom(pom, project) {
+    pom.whenConfigured { generatedPom ->
+
+        // eliminate all test dependencies
+        generatedPom.dependencies.removeAll { dep -> dep.scope == "test" }
+
+        // remove all internal dependencies
+        generatedPom.dependencies.removeAll { dep -> dep.groupId.contains("crashnote") }
+
+        // use "provided" scope for all dependencies
+        generatedPom.dependencies.each { it.scope = "provided" }
+
+        // add all items necessary for maven central publication
+        generatedPom.project {
+
+            name = project.displayName
+            description = project.description
+            artifactId = "crashnote-" + project.name
+
+            url = linkHomepage
+            inceptionYear = 2011
+
+            organization {
+                name = "101 Loops"
+                url = "http://www.101loops.com"
+            }
+
+            licenses {
+                license {
+                    name = "The Apache Software License, Version 2.0"
+                    url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                    distribution = "repo"
+                }
+            }
+
+            scm {
+                url linkScmUrl
+                connection = "scm:git:" + linkScmConnection
+                developerConnection = "scm:git:" + linkScmDevConnection
+            }
+
+            issueManagement {
+                system = "github"
+                url = linkIssue
+            }
+
+            developers {
+                developer {
+                    name = "Crashnote Developers"
+                    email = "dev@crashnote.com"
+                    organization = "101 Loops"
+                    organizationUrl = "http://www.101loops.com"
+                }
+            }
+        }
+    }
+}

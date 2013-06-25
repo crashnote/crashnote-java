@@ -1,0 +1,255 @@
+defaultTasks "build"
+
+def isDevBuild
+def isCiBuild
+def isReleaseBuild
+
+allprojects {
+
+    apply plugin: "java"
+    apply plugin: "scala"
+
+    repositories {
+        mavenCentral()
+    }
+
+    ext {
+        // ==== VERSIONS
+
+        isReleaseVersion = !version.endsWith("SNAPSHOT")
+
+        scalaMajorVersion = "2.10"
+        scalaMinorVersion = scalaMajorVersion + ".2"
+
+        log4jVersion = "1.2.16"
+        slf4jVersion = "1.7.0"
+        logbackVersion = "1.0.0"
+
+        servletVersion = "2.5"
+        gaeVersion = "1.5.0"
+
+        specsVersion = "1.14"
+        junitVersion = "4.10"
+        mockitoVersion = "1.9.5"
+
+        // ==== DEPENDENCIES
+
+        libraries = [
+                loggers: [
+                        "log4j:log4j:$log4jVersion",
+                        "org.slf4j:slf4j-api:$slf4jVersion",
+                        "ch.qos.logback:logback-classic:$logbackVersion"
+                ],
+                servlet: [
+                        "javax.servlet:servlet-api:$servletVersion"
+                ],
+                test: [
+                        "org.scala-lang:scala-library:$scalaMinorVersion",
+                        "junit:junit:$junitVersion",
+                        "org.specs2:specs2_2.10:$specsVersion",
+                        "org.mockito:mockito-all:$mockitoVersion",
+                        "commons-io:commons-io:2.3",
+                        "org.eclipse.jetty:jetty-webapp:7.5.1.v20110908"
+                ]
+        ]
+
+        // ==== DIRECTORIES
+
+        moduleDirs = [
+                "../../modules/ext-json/src/main/",
+                "../../modules/ext-config/src/main/",
+                "../../modules/core/src/main/",
+                "../../modules/logger/src/main/",
+                "../../modules/web/src/main/"
+        ]
+
+        // ==== LINKS
+
+        linkHomepage = "http://www.crashnote.com"
+
+        linkCi = "https://travis-ci.org/crashnote/crashnote-java"
+        linkIssue = "https://github.com/crashnote/crashnote-java/issues"
+
+        linkScmUrl = "https://github.com/crashnote/crashnote-java"
+        linkScmConnection = "git://github.com/crashnote/crashnote-java.git"
+        linkScmDevConnection = "git@github.com:crashnote/crashnote-java.git"
+    }
+
+    dependencies {
+        testCompile libraries.test[0]
+    }
+
+    // ### IDEA -----------------------------------------------------------------------------------
+
+    apply plugin: "idea"
+
+    idea.module.iml {
+        whenMerged { module ->
+            module.sourceFolders =
+                module.sourceFolders.findAll { it.canonicalUrl != it.url } // remove overlapping sources
+        }
+    }
+
+    // ### ECLIPSE --------------------------------------------------------------------------------
+
+    apply plugin: "eclipse"
+
+    // ### LICENSE --------------------------------------------------------------------------------
+
+    /*
+    buildscript {
+        repositories {
+            mavenCentral()
+        }
+
+        dependencies {
+            classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.5.0'
+        }
+    }
+
+    apply plugin: "license"
+
+    license {
+        header = rootProject.file("HEADER")
+
+        strictCheck = true
+        dryRun = true
+
+        ext.year = Calendar.getInstance().get(Calendar.YEAR)
+        ext.name = "101 Loops"
+        ext.email = "dev@101loops.com"
+    }
+
+    compileJava {
+        it.dependsOn(licenseMain, licenseTest) // hook into "compileJava" task
+    }
+    */
+}
+
+// ### PROJECTS -----------------------------------------------------------------------------------
+
+subprojects { subproject ->
+
+    // ### JAVA -----------------------------------------------------------------------------------
+
+    version = "0.6.0"
+    group = "com.crashnote"
+
+    sourceCompatibility = 1.6
+    targetCompatibility = 1.6
+
+    // ### SCALA ----------------------------------------------------------------------------------
+
+    tasks.withType(ScalaCompile) {
+        scalaCompileOptions.fork = true
+
+        configure(scalaCompileOptions.forkOptions) {
+            memoryMaximumSize = "1g"
+            jvmArgs = ["-XX:MaxPermSize=512m"]
+        }
+    }
+
+    compileScala {
+        compileScala.scalaCompileOptions.additionalParameters = ["-feature"]
+        compileScala.scalaCompileOptions.additionalParameters = ["-language:_"]
+    }
+
+    compileTestScala {
+        compileTestScala.scalaCompileOptions.additionalParameters = ["-feature"]
+        compileTestScala.scalaCompileOptions.additionalParameters = ["-language:_"]
+    }
+
+    // ### PUBLISH --------------------------------------------------------------------------------
+
+    if (subproject.path.startsWith(":agents:")) {
+        apply from: "${rootProject.projectDir}/publish.gradle"
+    }
+}
+
+// ### PROJECTS: MODULES --------------------------------------------------------------------------
+
+project(":modules:test") {
+    dependencies {
+        compile libraries.test
+    }
+}
+
+project(":modules:ext-json")
+project(":modules:ext-config")
+
+project(":modules:core") {
+    dependencies {
+        compile project(":modules:ext-json")
+        compile project(":modules:ext-config")
+
+        testCompile project(":modules:test")
+    }
+}
+
+project(":modules:logger") {
+    dependencies {
+        compile project(":modules:core")
+        compile libraries.loggers
+
+        testCompile project(":modules:test")
+    }
+}
+
+project(":modules:web") {
+    dependencies {
+        compile project(":modules:logger")
+
+        testCompile project(":modules:test")
+    }
+}
+
+// ### PROJECTS: AGENTS ---------------------------------------------------------------------------
+
+project(":agents:servlet") {
+    displayName = "Crashnote Servlet Agent"
+    description = "Reports exceptions from Java servlet apps to crashnote.com"
+
+    dependencies {
+        compile libraries.loggers
+        compile libraries.servlet
+        compile project(":modules:web")
+
+        testCompile project(":modules:test")
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDirs = ["src/main/java"] + moduleDirs.collect { it + "java" }
+            }
+            resources {
+                srcDirs = ["src/main/resources"] + moduleDirs.collect { it + "resources" }
+            }
+        }
+    }
+}
+
+project(":agents:appengine") {
+    displayName = "Crashnote Appengine Agent"
+    description = "Reports exceptions from Java apps on Appengine to crashnote.com"
+
+    dependencies {
+        compile libraries.loggers
+        compile libraries.servlet
+        compile project(":agents:servlet")
+        compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion"
+
+        testCompile project(":modules:test")
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDirs = ["src/main/java", "../servlet/src/main/java"] + moduleDirs.collect { it + "java" }
+            }
+            resources {
+                srcDirs = ["src/main/resources"] + moduleDirs.collect { it + "resources" }
+            }
+        }
+    }
+}
