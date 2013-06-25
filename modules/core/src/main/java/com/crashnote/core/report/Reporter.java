@@ -29,7 +29,7 @@ import com.crashnote.core.report.impl.session.LocalLogSession;
 /**
  * The Grand Central station of the library, every log event passes through here.
  *
- * It's main job is to take these events and put them into the {@link ILogSession},
+ * Its main job is to take these events and put them into the {@link ILogSession},
  * the same goes for context data. It can automatically or manually flush the session
  * in order to send out a crash report by calling the internal {@link Processor}.
  */
