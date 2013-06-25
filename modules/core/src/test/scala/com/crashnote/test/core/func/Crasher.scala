@@ -34,13 +34,15 @@ object Crasher {
       override def fromSystemProps() =
         fromString {
           s"""
+            |crashnote.id = 42
             |crashnote.key = "00000000-0000-0000-0000-000000000000"
-            |crashnote.projectId = 42
+            |
+            |crashnote.debug = true
+            |crashnote.enabled = true
+            |
             |crashnote.network.port = $port
             |crashnote.network.host = "$url"
             |crashnote.network.protocol = http
-            |crashnote.debug = true
-            |crashnote.enabled = true
           """.stripMargin
         }
     }

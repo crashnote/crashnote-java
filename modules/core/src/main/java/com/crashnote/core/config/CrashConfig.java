@@ -337,6 +337,8 @@ public class CrashConfig {
             v = getOptString("project");
         if (v == null)
             v = getOptString("project_id");
+        if (v == null)
+            v = getOptString("id");
         return v;
     }
 

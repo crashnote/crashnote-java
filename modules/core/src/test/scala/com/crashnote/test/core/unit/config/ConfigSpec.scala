@@ -35,7 +35,7 @@ class ConfigSpec
 
     "return" >> {
       "POST URL" >> {
-        val bm = List("key" -> "xyz", "projectId" -> "abc", "network.host" -> "mycompany.com")
+        val bm = List("key" -> "xyz", "id" -> "abc", "network.host" -> "mycompany.com")
 
         "with custom protocol" >> {
           c = getConfig(bm ::: List("network.protocol" -> "udp"))
