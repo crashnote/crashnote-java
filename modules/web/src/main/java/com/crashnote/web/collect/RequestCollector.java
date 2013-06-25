@@ -24,6 +24,9 @@ import java.util.List;
 
 import static com.crashnote.core.util.FilterUtil.doFilter;
 
+/**
+ * Collector to transform a HTTP request into a structured data format.
+ */
 public abstract class RequestCollector<R>
         extends BaseCollector {
 

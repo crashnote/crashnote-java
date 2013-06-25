@@ -19,8 +19,12 @@ import com.crashnote.core.config.ConfigLoader;
 import com.crashnote.external.config.Config;
 import com.crashnote.logger.config.LoggerConfigFactory;
 
+/**
+ * Factory to create instance(s) of {@link WebConfig}.
+ * Loads additional configuration settings from file 'crashnote.web.conf'.
+ */
 public class WebConfigFactory<C extends WebConfig>
-        extends LoggerConfigFactory<C> {
+    extends LoggerConfigFactory<C> {
 
     // SETUP ======================================================================================
 

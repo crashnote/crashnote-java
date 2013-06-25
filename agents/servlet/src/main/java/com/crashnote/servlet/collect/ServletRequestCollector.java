@@ -23,9 +23,6 @@ import com.crashnote.web.collect.RequestCollector;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
-/**
- * Collector to transform a HTTP request into a structured data format.
- */
 public class ServletRequestCollector
     extends RequestCollector<HttpServletRequest> {
 

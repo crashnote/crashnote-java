@@ -8,6 +8,10 @@ import play.Application;
 import play.Logger;
 import play.Plugin;
 
+/**
+ * Plugin compatible with the Play2 framework and its lifecycle.
+ * Upon start a crash system will be created in order to process all occurring exceptions.
+ */
 public class CrashnotePlugin extends Plugin {
 
     // VARS =======================================================================================

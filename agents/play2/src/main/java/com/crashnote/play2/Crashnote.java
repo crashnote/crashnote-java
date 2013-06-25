@@ -5,6 +5,11 @@ import com.crashnote.play2.reporter.ReqHeader;
 import play.api.mvc.RequestHeader;
 import play.mvc.Http;
 
+/**
+ * Interface for a Play2 application.
+ *
+ * Allows to send errors from Java/Scala-based apps.
+ */
 public class Crashnote {
 
     // VARS =======================================================================================
@@ -17,7 +22,16 @@ public class Crashnote {
     /**
      * Java API
      *
-     * @param request original HTTP request
+     * <pre>{@code
+     * // Global.java
+     * @Override
+     * public Result onError(RequestHeader request, Throwable th) {
+     *   Crashnote.report(request, th);
+     *   return super.onError(request, th);
+     * }
+     * }</pre>
+     *
+     * @param request originating HTTP request
      * @param th      occurred exception
      */
     public static void report(final Http.RequestHeader request, final Throwable th) {
@@ -28,7 +42,15 @@ public class Crashnote {
     /**
      * Scala API
      *
-     * @param request original HTTP request
+     * <pre>{@code
+     * // Global.scala
+     * override def onError(request: RequestHeader, th: Throwable) = {
+     *   Crashnote.report(request, th)
+     *   super.onError(request, th)
+     * }
+     * }</pre>
+     *
+     * @param request originating HTTP request
      * @param th      occurred exception
      */
     public static void report(final RequestHeader request, final Throwable th) {

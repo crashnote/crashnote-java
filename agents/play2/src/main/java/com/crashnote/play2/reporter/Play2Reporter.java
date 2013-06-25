@@ -13,8 +13,6 @@ import com.crashnote.web.report.WebReporter;
 public class Play2Reporter
     extends WebReporter<Play2Config, ReqHeader> {
 
-
-
     // SETUP ======================================================================================
 
     public Play2Reporter(final Play2Config config) {

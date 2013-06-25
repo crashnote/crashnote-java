@@ -23,9 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
 
-/**
- * Collector to transform a HTTP session into a structured data format.
- */
 public class ServletSessionCollector
         extends SessionCollector<HttpServletRequest> {
 

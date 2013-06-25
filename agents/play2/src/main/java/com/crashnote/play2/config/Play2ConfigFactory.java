@@ -1,12 +1,15 @@
 package com.crashnote.play2.config;
 
-import com.crashnote.core.config.ConfigLoader;
 import com.crashnote.external.config.Config;
 import com.crashnote.external.config.ConfigFactory;
 import com.crashnote.logger.config.LoggerConfigFactory;
 import play.Application;
 import play.Configuration;
 
+/**
+ * Factory to create instance(s) of {@link Play2Config}.
+ * The user's configuration is provided through Play's own config file, not a separate one.
+ */
 public class Play2ConfigFactory
     extends LoggerConfigFactory<Play2Config> {
 

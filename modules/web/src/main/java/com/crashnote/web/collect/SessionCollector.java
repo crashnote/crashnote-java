@@ -19,6 +19,9 @@ import com.crashnote.core.collect.BaseCollector;
 import com.crashnote.core.model.data.DataObject;
 import com.crashnote.web.config.WebConfig;
 
+/**
+ * Collector to transform a HTTP session into a structured data format.
+ */
 public abstract class SessionCollector<R>
     extends BaseCollector {
 

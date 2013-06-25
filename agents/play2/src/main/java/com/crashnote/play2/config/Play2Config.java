@@ -4,6 +4,9 @@ import com.crashnote.external.config.Config;
 import com.crashnote.play2.reporter.Play2Reporter;
 import com.crashnote.web.config.WebConfig;
 
+/**
+ * Customized {@link WebConfig}: Creates a custom Play2-reporter.
+ */
 public class Play2Config
     extends WebConfig {
 

@@ -3,6 +3,9 @@ package com.crashnote.play2.reporter;
 import play.api.mvc.RequestHeader;
 import play.mvc.Http;
 
+/**
+ * Wrapper around Play2's RequestHeader, Scala and Java respectively
+ */
 public class ReqHeader {
 
     // VARS =======================================================================================
