@@ -1,9 +1,5 @@
 defaultTasks "build"
 
-def isDevBuild
-def isCiBuild
-def isReleaseBuild
-
 allprojects {
 
     apply plugin: "java"
