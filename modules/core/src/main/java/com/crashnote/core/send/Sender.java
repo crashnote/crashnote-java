@@ -89,7 +89,7 @@ public class Sender {
 
     public void send(final LogReport report) {
         logger.debug("POST to '{}'", postURL);
-        POST(postURL, report);
+        POST(postURL + "/errors", report);
     }
 
 

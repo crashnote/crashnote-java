@@ -84,7 +84,7 @@ class SenderSpec
 
   private def checkConnection(url: String) =
     if (m_conn != null) {
-      m_conn.getURL.toURI.toString === url
+      m_conn.getURL.toURI.toString === "https://send.crashnote.io/errors"
       expect {
         one(m_conn).setRequestProperty("Content-Encoding", "gzip")
         one(m_conn).setRequestProperty("Content-Type", "application/json; charset=utf-8")
@@ -102,8 +102,8 @@ class SenderSpec
 
   // SETUP ======================================================================================
 
+  val url = "https://send.crashnote.io"
   val key = "0000000000000000000000000000000"
-  val url = "https://error.crashnote.io:443"
   val client = "spec-1.0"
 
   override def mockConfig() = {
