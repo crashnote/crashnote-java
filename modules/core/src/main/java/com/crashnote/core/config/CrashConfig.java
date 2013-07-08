@@ -31,6 +31,7 @@ import com.crashnote.external.config.ConfigRenderOptions;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Main configuration object, home to all configurable settings of the notifier like
@@ -288,9 +289,10 @@ public class CrashConfig {
     // GET+ =======================================================================================
 
     public String getPostURL() {
-        final String protocol = getString("network.protocol");
+        final boolean secure = getBool("network.secure", true);
         final String host = getString("network.host");
         final int port = getOptInt("network.port", 0);
+        final String protocol = secure ? "https" : "http";
         final String url = protocol + "://" + getProjectId() + ":" + getKey() + "@" +
             host + (port > 0 ? ":" + port : "");
         logger.debug("resolved POST target URL: {}", url);

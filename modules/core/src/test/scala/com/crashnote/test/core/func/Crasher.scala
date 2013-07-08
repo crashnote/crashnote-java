@@ -42,7 +42,7 @@ object Crasher {
             |
             |crashnote.network.port = $port
             |crashnote.network.host = "$url"
-            |crashnote.network.protocol = http
+            |crashnote.network.secure = false
           """.stripMargin
         }
     }
