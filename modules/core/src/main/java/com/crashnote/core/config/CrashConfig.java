@@ -227,7 +227,7 @@ public class CrashConfig {
 
     protected Long getMillis(final String name) {
         try {
-            return conf.getMilliseconds(getConfName(name));
+            return conf.getDuration(getConfName(name), TimeUnit.MILLISECONDS);
         } catch (ConfigException.Missing e) {
             throw new CrashnoteException("can not find config key '" + name + "'", e);
         } catch (ConfigException.BadValue e) {
