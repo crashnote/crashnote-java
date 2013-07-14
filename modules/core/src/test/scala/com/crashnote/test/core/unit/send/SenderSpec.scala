@@ -103,12 +103,10 @@ class SenderSpec
   // SETUP ======================================================================================
 
   val url = "https://send.crashnote.io"
-  val key = "0000000000000000000000000000000"
   val client = "spec-1.0"
 
   override def mockConfig() = {
     val mc = super.mockConfig()
-    mc.getKey returns key
     mc.getPostURL returns url
     mc.getClientInfo returns client
     mc.getConnectionTimeout returns 10000
