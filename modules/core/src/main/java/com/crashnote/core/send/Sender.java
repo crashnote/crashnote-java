@@ -24,6 +24,10 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.cert.X509Certificate;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -35,17 +39,23 @@ public class Sender {
     // VARS =======================================================================================
 
     // configuration settings:
+    private final String key;
     private final String postURL;
+    private final String projectId;
     private final String clientInfo;
     private final int connectionTimeout;
 
     protected final LogLog logger;
 
+    private static final String CONTENT_TYPE = "application/json; charset=utf-8";
+
 
     // SETUP ======================================================================================
 
     public <C extends CrashConfig> Sender(final C config) {
+        this.key = config.getKey();
         this.postURL = config.getPostURL();
+        this.projectId = config.getProjectId();
         this.clientInfo = config.getClientInfo();
         this.connectionTimeout = config.getConnectionTimeout();
 
@@ -98,7 +108,7 @@ public class Sender {
     protected void POST(final String url, final LogReport report) {
         HttpURLConnection conn = null;
         try {
-            conn = prepareConnection(url);
+            conn = prepareConnection("POST", url);
             try {
                 write(conn, report);
             } catch (IOException e) {
@@ -113,10 +123,16 @@ public class Sender {
         }
     }
 
+    protected String dateString(final Date date) {
+        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z");
+        df.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return df.format(date);
+    }
+
 
     // INTERNALS ==================================================================================
 
-    private HttpURLConnection prepareConnection(final String url) throws IOException {
+    private HttpURLConnection prepareConnection(final String verb, final String url) throws IOException {
         final HttpURLConnection conn = createConnection(url);
         {
             conn.setDoOutput(true);
@@ -126,9 +142,15 @@ public class Sender {
             conn.setReadTimeout(connectionTimeout);
             conn.setConnectTimeout(connectionTimeout);
 
+            final String date = dateString(new Date());
+            final String path = conn.getURL().getPath();
+
             conn.setRequestProperty("Accept", "application/json");
-            conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+            conn.setRequestProperty("Authorization", // using empty content hash (for now)
+                "hmac " + projectId + ":" + HMAC.create(key, verb, "", CONTENT_TYPE, date, path));
             conn.setRequestProperty("Content-Encoding", "gzip");
+            conn.setRequestProperty("Content-Type", CONTENT_TYPE);
+            conn.setRequestProperty("Date", date);
             if (clientInfo != null)
                 conn.setRequestProperty("User-Agent", getClientInfo());
         }

@@ -35,11 +35,16 @@ class ConfigSpec
 
     "return" >> {
       "POST URL" >> {
-        val bm = List("key" -> "xyz", "id" -> "abc", "network.host" -> "mycompany.com")
+        val bm = List("projectId" -> 42)
 
-        "without custom port" >> {
-          c = getConfig(bm ::: List("network.port" -> 8080))
-          c.getPostURL === "https://abc:xyz@mycompany.com:8080"
+        "with default settings" >> {
+          c = getConfig(bm)
+          c.getPostURL === "https://notify.crashnote.io"
+        }
+
+        "with custom host and port" >> {
+          c = getConfig(bm ::: List("network.host" -> "mycompany.com", "network.port" -> 8080))
+          c.getPostURL === "https://mycompany.com:8080"
         }
       }
       "start time" >> {

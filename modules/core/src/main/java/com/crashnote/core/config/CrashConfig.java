@@ -293,8 +293,7 @@ public class CrashConfig {
         final String host = getString("network.host");
         final int port = getOptInt("network.port", 0);
         final String protocol = secure ? "https" : "http";
-        final String url = protocol + "://" + getProjectId() + ":" + getKey() + "@" +
-            host + (port > 0 ? ":" + port : "");
+        final String url = protocol + "://" + host + (port > 0 ? ":" + port : "");
         logger.debug("resolved POST target URL: {}", url);
         return url;
     }

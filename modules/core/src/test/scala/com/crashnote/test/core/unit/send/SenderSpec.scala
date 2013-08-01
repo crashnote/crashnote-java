@@ -23,6 +23,7 @@ import com.crashnote.core.model.log.LogReport
 import com.crashnote.core.build.impl.JSONDataObject
 import com.crashnote.core.send.Sender
 import com.crashnote.test.core.defs.TargetMockSpec
+import java.util.Date
 
 class SenderSpec
   extends TargetMockSpec[Sender] {
@@ -86,8 +87,12 @@ class SenderSpec
     if (m_conn != null) {
       m_conn.getURL.toURI.toString === "https://send.crashnote.io/errors"
       expect {
+        one(m_conn).setRequestProperty("Accept", "application/json")
+        one(m_conn).setRequestProperty("Authorization", "HMAC 42:lrZmQceUq7RNMk+zs3TQWbSkM4g=")
         one(m_conn).setRequestProperty("Content-Encoding", "gzip")
         one(m_conn).setRequestProperty("Content-Type", "application/json; charset=utf-8")
+        one(m_conn).setRequestProperty("Date", "Sat, 1 Jan 2000 06:00:00 GMT")
+        one(m_conn).setRequestProperty("User-Agent", "spec-1.0")
 
         one(m_conn).setUseCaches(false)
         one(m_conn).setDoOutput(true)
@@ -108,6 +113,8 @@ class SenderSpec
   override def mockConfig() = {
     val mc = super.mockConfig()
     mc.getPostURL returns url
+    mc.getKey returns "secret"
+    mc.getProjectId returns "42"
     mc.getClientInfo returns client
     mc.getConnectionTimeout returns 10000
     mc
@@ -138,6 +145,9 @@ class SenderSpec
 
         m_conn
       }
+
+      override protected def dateString(date: Date) =
+        super.dateString(new Date(946706400000L))
 
       override protected def createWriter(stream: OutputStream) = {
         m_writer = mock[Writer]
