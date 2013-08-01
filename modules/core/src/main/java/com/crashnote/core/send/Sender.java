@@ -147,7 +147,7 @@ public class Sender {
 
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Authorization", // using empty content hash (for now)
-                "hmac " + projectId + ":" + HMAC.create(key, verb, "", CONTENT_TYPE, date, path));
+                "HMAC " + projectId + ":" + HMAC.create(key, verb, "", CONTENT_TYPE, date, path));
             conn.setRequestProperty("Content-Encoding", "gzip");
             conn.setRequestProperty("Content-Type", CONTENT_TYPE);
             conn.setRequestProperty("Date", date);
