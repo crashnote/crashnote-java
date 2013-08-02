@@ -40,6 +40,7 @@ public class Sender {
 
     // configuration settings:
     private final String key;
+    private final boolean sign;
     private final String postURL;
     private final String projectId;
     private final String clientInfo;
@@ -54,6 +55,7 @@ public class Sender {
 
     public <C extends CrashConfig> Sender(final C config) {
         this.key = config.getKey();
+        this.sign = config.isSigned();
         this.postURL = config.getPostURL();
         this.projectId = config.getProjectId();
         this.clientInfo = config.getClientInfo();
@@ -146,8 +148,11 @@ public class Sender {
             final String path = conn.getURL().getPath();
 
             conn.setRequestProperty("Accept", "application/json");
-            conn.setRequestProperty("Authorization", // using empty content hash (for now)
-                "HMAC " + projectId + ":" + HMAC.create(key, verb, "", CONTENT_TYPE, date, path));
+            if (sign)
+                conn.setRequestProperty("Authorization", // using empty content hash (for now)
+                    "HMAC " + projectId + ":" + HMAC.create(key, verb, "", CONTENT_TYPE, date, path));
+            else
+                conn.setRequestProperty("Authorization", "Token " + projectId + ":" + key);
             conn.setRequestProperty("Content-Encoding", "gzip");
             conn.setRequestProperty("Content-Type", CONTENT_TYPE);
             conn.setRequestProperty("Date", date);

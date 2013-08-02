@@ -88,7 +88,7 @@ class SenderSpec
       m_conn.getURL.toURI.toString === "https://send.crashnote.io/errors"
       expect {
         one(m_conn).setRequestProperty("Accept", "application/json")
-        one(m_conn).setRequestProperty("Authorization", "HMAC 42:lrZmQceUq7RNMk+zs3TQWbSkM4g=")
+        one(m_conn).setRequestProperty("Authorization", "Token 42:secret")
         one(m_conn).setRequestProperty("Content-Encoding", "gzip")
         one(m_conn).setRequestProperty("Content-Type", "application/json; charset=utf-8")
         one(m_conn).setRequestProperty("Date", "Sat, 1 Jan 2000 06:00:00 GMT")

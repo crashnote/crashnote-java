@@ -376,6 +376,10 @@ public class CrashConfig {
         return getMillis("network.timeout").intValue();
     }
 
+    public boolean isSigned() {
+        return getBool("network.signed", false);
+    }
+
     public boolean isDebug() {
         return getBool("debug", false);
     }
